@@ -5,6 +5,7 @@ import Logout from "./pages/Logout";
 import Auctionpost from "./pages/Auctionpost1";
 import Auctionpost1 from "./pages/Auctionpost1";
 import App from "./pages/App";
+import Home from "./Home";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -20,6 +21,9 @@ const router = createBrowserRouter([
             },{
               path:"/detail",
               element:<App/>
+            },{
+              path:"/home",
+              element:<Home/>
             }
           
 
