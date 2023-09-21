@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import img1 from "/team-front/src/testimg/image1.jpg";
-import img2 from "/team-front/src/testimg/image2.jpg";
-import img3 from "/team-front/src/testimg/image3.jpg";
-import img4 from "/team-front/src/testimg/image4.jpg";
-import img5 from "/team-front/src/testimg/image5.jpg";
+import img1 from "../img/image1.jpg";
+import img2 from "../img/image2.jpg";
+import img3 from "../img/image3.jpg";
+import img4 from "../img/image4.jpg";
+import img5 from "../img/image5.jpg";
 
 const Auctionpost1 = () => {
   const styles = {
@@ -23,6 +23,15 @@ const Auctionpost1 = () => {
       borderRadius: "8px", // 모서리 둥글게
     },
     largeGridItem: {
+      gridColumn: "span 2", // 두 칼럼 너비를 차지하도록 설정합니다.
+      border: "1px solid #000",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "#fff", // 배경색 추가
+      borderRadius: "8px", // 모서리 둥글게
+    },
+    LastGridItem: {
       gridColumn: "span 2", // 두 칼럼 너비를 차지하도록 설정합니다.
       border: "1px solid #000",
       display: "flex",
@@ -61,9 +70,6 @@ const Auctionpost1 = () => {
       alignItems: "center",
       padding: "10px", // 안쪽 패딩 추가
     },
-    sellerInfoItem: {
-      margin: "5px 0", // 상하 마진 추가하여 항목 사이에 간격을 줍니다.
-    },
     buttonContainer: {
       display: "flex", // 버튼들이 한 줄로 나열되도록 flex를 사용
       justifyContent: "space-around", // 버튼들 사이에 공간을 고르게 배분
@@ -81,10 +87,22 @@ const Auctionpost1 = () => {
         backgroundColor: "#5a6268", // 호버 효과 추가
       },
     },
+    button2: {
+      marginTop: "10px", // 버튼 위쪽에 여백 추가
+    },
+    prevButton: {
+      marginRight: "20px", // "이전" 버튼 오른쪽에 마진 추가
+    },
     input: {
       margin: "0 10px 10px 0", // margin을 추가하여 input과 버튼 사이에 공간을 만듭니다
       padding: "10px", // padding 추가
       border: "1px solid #ccc", // border 스타일 설정
+      borderRadius: "4px", // 모서리 둥글게
+    },
+    detailItem: {
+      backgroundColor: "gray", // 배경색을 gray로 지정
+      padding: "10px", // 패딩 추가
+      margin: "5px 0", // 마진 추가
       borderRadius: "4px", // 모서리 둥글게
     },
   };
@@ -113,7 +131,7 @@ const Auctionpost1 = () => {
           <img src={images[currentImageIndex]} alt="Auction" />
           <div>
             <button
-              className="mimg"
+              style={{ ...styles.button2, ...styles.prevButton }}
               onClick={() =>
                 setCurrentImageIndex(
                   (prevIndex) => (prevIndex - 1 + images.length) % images.length
@@ -123,7 +141,7 @@ const Auctionpost1 = () => {
               이전
             </button>
             <button
-              className="pimg"
+              style={styles.button2}
               onClick={() =>
                 setCurrentImageIndex(
                   (prevIndex) => (prevIndex + 1) % images.length
@@ -137,16 +155,16 @@ const Auctionpost1 = () => {
         <div style={styles.gridItem}>
           <div style={styles.innerContainer}>
             <div style={styles.innerItemTop}>
-              <div>상품명</div>
+              <div style={styles.detailItem}>상품명</div>
               <div style={styles.detailsRow}>
-                <div>시작시간</div>
-                <div>종료시간</div>
-                <div>입찰 횟수</div>
+                <div style={styles.detailItem}>시작시간</div>
+                <div style={styles.detailItem}>종료시간</div>
+                <div style={styles.detailItem}>입찰 횟수</div>
               </div>
-              <div>경매 시작가격</div>
-              <div>현재 입찰금액</div>
-              <div>최소 입찰단위</div>
-              <div>즉시구매가</div>
+              <div style={styles.detailItem}>경매 시작가격</div>
+              <div style={styles.detailItem}>현재 입찰금액</div>
+              <div style={styles.detailItem}>최소 입찰단위</div>
+              <div style={styles.detailItem}>즉시구매가</div>
               <div style={styles.buttonContainer}>
                 <input
                   type="number" // 숫자만 입력받을 수 있도록 type을 number로 설정
@@ -160,19 +178,16 @@ const Auctionpost1 = () => {
               </div>
             </div>
             <div style={styles.innerItemBottom}>
-              <div style={styles.sellerInfoItem}>판매자 아이디</div>
-
-              <div style={styles.sellerInfoItem}>총 판매건수</div>
-              <div style={styles.sellerInfoItem}>판매자 등급</div>
+              <div style={styles.detailItem}>판매자 아이디</div>
+              <div style={styles.detailItem}>총 판매건수</div>
+              <div style={styles.detailItem}>판매자 등급</div>
               <div style={styles.buttonContainer}>
                 <button style={styles.button}>신고하기</button>
               </div>
             </div>
           </div>
         </div>
-        <div style={styles.largeGridItem}>
-          <h1>상품상세설명/게시글내용</h1>
-        </div>
+        <div style={styles.LastGridItem}>게시글 내용</div>
       </div>
     </from>
   );
