@@ -6,13 +6,31 @@ import styled from "styled-components";
 
 const Main = styled.div`
   display: grid;
-  grid-template-rows: 300px auto, 300px;
+  grid-template-columns: 1fr 5fr 1fr;
+  grid-template-rows: auto 150px;
+  grid-template-areas: 
+    "g-left g-gonggo g-right"
+    "g-lower g-lower g-lower";
+`;
+
+const Left = styled.div`
+  grid-area: g-left;
 `;
 
 const GongGo = styled.div`
-  margin-top: 70px;
+  grid-area: g-gonggo;
   width: 100%;
   height: 50vh;
+  
+
+`;
+
+const Right = styled.div`
+  grid-area: g-right;
+`;
+
+const Lower = styled.div`
+  grid-area: g-lower;
 `;
 
 
@@ -30,6 +48,7 @@ const Hot = styled.div`
     transition: 0.5s;
     position: relative;
     z-index: 1;
+    background-image: null;
 
     .hot-font {
       position: absolute;
@@ -64,6 +83,11 @@ const Home=()=> {
 
   return (
     <Main className='div-container'>
+      
+      <Left className='div-item'>
+
+      </Left>
+      
       <GongGo className='div-item'>
 
         <Hot className='hot-container'>
@@ -146,13 +170,13 @@ const Home=()=> {
         </Carousel> */}
       </GongGo>
 
-      <div className='div-item'>
+      <Right className='div-item'>
 
-      </div>
+      </Right>
 
-      <div className='div-item'>
+      <Lower className="div-item">
 
-      </div>
+      </Lower>
     </Main>
   );  
 }
