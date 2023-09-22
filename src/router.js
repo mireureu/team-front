@@ -5,6 +5,7 @@ import Logout from "./pages/Logout";
 import Auctionpost from "./pages/Auctionpost1";
 import Auctionpost1 from "./pages/Auctionpost1";
 import App from "./pages/App";
+import Login from "./pages/login";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
 
     ]
     },
+    {
+      path:"/login",
+      element:<Login />
+  },
     {
         path:"/logout",
         element:<Logout />

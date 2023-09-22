@@ -83,25 +83,23 @@ const App = () => {
       <Table striped bordered hover>
         <thead>
         <tr>
-            <th>1</th>
-            <th>1</th>
-            <th>1</th>
-            <th>1</th>  
+        <th>
+          <Form>
+            {['checkbox'].map((type) => (
+              <div key={`inline-${type}`} className="mb-3" >
+                <Form.Check
+                  inline
+                  label="ddddddddddddddddddddddd"
+                  type={type}
+                  id={`inline-${type}-1`}
+                />
+              </div>
+            ))}
+          </Form>
+        </th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td >1</td>
-            <td >1</td>
-            <td >1</td>
-            <td >1</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>2</td>
-            <td>2</td>
-            <td>2</td>
-        </tr>
         </tbody>
     </Table>;
         <Tabs defaultActiveKey="profile" id="justify-tab-example" className="mb-3" justify>
