@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import Layout from "./components/Layout";
-import Logout from "./pages/Logout";
-import Auctionpost from "./pages/Auctionpost1";
+import Login from "./pages/Login";
 import Auctionpost1 from "./pages/Auctionpost1";
 import App from "./pages/App";
+import Home from "./pages/Home";
+import Register from "./pages/Register.js";
 const router = createBrowserRouter([
     {
         path: "/",
@@ -12,8 +12,9 @@ const router = createBrowserRouter([
         children: [
             {
                 index: true,
-        
-            },{
+                element:<Home/>
+            },
+            {
               path:"/auction",
               element:<Auctionpost1 />
 
@@ -26,9 +27,14 @@ const router = createBrowserRouter([
     ]
     },
     {
-        path:"/logout",
-        element:<Logout />
+        path:"/login",
+        element:<Login />
+    },
+    {
+      path:"/register",
+      element:<Register />
     }
+    
 ]);
 export default router;
 

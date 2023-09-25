@@ -110,7 +110,8 @@ const Auctionpost1 = () => {
           <h1>제목</h1>
         </div>
         <div style={styles.gridItem}>
-          <img src={images[currentImageIndex]} alt="Auction" />
+         
+       
           <div>
             <button
               className="mimg"

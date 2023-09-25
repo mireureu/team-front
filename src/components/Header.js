@@ -10,7 +10,6 @@ import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
 import { Link } from 'react-router-dom';
 import { AiOutlineSearch } from "react-icons/ai";
-
 const StyledHeader = styled.header`
   #basic-navbar-nav {
     display: flex;
@@ -46,29 +45,29 @@ const Header = () => {
     <>
       <StyledHeader id="fill-tab-style">
         <Navbar bg="white" variant="dark" collapseOnSelect>
-          <Navbar.Brand href="#" style={{ marginLeft: '100px', color: "black", fontWeight: "bold" }}>
+          <Navbar.Brand href="/" style={{ marginLeft: '100px', color: "black", fontWeight: "bold" }}>
             중번당
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="#" style={{ color: "black" }}>회원가입</Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>로그인</Nav.Link>
+              <Nav.Link href="/register" style={{ color: "black" }}>회원가입</Nav.Link>
+              <Nav.Link href="/login" style={{ color: "black" }}>로그인</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
-        <Divider /> 
-        <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto" }}>
+        <Divider />
+        <InputGroup className="mb-3"autocomplete="off" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline:"none" }}>
           <Form.Control
             placeholder="검색어를 입력해주세요"
             style={{
               borderRadius: "25px 0 0 25px",
               boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
-              outline: "none",
               borderColor: "#d9d9d9",
               borderRight: "none",
+
             }}
           />
           <Link to="/search">
@@ -81,7 +80,6 @@ const Header = () => {
                 borderRadius: "0",
                 boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
                 borderColor: "#d9d9d9",
-                borderLeftColor: "white",
                 borderLeft: "none",
               }}
               className="custom-button"
@@ -92,7 +90,7 @@ const Header = () => {
         </InputGroup>
 
 
-        
+
         <CategoryColor>
           <Tabs
             defaultActiveKey="home"
@@ -109,7 +107,7 @@ const Header = () => {
             <Tab eventKey="longer-tab" title={<Link to="/bestItems" style={{ textDecoration: "none", color: "black", fontWeight: "bold" }}>베스트상품</Link>}>
               Tab content for Loooonger Tab
             </Tab>
-            <Tab eventKey="contact" title={<Link to="/contact" style={{ textDecoration: "none", color: "black", fontWeight: "bold", border: "none", outline: "none" }}>Contact</Link>} className="no-hover-animation">
+            <Tab eventKey="contact" title={<Link to="/contact" style={{ textDecoration: "none", color: "black", fontWeight: "bold", border: "none", outline: "none" }}>QnA</Link>} className="no-hover-animation">
             </Tab>
           </Tabs>
         </CategoryColor>
@@ -121,7 +119,17 @@ const Header = () => {
         <Offcanvas.Header closeButton>
           <Offcanvas.Title>Offcanvas</Offcanvas.Title>
         </Offcanvas.Header>
-        <Offcanvas.Body>아이템들</Offcanvas.Body>
+        <Offcanvas.Body>
+          {/* <section>
+
+            {videoes.map((video) => (
+              <a href="#" className="video-content" key={video.videoCode}>
+              <p>{video.channel.channelName}</p>
+              </a>
+            ))}
+          </section> */}
+        </Offcanvas.Body>
+
       </Offcanvas>
     </>
   );

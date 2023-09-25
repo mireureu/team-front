@@ -1,8 +1,6 @@
-import Carousel from 'react-bootstrap/Carousel';
-import images from '../src/components/1.png';
+
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWrench } from "@fortawesome/free-solid-svg-icons";
+
 
 const Main = styled.div`
   display: grid;
