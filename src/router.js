@@ -1,9 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 import Logout from "./pages/Logout";
-import Auctionpost1 from "./pages/Auctionpost1";
 import App from "./pages/App";
 import Home from "./Home";
+import Auctionpost from "./pages/Auctionpost";
+import QnAboard from "./pages/QnAboard";
 
 const router = createBrowserRouter([
   {
@@ -15,12 +16,16 @@ const router = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: "/auction",
-        element: <Auctionpost1 />,
-      },
-      {
         path: "/detail",
         element: <App />,
+      },
+      {
+        path: "/Auctionpost",
+        element: <Auctionpost />,
+      },
+      {
+        path: "post",
+        element: <QnAboard />,
       },
     ],
   },

@@ -1,5 +1,5 @@
-import Carousel from 'react-bootstrap/Carousel';
-import images from '../src/components/1.png';
+import Carousel from "react-bootstrap/Carousel";
+import images from "../src/components/1.png";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWrench } from "@fortawesome/free-solid-svg-icons";
@@ -20,52 +20,46 @@ const Hot = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   .hot-box {
     width: 150px;
     height: 200px;
     background-color: rgba(172, 94, 192);
     border: 1px solid black;
     transition: 0.5s;
-
-
   }
 
   .hot-box:hover {
     transform: scale(1.5);
-    
+
     transform-origin: center;
   }
 `;
-
 
 // const Middle = styled.div`
 
 // `;
 
-
-const Home=()=> {
-
+const Home = () => {
   // const Hot = () => {
-    
+
   // };
 
   return (
-    <Main className='div-container'>
-      <GongGo className='div-item'>
-
-        <Hot className='hot-container'>
-          <div className='hot-box'>
+    <Main className="div-container">
+      <GongGo className="div-item">
+        <Hot className="hot-container">
+          <div className="hot-box">
             <div>
               <p>게시글 제목</p>
               <p>마감시간</p>
             </div>
           </div>
-          <div className='hot-box'>B</div>
-          <div className='hot-box'>C</div>
-          <div className='hot-box'>D</div>
-          <div className='hot-box'>E</div>
-          <div className='hot-box'>F</div>
+          <div className="hot-box">B</div>
+          <div className="hot-box">C</div>
+          <div className="hot-box">D</div>
+          <div className="hot-box">E</div>
+          <div className="hot-box">F</div>
         </Hot>
 
         {/* <Carousel>
@@ -109,15 +103,11 @@ const Home=()=> {
         </Carousel> */}
       </GongGo>
 
-      <div className='div-item'>
+      <div className="div-item"></div>
 
-      </div>
-
-      <div className='div-item'>
-
-      </div>
+      <div className="div-item"></div>
     </Main>
-  );  
-}
+  );
+};
 
 export default Home;
