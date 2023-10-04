@@ -5,6 +5,7 @@ import App from "./pages/App";
 import Home from "./Home";
 import Auctionpost from "./pages/Auctionpost";
 import QnAboard from "./pages/QnAboard";
+import AskPage from "./pages/Askpage";
 
 const router = createBrowserRouter([
   {
@@ -24,8 +25,12 @@ const router = createBrowserRouter([
         element: <Auctionpost />,
       },
       {
-        path: "post",
+        path: "qnapost",
         element: <QnAboard />,
+      },
+      {
+        path: "AskPage",
+        element: <AskPage />,
       },
     ],
   },

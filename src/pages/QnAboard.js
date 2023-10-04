@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const sampleData = [
   {
@@ -78,6 +79,11 @@ const styles = {
 
 const QnAboard = () => {
   const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+  const navigate = useNavigate(); // useNavigate를 초기화
+
+  const handleAskClick = () => {
+    navigate("/AskPage"); // Askpage.js로 이동
+  };
 
   return (
     <div style={styles.container}>
@@ -118,6 +124,7 @@ const QnAboard = () => {
             (e.currentTarget.style.backgroundColor =
               styles.button.backgroundColor)
           }
+          onClick={handleAskClick}
         >
           1:1 개별 문의하기
         </button>
