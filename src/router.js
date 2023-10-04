@@ -6,6 +6,7 @@ import Home from "./Home";
 import Auctionpost from "./pages/Auctionpost";
 import QnAboard from "./pages/QnAboard";
 import AskPage from "./pages/Askpage";
+import Post from "./pages/Post";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
       {
         path: "AskPage",
         element: <AskPage />,
+      },
+      {
+        path: "Post",
+        element: <Post />,
       },
     ],
   },
