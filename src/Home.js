@@ -1,5 +1,6 @@
 // import Carousel from 'react-bootstrap/Carousel';
 // import images from '../src/components/1.png';
+import React, { useState } from "react";
 import styled from "styled-components";
 // import { getAuctionBoard } from "./api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +11,6 @@ const Main = styled.div`
   display: grid;
   margin: 30px;
   grid-template-columns: 1fr 4fr 1fr;
-  grid-template-rows: 80px 550px 150px;
   grid-template-areas:
     "g-left g-banner g-right" 
     "g-left g-newitem g-right"
@@ -26,6 +26,7 @@ const Banner = styled.div`
   justify-content: center;
   background-color: rgba(255, 217, 250);
   width: 80%;
+  height: 150px;
   margin: 0 auto;
 `;
 
@@ -37,7 +38,9 @@ const Left = styled.div`
 const NewItem = styled.div`
   grid-area: g-newitem;
   width: 100%;
-  height: 50vh;
+  height: 550px;
+  display: flex;
+  align-items: center;
 `;
 
 const Right = styled.div`
@@ -47,6 +50,7 @@ const Right = styled.div`
 
 const Lower = styled.div`
   grid-area: g-lower;
+  height: 150px;
   border: 1px solid black;
 `;
 
@@ -54,9 +58,9 @@ const Lower = styled.div`
 const News = styled.div`
   /* border: 1px solid black; */
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  justify-content: space-between;
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  justify-content: center;
+  gap: 20px;
   margin: 0 auto;
   max-width: 1000px;
 
@@ -65,10 +69,12 @@ const News = styled.div`
     height: 250px;
     background-color: rgba(234, 234, 234);
     border: 1px solid black;
+    justify-self: center;
     border-radius: 5%;
     transition: 0.5s;
     position: relative;
     z-index: 1;
+    cursor: pointer; /* 커서를 포인터로 변경 */
     /* background-image: none; */
 
     .new-font {
@@ -80,11 +86,6 @@ const News = styled.div`
       text-align: center;
       bottom: 0;
       line-height: 1;
-      
-
-      h5 {
-
-      }
 
       p {
         display: flex;
@@ -108,9 +109,53 @@ const News = styled.div`
 
 
 
-// const Middle = styled.div`
 
-// `;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 3;
+  border: 1px solid black;
+
+  h2 {
+    display: flex;
+    justify-content: center;
+  }
+
+  .flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .flex-row .times, .flex-row .values {
+    margin: 0;
+  }
+
+  .flex-row .times::after {
+    content: "";
+    margin-right: 10px;
+  }
+
+  .clows-button, .move-page {
+    position: absolute;
+    right: 20px;
+  }
+
+  .clows-button .move-page::after{
+    content: "";
+    margin-right: 10px;
+  }
+`;
 
 
 const Home=()=> {
@@ -118,10 +163,25 @@ const Home=()=> {
   // const auctionBoardAPI = async () => {
   //   const result = await getAuctionBoard();
   // }
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const openPage = () => {
+    setIsModalOpen(false);
+  };
 
   return (
     <Main className='div-container'>
       
+
+
       <Left className='div-item'>
 
       </Left>
@@ -132,9 +192,8 @@ const Home=()=> {
       </Banner>
 
       <NewItem className='div-item'>
-
         <News className='new-container'>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -145,7 +204,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -156,7 +215,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -167,7 +226,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -178,7 +237,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -189,7 +248,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -200,7 +259,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -211,7 +270,7 @@ const Home=()=> {
               </p>
             </div>
           </div>
-          <div className='new-box'>
+          <div onClick={openModal} className='new-box'>
             <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
@@ -223,46 +282,6 @@ const Home=()=> {
             </div>
           </div>
         </News>
-
-        {/* <Carousel>
-          <Carousel.Item interval={5000}>
-            <img src={images} text="First slide"/>
-            <Carousel.Caption>
-              <h3>광고 1</h3>
-              <p>사고 싶~ 쥐~</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item interval={5000}>
-            <img src={images} text="Second slide"/>
-            <Carousel.Caption>
-              <h3>광고 2</h3>
-              <p>갖고 싶~ 쥐~</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item interval={5000}>
-            <img src={images} text="Third slide"/>
-            <Carousel.Caption>
-              <h3>광고 3</h3>
-              <p>
-                못사~ 쥐~
-              </p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item interval={5000}>
-            <img src={images} text="Second slide"/>
-            <Carousel.Caption>
-              <h3>광고 4</h3>
-              <p>약오 르~ 쥐~</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-          <Carousel.Item interval={5000}>
-            <img src={images} text="Second slide"/>
-            <Carousel.Caption>
-              <h3>광고 5</h3>
-              <p>꼴 받~ 쥐~</p>
-            </Carousel.Caption>
-          </Carousel.Item>
-        </Carousel> */}
       </NewItem>
 
       <Right className='div-item'>
@@ -272,8 +291,26 @@ const Home=()=> {
       <Lower className="div-item">
 
       </Lower>
+
+      {isModalOpen && (
+        <Modal>
+          <div className="content">
+            <h2>상품 이름</h2>
+            <div className="flex-row">
+              <p className="times">
+                마감시간 :<span>30:05:20</span>
+              </p>
+              <p className="values">
+                현재가 : <span>30,000</span>원
+              </p>
+            </div>
+          </div>
+          <button className="move-page" onClick={openPage}>상세 페이지로</button>
+          <button className="close-button" onClick={closeModal}>닫기</button>
+        </Modal>
+      )}
     </Main>
-  );  
+  );
 }
 
 export default Home;
