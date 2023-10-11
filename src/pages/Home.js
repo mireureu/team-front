@@ -1,18 +1,18 @@
-import styled from "styled-components";
+// import Carousel from 'react-bootstrap/Carousel';
+// import images from '../src/components/1.png';
 import React, { useState } from "react";
-import Carousel from "react-bootstrap/Carousel";
-import images from "../src/components/1.png";
 import styled from "styled-components";
 // import { getAuctionBoard } from "./api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
+
 
 const Main = styled.div`
   display: grid;
   margin: 30px;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
-    "g-left g-banner g-right"
+    "g-left g-banner g-right" 
     "g-left g-newitem g-right"
     "g-lower g-lower g-lower";
   gap: 20px;
@@ -54,6 +54,7 @@ const Lower = styled.div`
   border: 1px solid black;
 `;
 
+
 const News = styled.div`
   /* border: 1px solid black; */
   display: grid;
@@ -77,6 +78,7 @@ const News = styled.div`
     /* background-image: none; */
 
     .new-font {
+      
       position: absolute;
       width: 80%;
       left: 10%;
@@ -99,11 +101,12 @@ const News = styled.div`
 
   .new-box:hover {
     transform: scale(1.5);
-
+    
     transform-origin: center;
     z-index: 2;
   }
 `;
+
 
 const Modal = styled.div`
   position: fixed;
@@ -116,7 +119,7 @@ const Modal = styled.div`
   padding: 20px;
   z-index: 3;
   border: 1px solid black;
-
+  
   h2 {
     display: flex;
     justify-content: center;
@@ -131,8 +134,7 @@ const Modal = styled.div`
     right: 20px;
   }
 
-  .flex-row .times,
-  .flex-row .values {
+  .flex-row .times, .flex-row .values {
     margin: 0;
   }
 
@@ -141,19 +143,20 @@ const Modal = styled.div`
     margin-right: 10px;
   }
 
-  .clows-button,
-  .move-page {
+  .clows-button, .move-page {
     position: absolute;
     right: 20px;
   }
 
-  .clows-button .move-page::after {
+  .clows-button .move-page::after{
     content: "";
     margin-right: 10px;
   }
 `;
 
-const Home = () => {
+
+const Home=()=> {
+
   // const auctionBoardAPI = async () => {
   //   const result = await getAuctionBoard();
   // }
@@ -172,18 +175,21 @@ const Home = () => {
   };
 
   return (
-    <Main className="div-container">
-      <Left className="div-item"></Left>
+    <Main className='div-container'>
 
+      <Left className='div-item'>
+
+      </Left>
+      
       <Banner>
         <h1>[ 주간 핫! 베스트 상품 ]</h1>
         {/* <h1>[ 주간 New 경매! ]</h1> */}
       </Banner>
 
-      <NewItem className="div-item">
-        <News className="new-container">
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+      <NewItem className='div-item'>
+        <News className='new-container'>
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -193,8 +199,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -204,8 +210,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -215,8 +221,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -226,8 +232,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -237,8 +243,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -248,8 +254,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 :<span>30:05:20</span>
@@ -259,8 +265,8 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <div onClick={openModal} className="new-box">
-            <div className="new-font">
+          <div onClick={openModal} className='new-box'>
+            <div className='new-font'>
               <h5>게시글 제목</h5>
               <p>
                 마감시간 : <span>30:05:20</span>
@@ -273,9 +279,13 @@ const Home = () => {
         </News>
       </NewItem>
 
-      <Right className="div-item"></Right>
+      <Right className='div-item'>
 
-      <Lower className="div-item"></Lower>
+      </Right>
+
+      <Lower className="div-item">
+
+      </Lower>
 
       {isModalOpen && (
         <Modal>
@@ -290,16 +300,12 @@ const Home = () => {
               </p>
             </div>
           </div>
-          <button className="move-page" onClick={openPage}>
-            상세 페이지로
-          </button>
-          <button className="close-button" onClick={closeModal}>
-            닫기
-          </button>
+          <button className="move-page" onClick={openPage}>상세 페이지로</button>
+          <button className="close-button" onClick={closeModal}>닫기</button>
         </Modal>
       )}
     </Main>
   );
-};
+}
 
 export default Home;
