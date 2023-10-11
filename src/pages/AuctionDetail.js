@@ -76,7 +76,7 @@ const StyledHeader = styled.header`
 }
 `;
 
-const App = () => {
+const AuctionDetail = () => {
   return (
     <StyledHeader>
       <Container>
@@ -276,4 +276,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default AuctionDetail;

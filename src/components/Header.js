@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useEffect, useState } from "react";
 import '../scss/custom.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
@@ -8,8 +8,9 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import InputGroup from 'react-bootstrap/InputGroup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from "react-icons/ai";
+import { getCategories } from "../api/connection";
 const StyledHeader = styled.header`
   #basic-navbar-nav {
     display: flex;
@@ -28,14 +29,30 @@ const CategoryColor = styled.div`
 `;
 
 const Header = () => {
+  const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState(null);
+  const categoryAPI = async () => {
+    const result = await getCategories();
+    setCategories(result.data);
+  };
+  
+  useEffect(() => {
+    categoryAPI();
+  }, []);
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-
+  const movePage = useNavigate();
+  const Login = () => {
+      movePage("/login");
+  }
+  const register  = () =>{
+    movePage("/register");
+  }
   const handleTabSelect = (eventKey) => {
     if (eventKey === 'home') {
-      // 'home' 탭을 클릭했을 때 'Button' 컴포넌트 클릭과 동일한 동작 수행
       handleShow();
       return;
     }
@@ -51,15 +68,15 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <Nav.Link href="/register" style={{ color: "black" }}>회원가입</Nav.Link>
-              <Nav.Link href="/login" style={{ color: "black" }}>로그인</Nav.Link>
+              <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
+              <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
         <Divider />
-        <InputGroup className="mb-3"autocomplete="off" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline:"none" }}>
+        <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline:"none" }}>
           <Form.Control
             placeholder="검색어를 입력해주세요"
             style={{
@@ -117,22 +134,20 @@ const Header = () => {
       </Button>
       <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>Offcanvas</Offcanvas.Title>
+          <Offcanvas.Title>전체 상품</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-          {/* <section>
-
-            {videoes.map((video) => (
-              <a href="#" className="video-content" key={video.videoCode}>
-              <p>{video.channel.channelName}</p>
-              </a>
-            ))}
-          </section> */}
+        {categories.map((mainCategory) => (
+            <a href="#" key={mainCategory.categoryCode} style={{textDecoration:"none", color:"black"}}>           
+              <p>{mainCategory.categoryName}</p>
+            </a>
+          ))}
         </Offcanvas.Body>
 
       </Offcanvas>
     </>
   );
+
 };
 
 export default Header;
