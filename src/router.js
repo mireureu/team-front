@@ -11,6 +11,7 @@ import Post from "./pages/Post";
 import Register from "./pages/register";
 const router = createBrowserRouter([
   {
+    
     path: "/",
     element: <Layout />,
     children: [
