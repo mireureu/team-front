@@ -25,9 +25,9 @@ const Banner = styled.div`
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 217, 250);
-  width: 80%;
+  /* width: 80%; */
   height: 150px;
-  margin: 0 auto;
+  /* margin: 0 auto; */
 `;
 
 const Left = styled.div`
@@ -38,7 +38,7 @@ const Left = styled.div`
 const NewItem = styled.div`
   grid-area: g-newitem;
   width: 100%;
-  height: 550px;
+  height: auto;
   display: flex;
   align-items: center;
 `;
@@ -108,9 +108,6 @@ const News = styled.div`
 `;
 
 
-
-
-
 const Modal = styled.div`
   position: fixed;
   top: 50%;
@@ -122,7 +119,7 @@ const Modal = styled.div`
   padding: 20px;
   z-index: 3;
   border: 1px solid black;
-
+  
   h2 {
     display: flex;
     justify-content: center;
@@ -179,8 +176,6 @@ const Home=()=> {
 
   return (
     <Main className='div-container'>
-      
-
 
       <Left className='div-item'>
 
