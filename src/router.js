@@ -1,40 +1,52 @@
 import { createBrowserRouter } from "react-router-dom";
-
 import Layout from "./components/Layout";
 import Logout from "./pages/Logout";
-import Auctionpost from "./pages/Auctionpost1";
-import Auctionpost1 from "./pages/Auctionpost1";
 import App from "./pages/App";
 import Login from "./pages/login";
+import Home from "./Home";
+import Auctionpost from "./pages/Auctionpost";
+import QnAboard from "./pages/QnAboard";
+import AskPage from "./pages/Askpage";
+import Post from "./pages/Post";
+
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Layout/>,
-        children: [
-            {
-                index: true,
-        
-            },{
-              path:"/auction",
-              element:<Auctionpost1 />
-
-            },{
-              path:"/detail",
-              element:<App/>
-            }
-          
-
-    ]
-    },
-    {
-      path:"/login",
-      element:<Login />
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      {
+        path: "/detail",
+        element: <App />,
+      },
+      {
+        path: "/Auctionpost",
+        element: <Auctionpost />,
+      },
+      {
+        path: "qnapost",
+        element: <QnAboard />,
+      },
+      {
+        path: "AskPage",
+        element: <AskPage />,
+      },
+      {
+        path: "Post",
+        element: <Post />,
+      },
+    ],
   },
-    {
-        path:"/logout",
-        element:<Logout />
-    }
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/logout",
+    element: <Logout />,
+  },
 ]);
 export default router;
-
-
