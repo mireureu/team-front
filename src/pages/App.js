@@ -10,6 +10,8 @@ import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import Pagination from 'react-bootstrap/Pagination';
 
+
+
 const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
@@ -23,25 +25,37 @@ const StyledHeader = styled.header`
   border-color: #007bff;
   color: #fff;
 }
-  .cards-container {
+.cards-container {
     display: flex;
     flex-flow: row;
     justify-content: center;
-    
   }
+
   .hover {
     border: 1px solid;
     padding: 10px;
     width: 300px;
+
+    background-color: initial;
+    color: black;
+  }
+
+  .hover:hover {
+    /* 호버 시 배경색과 텍스트 컬러 변경 */
+    background-color: whitesmoke; /* 원하는 배경색으로 변경 */
+    color: white; /* 원하는 텍스트 컬러로 변경 */
   }
   .show-hover {
     display: none;
+    
   }
   .hover:hover .show-hover {
     display: block;
+    
   }
   .hover:hover .hidden-hover {
     display: none;
+    
   }
   .Card{
     margin-left: 100px;
@@ -49,12 +63,45 @@ const StyledHeader = styled.header`
   .small-text{
     font-size: 12px;
   }
+  .hover-button {
+  /* 기본 배경색과 텍스트 컬러 초기화 */
+  background-color: initial;
+  color: initial;
+}
+
+.hover-button:hover {
+  /* 호버 시 배경색과 텍스트 컬러 변경 */
+  background-color: white; 
+  color: black; /* 원하는 텍스트 컬러로 변경 */
+}
 `;
 
 const App = () => {
   return (
     <StyledHeader>
       <Container>
+      <Table striped bordered hover>
+        <thead>
+        <tr>
+        <th>
+          <Form>
+            {['checkbox'].map((type) => (
+              <div key={`inline-${type}`} className="mb-3" >
+                <Form.Check
+                  inline
+                  label="ddddddddddddddddddddddd"
+                  type={type}
+                  id={`inline-${type}-1`}
+                />
+              </div>
+            ))}
+          </Form>
+        </th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </Table>;
         <Tabs defaultActiveKey="profile" id="justify-tab-example" className="mb-3" justify>
           <Tab eventKey="home" title="예정">
             예정중인 경매
@@ -66,6 +113,8 @@ const App = () => {
             종료된 경매
           </Tab>
         </Tabs>
+        
+        
         <Form.Select aria-label="Default select example">
           <option value="1">인기순</option>
           <option value="2">조회순</option>
@@ -74,6 +123,7 @@ const App = () => {
           <option value="5">높은 가격순</option>
         </Form.Select>
         <Table style={{display: "flex", flexFlow: "row", flexWrap: "wrap"}} striped bordered hover>
+          <a href='#' style={{textDecoration:"none"}}>
           <Card style={{ width: '18rem', marginTop: '30px' }} className="hover">
             <Card.Img variant="top" src={ds} />
             <Card.Body>
@@ -81,13 +131,14 @@ const App = () => {
               <Card.Text></Card.Text>
               <p>입찰 : 21회</p>
               <p>종료까지 : ~~</p>
-              <Button variant="primary">
+              <Button variant="primary" className="hover-button">
                 <div className="hidden-hover">시작가 : 10000원</div>
                 <div className="show-hover">현재가 : 572800원</div>
                 <div className="small-text">클릭 시 경매 참가</div>
               </Button>
             </Card.Body>
           </Card>
+          </a>
           {/* <Card style={{ width: '18rem', marginTop: '30px' }} className="hover">
             <Card.Img variant="top" src={ds} />
             <Card.Body>
