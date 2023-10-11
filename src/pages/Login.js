@@ -3,7 +3,8 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
+import { Nav } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -23,22 +24,20 @@ const Login = () => {
             display: 'none',
         },
     });
-
-
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-        const data = new FormData(event.currentTarget);
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        });
-    };
-
+    const onClick = (e) => {
+        e.preventDefault();
+        const id = e.target.id.value;
+        const password = e.target.password.value;
+        dispatch(asyncLogin({id, passowrd}));
+    }
+    const movePage = useNavigate();
+    const register = () => {
+        movePage("/register");
+    }
     return (
-        
 
-        
+
+
         <ThemeProvider theme={defaultTheme}>
             <Grid container component="main" sx={{
                 display: 'flex',
@@ -47,7 +46,7 @@ const Login = () => {
                 justifyContent: 'center',
                 height: '100vh',
             }}>
-                <a href="/" style={{textDecoration:"none", color:"black"}}><h1>중번당</h1></a>
+                <a href="/" style={{ textDecoration: "none", color: "black" }}><h1>중번당</h1></a>
                 <CssBaseline />
                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
                     <Box
@@ -62,25 +61,23 @@ const Login = () => {
                         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                             <LockOutlinedIcon />
                         </Avatar>
-                        
+
                         <Typography component="h1" variant="h5">
                             로그인
                         </Typography>
-                        <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                        <Box component="form" sx={{ mt: 1 }}>
 
                             <StyledTextField
                                 margin="normal"
                                 required
                                 fullWidth
-                                id="email"
                                 label={
                                     <div style={{ display: 'flex', alignItems: 'center' }}>
                                         <FaRegUser style={{ marginRight: '8px' }} />
                                         아이디
                                     </div>
                                 }
-                                name="email"
-                                autoComplete="email"
+                                name="id"
                                 autoFocus
                                 InputLabelProps={{ required: false }}
                             />
@@ -109,16 +106,15 @@ const Login = () => {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                                 style={{ padding: "18px" }}
+                                onClick={onClick}
                             >
                                 로그인
                             </Button>
-                            <Grid container>
-                                <Grid item>
-                                    <Link href="/register" variant="body2" style={{ textDecoration: "none" }}>
-                                        {"회원가입"}
-                                    </Link>
-                                </Grid>
-                            </Grid>
+                            <div className="d-grid gap-1">
+                                <Button variant="secondary" >
+                                    회원 가입
+                                </Button>
+                            </div>
 
                         </Box>
                     </Box>
