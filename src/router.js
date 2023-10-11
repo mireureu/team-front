@@ -1,14 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
+// import Logout from "./pages/Logout";
+import App from "./pages/App";
 import Login from "./pages/Login";
-import Auctionpost1 from "./pages/Auctionpost1";
-import App from "./pages/App";
 import Home from "./pages/Home";
-import Register from "./pages/Register.js";
-import Logout from "./pages/Logout";
-import App from "./pages/App";
-import Login from "./pages/login";
-import Home from "./Home";
 import Auctionpost from "./pages/Auctionpost";
 import QnAboard from "./pages/QnAboard";
 import AskPage from "./pages/Askpage";
@@ -49,9 +44,9 @@ const router = createBrowserRouter([
     path: "/login",
     element: <Login />,
   },
-  {
-    path: "/logout",
-    element: <Logout />,
-  },
+  // {
+  //   path: "/logout",
+  //   element: <Logout />,
+  // },
 ]);
 export default router;
