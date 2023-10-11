@@ -1,8 +1,8 @@
 import Carousel from "react-bootstrap/Carousel";
 import images from "../src/components/1.png";
 import styled from "styled-components";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faWrench } from "@fortawesome/free-solid-svg-icons";
+// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+// import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
 const Main = styled.div`
   display: grid;
@@ -27,12 +27,24 @@ const Hot = styled.div`
     background-color: rgba(172, 94, 192);
     border: 1px solid black;
     transition: 0.5s;
+    position: relative;
+    z-index: 1;
+
+    .hot-font {
+      position: absolute;
+      width: 100%;
+      height: 30%;
+      text-align: center;
+      bottom: 0;
+      line-height: 1;
+    }
   }
 
   .hot-box:hover {
     transform: scale(1.5);
 
     transform-origin: center;
+    z-index: 2;
   }
 `;
 
@@ -50,11 +62,42 @@ const Home = () => {
       <GongGo className="div-item">
         <Hot className="hot-container">
           <div className="hot-box">
-            <div>
+            <div className="hot-font">
               <p>게시글 제목</p>
               <p>마감시간</p>
             </div>
           </div>
+          <div className="hot-box">
+            <div className="hot-font">
+              <p>게시글 제목</p>
+              <p>마감시간</p>
+            </div>
+          </div>
+          <div className="hot-box">
+            <div className="hot-font">
+              <p>게시글 제목</p>
+              <p>마감시간</p>
+            </div>
+          </div>
+          <div className="hot-box">
+            <div className="hot-font">
+              <p>게시글 제목</p>
+              <p>마감시간</p>
+            </div>
+          </div>
+          <div className="hot-box">
+            <div className="hot-font">
+              <p>게시글 제목</p>
+              <p>마감시간</p>
+            </div>
+          </div>
+          <div className="hot-box">
+            <div className="hot-font">
+              <p>게시글 제목</p>
+              <p>마감시간</p>
+            </div>
+          </div>
+
           <div className="hot-box">B</div>
           <div className="hot-box">C</div>
           <div className="hot-box">D</div>
