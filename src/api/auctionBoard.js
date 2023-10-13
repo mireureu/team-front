@@ -7,4 +7,8 @@ const instance = axios.create({
 
 export const getAuctionBoard = async () => {
     return null;
-}
+};
+
+export const getHotList = async () => {
+    return await instance.get("public/auction/hot");
+};

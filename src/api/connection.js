@@ -4,7 +4,7 @@ const instance = axios.create({
 });
 
 export const getCategories = async () => {
-    return await instance.get("/public/MainCategory"); // main_category 테이블, intellij로 구현
+    return await instance.get("/public/category"); // main_category 테이블, intellij로 구현
 }
 export const duplicate = async (data) => {
     return await instance.post("/user/duplicate", data);

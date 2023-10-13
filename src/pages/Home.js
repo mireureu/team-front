@@ -1,8 +1,10 @@
 // import Carousel from 'react-bootstrap/Carousel';
 // import images from '../src/components/1.png';
-import React, { useState, useEffect } from "react";
+import React from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getCategories } from "../api/connection";
+import { getHotList } from "../api/auctionBoard";
 // import { getAuctionBoard } from "./api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
@@ -66,75 +68,77 @@ const News = styled.div`
   margin: 0 auto;
   max-width: 1000px;
 
-  .new-box {
-    width: 200px;
-    height: 250px;
-    background-color: rgba(234, 234, 234);
-    border: 1px solid black;
-    justify-self: center;
-    border-radius: 5%;
-    transition: 0.5s;
-    position: relative;
-    z-index: 1;
-    cursor: pointer; /* 커서를 포인터로 변경 */
-    /* background-image: none; */
+  /* section { */
+    .new-box {
+      width: 200px;
+      height: 250px;
+      background-color: rgba(234, 234, 234);
+      border: 1px solid black;
+      justify-self: center;
+      border-radius: 5%;
+      transition: 0.5s;
+      position: relative;
+      z-index: 1;
+      cursor: pointer; /* 커서를 포인터로 변경 */
+      /* background-image: none; */
 
-    .new-image {
-      margin-top: 10px;
-      margin-left: 10px;
-      width: 180px;
-      height: 180px;
-      overflow: hidden;
+      .new-image {
+        margin-top: 10px;
+        margin-left: 10px;
+        width: 180px;
+        height: 180px;
+        overflow: hidden;
 
-      img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        object-position: center;
-      }
-    }
-
-    .new-font {
-      position: absolute;
-      width: 80%;
-      left: 10%;
-      height: auto;
-      text-align: center;
-      bottom: 0;
-      line-height: 1;
-
-      h5 {
-        background-color: rgba(217, 220, 253);
-        border-radius: 10px;
-      }
-
-      p {
-        background-color: rgba(172, 180, 246);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 5px;
-        height: 30px;
-        border: 1px solid black;
-        border-radius: 10px;
-        white-space: pre;
-          
-        &.p-time-short {
-          background-color: rgba(255, 70, 70);
-          color: white;
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center;
         }
       }
 
+      .new-font {
+        position: absolute;
+        width: 80%;
+        left: 10%;
+        height: auto;
+        text-align: center;
+        bottom: 0;
+        line-height: 1;
+
+        h5 {
+          background-color: rgba(217, 220, 253);
+          border-radius: 10px;
+        }
+
+        p {
+          background-color: rgba(172, 180, 246);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 5px;
+          height: 30px;
+          border: 1px solid black;
+          border-radius: 10px;
+          white-space: pre;
+            
+          &.p-time-short {
+            background-color: rgba(255, 70, 70);
+            color: white;
+          }
+        }
+
+      }
+
     }
 
-  }
-
-  .new-box:hover {
-    transform: scale(1.5);
-    
-    transform-origin: center;
-    z-index: 2;
-  }
+    .new-box:hover {
+      transform: scale(1.5);
+      
+      transform-origin: center;
+      z-index: 2;
+    }
+  /* } */
 `;
 
 
@@ -200,6 +204,8 @@ const Home=()=> {
 
   const [isShortTime, setIsShortTime] = useState(false);
 
+  const [hotList, setHotList] = useState([]);
+
   // 남은 시간을 1초마다 갱신
   useEffect(() => {
     const interval = setInterval(timeClock, 1000);
@@ -207,6 +213,11 @@ const Home=()=> {
     return () => {
       clearInterval(interval);
     };
+    
+  }, []);
+
+  useEffect(() => {
+    hotListAPI();
   }, []);
 
   // 남은 시간이 1일 이상인지 미만인지에 따라 출력값 다르게
@@ -234,6 +245,12 @@ const Home=()=> {
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
+  }
+
+  const hotListAPI = async () => {
+    const result = await getHotList();
+    console.log(result.data);
+    setHotList(result.data);
   }
   
   // 미리보기 창 열기
@@ -265,7 +282,30 @@ const Home=()=> {
 
       <NewItem className='div-item'>
         <News className='new-container'>
-          <div onClick={openModal} className='new-box'>
+          
+
+
+
+
+
+        
+        <div onClick={openModal} className='new-box'>
+          <div className='new-image'>
+            <img src={""}/>
+          </div>
+          <div className='new-font'>
+            <h5>게시글 제목</h5>
+            <p className={isShortTime ? "p-time-short" : ""}>
+              마감시간 : <span>{timeRemaining}</span>
+            </p>
+            <p>
+              현재가 : <span>30,000</span>원
+            </p>
+          </div>
+        </div>
+                
+
+          {/* <div onClick={openModal} className='new-box'>
             <div className='new-image'>
               <img src={imgTest1}/>
             </div>
@@ -362,21 +402,7 @@ const Home=()=> {
                 현재가 : <span>30,000</span>원
               </p>
             </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
+          </div> */}
         </News>
       </NewItem>
 
