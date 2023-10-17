@@ -1,148 +1,154 @@
-import "bootstrap/dist/css/bootstrap.min.css";
-import { Container } from "react-bootstrap";
-import styled from "styled-components";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { getCategories, addPost } from "../api/addpost";
-import { useEffect, useState } from "react";
+import React, { useState } from "react";
+import {
+  Container,
+  Form,
+  Button,
+  Row,
+  Col,
+  FormGroup,
+  FormLabel,
+} from "react-bootstrap";
 
 const Post = () => {
-  const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
-  const [itemName, setitemName] = useState("");
-  const [dece, setDece] = useState("");
-  const [sMoney, setSmoney] = useState("");
-  const [eMoney, setEmoney] = useState("");
-  const [gMoney, setGmoney] = useState("");
-  const [select, setSelect] = useState(1);
-  const [isBuyNowChecked, setIsBuyNowChecked] = useState(false);
-  const [images, setImages] = useState([]);
+  const [description, setDescription] = useState("");
+  const [startPrice, setStartPrice] = useState("");
+  const [minimumBid, setMinimumBid] = useState("");
+  const [buyNowPrice, setBuyNowPrice] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [images, setImages] = useState([]); // 이미지 배열 추가
+  const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 배열 추가
 
-  const onClick = async () => {
-    const formData = new FormData();
+  const handleSubmit = () => {
+    // 경매글 작성 로직을 구현할 수 있습니다.
+    // 제목(title), 설명(description), 경매 시작가격(startPrice),
+    // 최소 입찰금액(minimumBid), 즉시구매가(buyNowPrice),
+    // 경매 종료일자(endDate), 이미지(images) 등의 정보를 이용하여 경매글을 작성하고,
+    // 서버로 요청을 보낼 수 있습니다.
+  };
 
-    formData.append("title", title);
-    formData.append("itemName", itemName);
-    formData.append("dece", dece);
-    formData.append("sMoney", sMoney);
-    formData.append("eMoney", eMoney);
-    formData.append("gMoney", gMoney);
-    formData.append("categoryNo", select);
-    formData.append("image", images);
-    formData.append("nowBuy", isBuyNowChecked ? "Y" : "N"); // 즉시 구매 여부를 "Y" 또는 "N"으로 설정
-    console.log(isBuyNowChecked ? "Y" : "N");
-    try {
-      const response = await addPost(formData); // 서버로 데이터 업로드
-      if (response.status === 200) {
-        // 업로드 성공 처리
-        console.log("게시물이 성공적으로 업로드되었습니다.");
-      } else {
-        // 업로드 실패 처리
-        console.error("게시물 업로드 중 오류발생.");
-      }
-    } catch (error) {
-      console.error("게시물 업로드 중 오류가 발생했습니다.", error);
+  const handleImageChange = (e) => {
+    const selectedImage = e.target.files[0];
+
+    // 이미지 배열에 추가
+    setImages((prevImages) => [...prevImages, selectedImage]);
+
+    // 이미지 파일을 미리보기로 보여주기
+    if (selectedImage) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        // 이미지 미리보기 배열에 추가
+        setImagePreviews((prevPreviews) => [
+          ...prevPreviews,
+          event.target.result,
+        ]);
+      };
+      reader.readAsDataURL(selectedImage);
     }
   };
-  const onUploadImage = (e) => {
-    setImages(e.target.files[0]);
-  };
-  const categoryAPI = async () => {
-    const result = await getCategories();
-    console.log(result);
-    setCategories(result.data);
-  };
 
-  useEffect(() => {
-    categoryAPI();
-  }, []);
-
-  const onChangeCategory = (e) => {
-    setSelect(e.currentTarget.value);
+  const removeImage = (index) => {
+    // 이미지와 미리보기 배열에서 해당 이미지를 제거
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImagePreviews((prevPreviews) =>
+      prevPreviews.filter((_, i) => i !== index)
+    );
   };
 
   return (
     <Container>
-      <h1>경매글 작성</h1>
-      <Form>
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="text"
-            value={title}
-            placeholder="제목"
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="text"
-            value={itemName}
-            placeholder="상품명"
-            onChange={(e) => setitemName(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Control
-            as="textarea"
-            rows={3}
-            value={dece}
-            placeholder="게시글 내용"
-            onChange={(e) => setDece(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="number"
-            value={sMoney}
-            placeholder="경매시작가격"
-            onChange={(e) => setSmoney(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Control
-            type="number"
-            value={eMoney}
-            placeholder="최소입찰가"
-            onChange={(e) => setEmoney(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Check
-            type="checkbox"
-            label="즉시구매 사용여부"
-            checked={isBuyNowChecked}
-            onChange={() => setIsBuyNowChecked(!isBuyNowChecked)}
-          />
-        </Form.Group>
-        {isBuyNowChecked && (
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="number"
-              value={gMoney}
-              placeholder="즉시구매가"
-              onChange={(e) => setGmoney(e.target.value)}
-            />
-          </Form.Group>
-        )}
-        <Form.Select onChange={onChangeCategory} value={select}>
-          {categories.map((category, index) => (
-            <option value={category.categoryNo} key={index}>
-              {category.categoryName}
-            </option>
-          ))}
-        </Form.Select>
-        <Form.Group className="mb-3">
-          <Form.Label>이미지 업로드</Form.Label>
-          <Form.Control type="file" onChange={onUploadImage} multiple />
-        </Form.Group>
-        <Button
-          variant="danger"
-          style={{ marginTop: "20px" }}
-          onClick={onClick}
-        >
-          저장
-        </Button>
-      </Form>
+      <Row className="mb-4">
+        <Col xs={12}>
+          <Form>
+            <FormGroup>
+              <FormLabel>제목</FormLabel>
+              <Form.Control
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>설명</FormLabel>
+              <Form.Control
+                as="textarea"
+                rows={4}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>경매 시작가격</FormLabel>
+              <Form.Control
+                type="number"
+                value={startPrice}
+                onChange={(e) => setStartPrice(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>최소 입찰금액</FormLabel>
+              <Form.Control
+                type="number"
+                value={minimumBid}
+                onChange={(e) => setMinimumBid(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>즉시구매가</FormLabel>
+              <Form.Control
+                type="number"
+                value={buyNowPrice}
+                onChange={(e) => setBuyNowPrice(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>경매 종료일자</FormLabel>
+              <Form.Control
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+              />
+            </FormGroup>
+
+            <FormGroup>
+              <FormLabel>이미지 업로드</FormLabel>
+              <Form.Control
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                multiple // 여러 개의 이미지를 선택할 수 있도록 설정
+              />
+              {imagePreviews.length > 0 &&
+                imagePreviews.map((preview, index) => (
+                  <div key={index} className="mt-2">
+                    <img
+                      src={preview}
+                      alt={`이미지 미리보기 ${index + 1}`}
+                      style={{ maxWidth: "100%", maxHeight: "200px" }}
+                    />
+                    <Button
+                      variant="danger"
+                      size="sm"
+                      className="mt-1"
+                      onClick={() => removeImage(index)}
+                    >
+                      삭제
+                    </Button>
+                  </div>
+                ))}
+            </FormGroup>
+
+            <Button type="submit" onClick={handleSubmit}>
+              경매글 작성
+            </Button>
+          </Form>
+        </Col>
+      </Row>
     </Container>
   );
 };
