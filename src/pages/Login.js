@@ -10,27 +10,30 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { FaRegUser } from "react-icons/fa6";
+import { FaRegUser } from "react-icons/fa";
 import { styled } from "@mui/material/styles";
 import { AiFillLock } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { asyncLogin } from "../store/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const defaultTheme = createTheme();
 
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const StyledTextField = styled(TextField)({
     "& label.MuiInputLabel-asterisk": {
       display: "none",
     },
   });
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    data.append();
-    console.log({
-      id: data.get("id"),
-      password: data.get("password"),
-    });
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const id = e.target.id.value;
+    const password = e.target.password.value;
+    dispatch(asyncLogin({ id, password }));
+    navigate("/");
   };
 
   return (
@@ -70,7 +73,7 @@ const Login = () => {
             <Box
               component="form"
               noValidate
-              onSubmit={handleSubmit}
+              onSubmit={onSubmit}
               sx={{ mt: 1 }}
             >
               <StyledTextField
@@ -84,8 +87,7 @@ const Login = () => {
                     아이디
                   </div>
                 }
-                name="email"
-                autoComplete="email"
+                name="id"
                 autoFocus
                 InputLabelProps={{ required: false }}
               />
@@ -108,7 +110,7 @@ const Login = () => {
               />
 
               <Button
-                type="submst"
+                type="submit"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
