@@ -16,14 +16,13 @@ const userSlice = createSlice({
         userLogout: (state, action)=>{
             return {};
         },
+
+        
     },
 
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{
             localStorage.setItem("token",action.payload.token);  
-            // 서버측에서 token변수명을 String token이라고 선언했기때문에
-            // action.payload.token이라고 해야함
-            
             localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장
             return action.payload;
         });
