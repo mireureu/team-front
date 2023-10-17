@@ -27,7 +27,7 @@ const Login = () => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
-      email: data.get("email"),
+      email: data.get("id"),
       password: data.get("password"),
     });
   };
@@ -76,7 +76,7 @@ const Login = () => {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
+                id="id"
                 label={
                   <div style={{ display: "flex", alignItems: "center" }}>
                     <FaRegUser style={{ marginRight: "8px" }} />
