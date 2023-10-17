@@ -6,6 +6,8 @@ import Button from "react-bootstrap/Button";
 import { getCategories, addPost } from "../api/addpost";
 import { useEffect, useState } from "react";
 
+
+
 const Post = () => {
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");

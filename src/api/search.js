@@ -4,4 +4,4 @@ const instance = axios.create({
 });
 export const getSearchResult = async () =>{
     return await instance.get("public/search");    
-}
+} 

@@ -77,6 +77,8 @@ const Register = () => {
             });
     }
 
+
+    
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
