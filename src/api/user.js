@@ -4,3 +4,6 @@ const instance = axios.create({
     baseURL:"http://localhost:8080/api/user"
 });
 
+export const login = async (data) =>{
+    return await instance.post("/signin", data);
+}

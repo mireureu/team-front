@@ -11,6 +11,9 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineSearch } from "react-icons/ai";
 import { getCategories } from "../api/connection";
+import { useDispatch, useSelector } from "react-redux";
+import { userSave, userLogout } from "../store/userSlice";
+import Kakaopay from "../api/KakaoPay";
 const StyledHeader = styled.header`
   #basic-navbar-nav {
     display: flex;
@@ -29,25 +32,44 @@ const CategoryColor = styled.div`
 `;
 
 const Header = () => {
+  const dispatch = useDispatch();
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const movePage = useNavigate();
+
+  const user = useSelector((state) => {
+    return state.user;
+  });
+  useEffect(() => {
+    const save = localStorage.getItem("user");
+    if (Object.keys(user).length === 0 && save != null) {
+      dispatch(userSave(JSON.parse(save)));
+    }
+  });
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    dispatch(userLogout());
+    movePage("/");
+    window.location.replace("/"); // 새로고침
+  }
   const [categories, setCategories] = useState([]);
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
   };
-  
+
   useEffect(() => {
     categoryAPI();
   }, []);
 
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-  const movePage = useNavigate();
   const Login = () => {
-      movePage("/login");
+    movePage("/login");
   }
-  const register  = () =>{
+  const register = () => {
     movePage("/register");
   }
   const handleTabSelect = (eventKey) => {
@@ -68,14 +90,22 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
-              <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
+             
+              <Kakaopay/>
+
+              {Object.keys(user).length === 0 ? (
+
+                <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
+
+              ) : (
+                <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>)}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
         <Divider />
-        <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline:"none" }}>
+        <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline: "none" }}>
           <Form.Control
             placeholder="검색어를 입력해주세요"
             style={{
@@ -136,9 +166,9 @@ const Header = () => {
           <Offcanvas.Title>전체 상품</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
-        {categories.map((mainCategory) => (
-            <a href="#" key={mainCategory.categoryNo} style={{textDecoration:"none", color:"black"}}>           
-              <p>{mainCategory.categoryName}</p>
+          {categories.map((Category) => (
+            <a href="#" key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }}>
+              <p>{Category.categoryName}</p>
             </a>
           ))}
         </Offcanvas.Body>
