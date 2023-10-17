@@ -17,3 +17,4 @@ export const getCategories = async () => {
     }
     return await instance.get(url);
   };
+  
