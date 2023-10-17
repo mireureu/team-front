@@ -11,6 +11,8 @@ import { getHotList } from "../api/auctionBoard";
 
 
 
+
+
 const Main = styled.div`
   display: grid;
   margin: 30px;

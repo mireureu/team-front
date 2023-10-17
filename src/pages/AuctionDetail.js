@@ -278,7 +278,8 @@ const App = () => {
             disabled={page === totalPages}
           />
         </Pagination>
-        <div className="current-page">
+        <div className="current-page"> 
+        
           {/* 현재 페이지: {page}/{totalPages} */}
         </div>
       </Container>
