@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { addUser, duplicate } from "../api/connection";
 import { useNavigate } from 'react-router-dom';
+import DaumPostcode from '../components/DaumPostcode';
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -13,11 +14,15 @@ const Register = () => {
     const [phone, setPhone] = useState("");
     const [sphone, setsPhone] = useState("");
     const [addr, setAddr] = useState("");
+    const [detailaddr, setDetailAddr] = useState("");
     const [password, setPassword] = useState("");
     const [id, setId] = useState("");
     const [securityNumber, setSecurityNumber] = useState("");
     const [email, setEmail] = useState("");
     const successRegi = useNavigate(); // onClick시 성공하면 홈으로 이동 실패하면 다시 회원가입창으로
+    const handleAddressSelected = (selectedAddress) => {
+        setAddr(selectedAddress);
+    };
 
     const duplicationCheckAPI = async (id) => {
         const formData = new FormData();
@@ -29,7 +34,7 @@ const Register = () => {
             throw error;
         }
     };
-
+   
     const duplicateIdClick = async () => {
         try {
             const isDuplicate = await duplicationCheckAPI(id);
@@ -55,7 +60,7 @@ const Register = () => {
             email: email,
             phone: phone,
             sphone: sphone,
-            addr: addr,
+            addr: addr + "" + detailaddr,
         };
 
         // addUser 함수를 호출하여 사용자 데이터를 서버로 전송
@@ -73,7 +78,6 @@ const Register = () => {
     }
 
     const [confirmPassword, setConfirmPassword] = useState('');
-
     const [passwordMatch, setPasswordMatch] = useState(true);
     const [emailValid, setEmailValid] = useState(true);
     const [isTyping, setIsTyping] = useState(false);
@@ -117,7 +121,7 @@ const Register = () => {
     }
 
     const handleFrontChange = (e) => {
-        const newRegistrationNumberFront = e.target.value.slice(0, 6); // 최대 6글자로 제한
+        const newRegistrationNumberFront = e.target.value.slice(0, 7); // 최대 6글자로 제한
         setRegistrationNumberFront(newRegistrationNumberFront);
 
         if (newRegistrationNumberFront.length === 6) {
@@ -195,11 +199,7 @@ const Register = () => {
                 </Form.Group>
 
 
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="주소" value={addr} onChange={(e) => setAddr(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
+
 
 
                 <Form.Group as={Row} className="mb-3">
@@ -222,9 +222,9 @@ const Register = () => {
                                 <Form.Control
                                     type="text"
                                     placeholder="앞자리"
-                                    value={securityNumber}                                    
+                                    value={registrationNumberFront}
                                     onChange={(e) => {
-                        
+
                                         handleFrontChange(e);
                                     }}
 
@@ -238,7 +238,6 @@ const Register = () => {
                                     type="text"
                                     placeholder="뒷자리"
                                     onChange={(e) => {
-                                        
                                         handleBackChange(e);
                                     }}
                                     value={registrationNumberBack}
@@ -269,6 +268,26 @@ const Register = () => {
                     </Col>
                 </Form.Group>
 
+
+                
+                <Button
+                    onClick={() => {                 
+                        DaumPostcode({ onAddressSelected: handleAddressSelected });
+                    }}
+                    style={{ border: "1px solid red", backgroundColor: "white", color: "red" }}
+                >
+                    우편 번호 검색
+                </Button>
+                <Form.Group as={Row} className="mb-3">
+                    <Col sm>
+                        <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}style={{ width: inputWidth }} />
+                    </Col>
+                </Form.Group>
+                <Form.Group as={Row} className="mb-3">
+                    <Col sm>
+                        <Form.Control type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)} style={{ width: inputWidth }} />
+                    </Col>
+                </Form.Group>
                 <br />
 
 
