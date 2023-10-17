@@ -103,7 +103,7 @@ const App = () => {
       const result = await getItem(selectedPage, selectedCategory);
 
       console.log("aaaaaaaaaaaaa"+result.data); // 응답 데이터를 콘솔로 출력하여 응답 구조를 확인합니다.
-      console.log(result.data.totalPages+"ccccccccccccc");
+      console.log(result.data.totalPages);
       console.log(result.data.content);
       // 불러온 데이터로 items 상태 업데이트
       setTotalPages(result.data.totalPages);
