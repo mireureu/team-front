@@ -10,7 +10,6 @@ import { getHotList } from "../api/auctionBoard";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
 
-
 const Main = styled.div`
   display: grid;
   margin: 30px;
