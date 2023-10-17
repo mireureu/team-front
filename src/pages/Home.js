@@ -4,13 +4,14 @@ import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getCategories } from "../api/connection";
-import { getHotList } from "../api/auctionBoard";
+import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
+import { async } from "q";
 // import { getAuctionBoard } from "./api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
-import imgTest1 from "../img/가로tast.png";
-import imgTest2 from "../img/세로tast.png";
+// import imgTest1 from "../img/가로tast.png";
+// import imgTest2 from "../img/세로tast.png";
 
 const Main = styled.div`
   display: grid;
@@ -196,7 +197,7 @@ const Modal = styled.div`
 
 
 const Home=()=> {
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시 미리보기
   // const [timeRemaining, setTimeRemaining] = useState([]);
   
@@ -204,7 +205,9 @@ const Home=()=> {
 
   const [isShortTime, setIsShortTime] = useState(false);
 
-  const [hotList, setHotList] = useState([]);
+  const [andList, setAndList] = useState([]);
+
+  // const [andList, setAndList] = useState([]);
 
   // 남은 시간을 1초마다 갱신
   useEffect(() => {
@@ -216,15 +219,16 @@ const Home=()=> {
     
   }, []);
 
-  useEffect(() => {
-    hotListAPI();
-  }, []);
+  
 
   // 남은 시간이 1일 이상인지 미만인지에 따라 출력값 다르게
-  const timeClock = () => {
+  const timeClock = async () => {
+
+    // const endDate = await getHotList();
+
     const date = new Date();
-    const lastTime = new Date('2023-10-14T00:00:00');
-    
+    const lastTime = new Date("2023-10-18T00:00:00");
+
     const diffTime = lastTime - date;
 
     const resultDay = Math.floor(diffTime / (1000 * 60 * 60 * 24));    
@@ -242,17 +246,38 @@ const Home=()=> {
     }
   };
 
-  const categoryAPI = async () => {
-    const result = await getCategories();
-    setCategories(result.data);
-  }
+  // const categoryAPI = async () => {
+  //   const result = getCategories();
+  //   const listData = await getAuctionBoard()
 
-  const hotListAPI = async () => {
-    const result = await getHotList();
+  //   if(result = 9) {
+      
+  //   } else if(result = 0) {
+
+  //   }
+    
+  //   setCategories(result.data);
+  // }
+
+  const andListAPI = async () => {
+    let clicks = "a";
+    let result = null;
+
+    if(clicks == "a"){
+      result = await getHotList();
+    } else if (clicks == "b"){
+      result = await getNewList();
+    }
+
     console.log(result.data);
-    setHotList(result.data);
+    setAndList(result.data);
   }
   
+  useEffect(() => {
+    andListAPI();
+    // categoryAPI();
+  }, []);
+
   // 미리보기 창 열기
   const openModal = () => {
     setIsModalOpen(true);
@@ -282,127 +307,22 @@ const Home=()=> {
 
       <NewItem className='div-item'>
         <News className='new-container'>
-          
-
-
-
-
-
-        
-        <div onClick={openModal} className='new-box'>
-          <div className='new-image'>
-            <img src={""}/>
-          </div>
-          <div className='new-font'>
-            <h5>게시글 제목</h5>
-            <p className={isShortTime ? "p-time-short" : ""}>
-              마감시간 : <span>{timeRemaining}</span>
-            </p>
-            <p>
-              현재가 : <span>30,000</span>원
-            </p>
-          </div>
-        </div>
-                
-
-          {/* <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
+          {andList.map((ands, index) => (
+            <div onClick={openModal} className='new-box'>
+              <div className='new-image'>
+                <img src={""}/>
+              </div>
+              <div className='new-font'>
+                <h5>{ands.auctionTitle}</h5>
+                <p className={isShortTime ? "p-time-short" : ""}>
+                  마감시간 : <span>{timeRemaining}</span>
+                </p>
+                <p>
+                  현재가 : <span>{ands.currentPrice}</span>원
+                </p>
+              </div>
             </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div>
-          <div onClick={openModal} className='new-box'>
-            <div className='new-image'>
-              <img src={imgTest1}/>
-            </div>
-            <div className='new-font'>
-              <h5>게시글 제목</h5>
-              <p className={isShortTime ? "p-time-short" : ""}>
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p>
-                현재가 : <span>30,000</span>원
-              </p>
-            </div>
-          </div> */}
+          ))}
         </News>
       </NewItem>
 
@@ -416,17 +336,19 @@ const Home=()=> {
 
       {isModalOpen && (
         <Modal>
-          <div className="content">
-            <h2>상품 이름</h2>
-            <div className="flex-row">
-              <p className="times">
-                마감시간 : <span>{timeRemaining}</span>
-              </p>
-              <p className="values">
-                현재가 : <span>30,000</span>원
-              </p>
+          {andList.map((ands, index) => (
+            <div className="content">
+              <h2>{ands.auctionTitle}</h2>
+              <div className="flex-row">
+                <p className="times">
+                  마감시간 : <span>{timeRemaining}</span>
+                </p>
+                <p className="values">
+                  현재가 : <span>30,000</span>원
+                </p>
+              </div>
             </div>
-          </div>
+          ))}
           <button className="move-page" onClick={openPage}>상세 페이지로</button>
           <button className="close-button" onClick={closeModal}>닫기</button>
         </Modal>
