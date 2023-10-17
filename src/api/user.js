@@ -6,4 +6,4 @@ const instance = axios.create({
 
 export const login = async (data) =>{
     return await instance.post("/signin", data);
-}
+} 

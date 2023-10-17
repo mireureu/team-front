@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Nav } from 'react-bootstrap';
 
 const Kakaopay = () => {
@@ -9,7 +9,7 @@ const Kakaopay = () => {
         window.IMP.request_pay({
             pg: "kakaopay",
             pay_method: "card",
-            merchant_uid: "test_lnnzwwot",
+            merchant_uid: "test_lnnzwwot", 
             name: "테스트 결제",
             amount: 100,
             buyer_tel: "010-2261-0000",

@@ -25,6 +25,7 @@ const Auctionpost = () => {
     }, 5000);
     return () => clearInterval(interval);
   }, []);
+  
 
   const imageContainerStyle = {
     display: "flex",
