@@ -2,7 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Layout from "./components/Layout";
 // import Logout from "./pages/Logout";
 import AuctionDetail from "./pages/AuctionDetail";
-import Login from "./pages/Login";
+import Login from "./pages/login";
 import Home from "./pages/Home";
 import Auctionpost from "./pages/Auctionpost";
 import QnAboard from "./pages/QnAboard";
@@ -14,10 +14,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      // {
-      //   index: true,
-      //   element: <Home />,
-      // },
+      {
+        index: true,
+        element: <Home />,
+      },
       {
         path: "/AuctionDetail",
         element: <AuctionDetail />,
@@ -30,14 +30,14 @@ const router = createBrowserRouter([
         path: "/qnapost",
         element: <QnAboard />,
       },
-      // {
-      //   path: "/AskPage",
-      //   element: <AskPage />,
-      // },
-      // {
-      //   path: "/Post",
-      //   element: <Post />,
-      // },
+      {
+        path: "/AskPage",
+        element: <AskPage />,
+      },
+      {
+        path: "/Post",
+        element: <Post />,
+      },
 
       
     ],

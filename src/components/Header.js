@@ -37,12 +37,13 @@ const Header = () => {
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const Search = async (e)=>{
+  const Search = async (e) => {
     setKeyword(e.target.value);
     const formData = new FormData();
-    formData.append("keyword",keyword);
-    console.log(keyword);
-     await getSearchResult(formData);
+    formData.append("keyword", keyword);
+    console.log("keyword :: " + keyword);
+    await getSearchResult(formData);
+    movePage(`/search/${e.target.value}`);
   }
   const user = useSelector((state) => {
     return state.user;
@@ -123,7 +124,7 @@ const Header = () => {
 
             }}
           />
-          <Link to="/AuctionDetail">
+          <Nav.Link>
             <Button
               variant="outline-secondary"
               id="button-addon2"
@@ -137,12 +138,13 @@ const Header = () => {
               }}
               value={keyword}
               onChange={Search}
-              
               className="custom-button"
             >
               <AiOutlineSearch className="aiBtn" style={{ fontSize: "30px", color: "black" }} />
             </Button>
-          </Link>
+          </Nav.Link>
+
+
         </InputGroup>
 
 
