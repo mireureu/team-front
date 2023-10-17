@@ -30,7 +30,6 @@ const CategoryColor = styled.div`
 
 const Header = () => {
   const [categories, setCategories] = useState([]);
-  const [category, setCategory] = useState(null);
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
@@ -138,7 +137,7 @@ const Header = () => {
         </Offcanvas.Header>
         <Offcanvas.Body>
         {categories.map((mainCategory) => (
-            <a href="#" key={mainCategory.categoryCode} style={{textDecoration:"none", color:"black"}}>           
+            <a href="#" key={mainCategory.categoryNo} style={{textDecoration:"none", color:"black"}}>           
               <p>{mainCategory.categoryName}</p>
             </a>
           ))}
