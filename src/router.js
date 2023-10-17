@@ -8,17 +8,17 @@ import Auctionpost from "./pages/Auctionpost";
 import QnAboard from "./pages/QnAboard";
 import AskPage from "./pages/Askpage";
 import Post from "./pages/Post";
-import Register from "./pages/register";
+import Register from "./pages/Register";
 const router = createBrowserRouter([
   {
     
     path: "/",
     element: <Layout />,
     children: [
-      {
-        index: true,
-        element: <Home />,
-      },
+      // {
+      //   index: true,
+      //   element: <Home />,
+      // },
       {
         path: "/AuctionDetail",
         element: <AuctionDetail />,

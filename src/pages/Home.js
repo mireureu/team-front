@@ -9,8 +9,6 @@ import { getHotList } from "../api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
-import imgTest1 from "../img/가로tast.png";
-import imgTest2 from "../img/세로tast.png";
 
 const Main = styled.div`
   display: grid;
