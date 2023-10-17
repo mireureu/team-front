@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import '../scss/custom.scss';
 import Tab from 'react-bootstrap/Tab';
 import Tabs from 'react-bootstrap/Tabs';
 import { Navbar, Nav } from 'react-bootstrap';
