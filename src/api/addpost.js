@@ -2,7 +2,7 @@ import axios from "axios";
 
 // http://localhost:8080/api/
 const instance = axios.create({
-  baseURL: "http://localhost:8080/api/user/post",
+  baseURL: "http://localhost:8080/api",
 });
 
 export const getCategories = async () => {
@@ -10,5 +10,5 @@ export const getCategories = async () => {
 };
 
 export const addPost = async (data) => {
-  return await instance.post("/user/post", data);
+  return await instance.post("/public/post", data);
 };

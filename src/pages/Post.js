@@ -6,12 +6,6 @@ import Button from "react-bootstrap/Button";
 import { getCategories, addPost } from "../api/addpost";
 import { useEffect, useState } from "react";
 
-const Header = styled.h1`
-  font-size: 1.8rem;
-  font-weight: bold;
-  padding: 20px 0;
-`;
-
 const Post = () => {
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
@@ -23,42 +17,20 @@ const Post = () => {
   const [select, setSelect] = useState(1);
   const [isBuyNowChecked, setIsBuyNowChecked] = useState(false);
   const [images, setImages] = useState([]);
-  const [imagePreviews, setImagePreviews] = useState([]);
-
-  const onImageChange = (e) => {
-    const selectedImages = Array.from(e.target.files);
-    if (selectedImages.length + images.length > 5) {
-      alert("최대 5장까지 업로드할 수 있습니다.");
-      return;
-    }
-    selectedImages.forEach((image) => {
-      setImages((prevImages) => [...prevImages, image]);
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setImagePreviews((prevPreviews) => [
-          ...prevPreviews,
-          { url: event.target.result, id: image.name },
-        ]);
-      };
-      reader.readAsDataURL(image);
-    });
-  };
 
   const onClick = async () => {
     const formData = new FormData();
+
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("dece", dece);
     formData.append("sMoney", sMoney);
     formData.append("eMoney", eMoney);
     formData.append("gMoney", gMoney);
-    formData.append("categoryNo", select); // 변경된 변수명
+    formData.append("categoryNo", select);
+    formData.append("image", images);
     formData.append("nowBuy", isBuyNowChecked ? "Y" : "N"); // 즉시 구매 여부를 "Y" 또는 "N"으로 설정
-
-    images.forEach((image, index) => {
-      formData.append(`image${index}`, image);
-    });
-
+    console.log(isBuyNowChecked ? "Y" : "N");
     try {
       const response = await addPost(formData); // 서버로 데이터 업로드
       if (response.status === 200) {
@@ -66,13 +38,15 @@ const Post = () => {
         console.log("게시물이 성공적으로 업로드되었습니다.");
       } else {
         // 업로드 실패 처리
-        console.error("게시물 업로드 중 오류가 발생했습니다.");
+        console.error("게시물 업로드 중 오류발생.");
       }
     } catch (error) {
       console.error("게시물 업로드 중 오류가 발생했습니다.", error);
     }
   };
-
+  const onUploadImage = (e) => {
+    setImages(e.target.files[0]);
+  };
   const categoryAPI = async () => {
     const result = await getCategories();
     console.log(result);
@@ -89,7 +63,7 @@ const Post = () => {
 
   return (
     <Container>
-      <Header>경매글 작성</Header>
+      <h1>경매글 작성</h1>
       <Form>
         <Form.Group className="mb-3">
           <Form.Control
@@ -151,38 +125,23 @@ const Post = () => {
           </Form.Group>
         )}
         <Form.Select onChange={onChangeCategory} value={select}>
-          {categories.map((category) => (
-            <option value={category.categoryNo} key={category.categoryNo}>
+          {categories.map((category, index) => (
+            <option value={category.categoryNo} key={index}>
               {category.categoryName}
             </option>
           ))}
         </Form.Select>
         <Form.Group className="mb-3">
-          <Form.Label>이미지 업로드 (최대 5장)</Form.Label>
-          <Form.Control
-            type="file"
-            accept="image/*"
-            onChange={onImageChange}
-            multiple
-          />
+          <Form.Label>이미지 업로드</Form.Label>
+          <Form.Control type="file" onChange={onUploadImage} multiple />
         </Form.Group>
-        <div>
-          {imagePreviews.map((imagePreview) => (
-            <img
-              key={imagePreview.id}
-              src={imagePreview.url}
-              alt="미리보기"
-              style={{ maxWidth: "100px", marginRight: "10px" }}
-            />
-          ))}
-        </div>
         <Button
           variant="danger"
           style={{ marginTop: "20px" }}
           onClick={onClick}
         >
           저장
-        </Button>{" "}
+        </Button>
       </Form>
     </Container>
   );
