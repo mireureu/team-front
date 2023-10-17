@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
-import styled from "styled-components";
+
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { getCategories, addPost } from "../api/addpost";

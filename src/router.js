@@ -6,8 +6,8 @@ import Login from "./pages/login";
 import Home from "./pages/Home";
 import Auctionpost from "./pages/Auctionpost";
 import QnAboard from "./pages/QnAboard";
-import AskPage from "./pages/Askpage";
-import Post from "./pages/Post";
+// import AskPage from "./pages/Askpage";
+// import Post from "./pages/Post";
 import Register from "./pages/Register";
 const router = createBrowserRouter([
   {
@@ -31,14 +31,14 @@ const router = createBrowserRouter([
         path: "/qnapost",
         element: <QnAboard />,
       },
-      {
-        path: "/AskPage",
-        element: <AskPage />,
-      },
-      {
-        path: "/Post",
-        element: <Post />,
-      },
+      // {
+      //   path: "/AskPage",
+      //   element: <AskPage />,
+      // },
+      // {
+      //   path: "/Post",
+      //   element: <Post />,
+      // },
     ],
   },
   {
@@ -49,9 +49,5 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register/>,
   }
-  // {
-  //   path: "/logout",
-  //   element: <Logout />,
-  // },
 ]);
 export default router;
