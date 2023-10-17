@@ -12,6 +12,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { getCategories } from "../api/connection";
 import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
+import { getSearchResult } from "../api/search";
 import Kakaopay from "../api/KakaoPay";
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -35,7 +36,14 @@ const Header = () => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
-
+  const [keyword, setKeyword] = useState("");
+  const Search = async (e)=>{
+    setKeyword(e.target.value);
+    const formData = new FormData();
+    formData.append("keyword",keyword);
+    console.log(keyword);
+     await getSearchResult(formData);
+  }
   const user = useSelector((state) => {
     return state.user;
   });
@@ -89,8 +97,8 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
-             
-              <Kakaopay/>
+
+              <Kakaopay />
 
               {Object.keys(user).length === 0 ? (
 
@@ -115,7 +123,7 @@ const Header = () => {
 
             }}
           />
-          <Link to="/search">
+          <Link to="/AuctionDetail">
             <Button
               variant="outline-secondary"
               id="button-addon2"
@@ -127,6 +135,9 @@ const Header = () => {
                 borderColor: "#d9d9d9",
                 borderLeft: "none",
               }}
+              value={keyword}
+              onChange={Search}
+              
               className="custom-button"
             >
               <AiOutlineSearch className="aiBtn" style={{ fontSize: "30px", color: "black" }} />

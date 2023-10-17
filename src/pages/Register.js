@@ -34,7 +34,7 @@ const Register = () => {
             throw error;
         }
     };
-   
+
     const duplicateIdClick = async () => {
         try {
             const isDuplicate = await duplicationCheckAPI(id);
@@ -269,18 +269,27 @@ const Register = () => {
                 </Form.Group>
 
 
-                
+
                 <Button
-                    onClick={() => {                 
-                        DaumPostcode();
+                    onClick={() => {
+                        DaumPostcode({ onAddressSelected: handleAddressSelected });
                     }}
                     style={{ border: "1px solid red", backgroundColor: "white", color: "red" }}
                 >
                     우편 번호 검색
                 </Button>
+
+
+
+
+
+
+
+
+
                 <Form.Group as={Row} className="mb-3">
                     <Col sm>
-                        <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}style={{ width: inputWidth }} />
+                        <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e) => setAddr(e.target.value)} style={{ width: inputWidth }} />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3">
