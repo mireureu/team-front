@@ -279,7 +279,7 @@ const App = () => {
           />
         </Pagination>
         <div className="current-page">
-          {/* 현재 페이지: {page}/{totalPages}ㅇㅇ */}
+          {/* 현재 페이지: {page}/{totalPages} */}
         </div>
       </Container>
     </StyledHeader>

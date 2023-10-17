@@ -4,15 +4,6 @@ const instance = axios.create({
     baseURL: "http://localhost:8080/api/",
 });
 
-
-export const getAuctionBoard = async () => { 
-    return null;
-};
-
-export const getHotList = async () => {
-    return await instance.get("public/auction/hot");
-};
-
 export const getCategories = async () => {
     return await instance.get("public/category");
  }
@@ -27,4 +18,3 @@ export const getCategories = async () => {
     return await instance.get(url);
   };
   
-
