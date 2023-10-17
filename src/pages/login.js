@@ -26,8 +26,9 @@ const Login = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
+    data.append();
     console.log({
-      email: data.get("id"),
+      id: data.get("id"),
       password: data.get("password"),
     });
   };
