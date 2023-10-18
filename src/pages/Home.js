@@ -209,63 +209,65 @@ const Home=()=> {
 
   // const [andList, setAndList] = useState([]);
 
+  const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
+
+
   // 남은 시간을 1초마다 갱신
-  useEffect(() => {
-    const interval = setInterval(timeClock, 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-    
-  }, []);
-
-  
-
-  // 남은 시간이 1일 이상인지 미만인지에 따라 출력값 다르게
-  const timeClock = async () => {
-
-    // const endDate = await getHotList();
-
-    const date = new Date();
-    const lastTime = new Date("2023-10-18T00:00:00");
-
-    const diffTime = lastTime - date;
-
-    const resultDay = Math.floor(diffTime / (1000 * 60 * 60 * 24));    
-    const resultHour = Math.floor((diffTime / (1000 * 60 * 60)) % 24);
-
-    setIsShortTime(resultDay === 0 && resultHour < 8);
-
-    const resultMin = Math.floor((diffTime / (1000 * 60)) % 60);
-    const resultSec = Math.floor((diffTime / (1000)) % 60);
-
-    if(resultDay > 0) {
-      setTimeRemaining(`${resultDay}일`);
-    } else {
-      setTimeRemaining(`${resultHour}:${resultMin}:${resultSec}`);
+  const calculateTimeDifference = (auctionEndDate) => {
+    if (!auctionEndDate) {
+      return {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
     }
+
+    const endDate = new Date(auctionEndDate);
+    const currentDate = new Date();
+    const timeDifference = endDate - currentDate;
+    const secondsDifference = Math.floor(timeDifference / 1000);
+    const minutesDifference = Math.floor(secondsDifference / 60);
+    const hoursDifference = Math.floor(minutesDifference / 60);
+    const daysDifference = Math.floor(hoursDifference / 24);
+
+    return {
+      days: daysDifference,
+      hours: hoursDifference % 24,
+      minutes: minutesDifference % 60,
+      seconds: secondsDifference % 60,
+    };
   };
 
-  // const categoryAPI = async () => {
-  //   const result = getCategories();
-  //   const listData = await getAuctionBoard()
 
-  //   if(result = 9) {
-      
-  //   } else if(result = 0) {
-
-  //   }
+  const startTimer = () => {
+    const timerId = setInterval(() => {
+      // 1초마다 시간을 갱신
+      setAndList((prevAndList) => {
+        return prevAndList.map((ands) => {
+          const timeDifference = calculateTimeDifference(ands.auctionEndDate);
+          const newAnds = {
+            ...ands,
+            timeDifference,
+          };
+          return newAnds;
+        });
+      });
+    }, 1000);
     
-  //   setCategories(result.data);
-  // }
+    // 컴포넌트 언마운트 시 타이머 해제
+    return () => {
+      clearInterval(timerId);
+    };
+  };
 
   const andListAPI = async () => {
     let clicks = "a";
     let result = null;
 
-    if(clicks == "a"){
+    if(clicks === "a"){
       result = await getHotList();
-    } else if (clicks == "b"){
+    } else if (clicks === "b"){
       result = await getNewList();
     }
 
@@ -276,10 +278,12 @@ const Home=()=> {
   useEffect(() => {
     andListAPI();
     // categoryAPI();
+    startTimer();
   }, []);
 
   // 미리보기 창 열기
-  const openModal = () => {
+  const openModal = (item) => {
+    setSelectedItem(item);
     setIsModalOpen(true);
   };
 
@@ -308,15 +312,15 @@ const Home=()=> {
       <NewItem className='div-item'>
         <News className='new-container'>
           {andList.map((ands, index) => (
-            <div onClick={openModal} className='new-box'>
+            <div onClick={() => openModal(ands)} className='new-box'>
               <div className='new-image'>
-                <img src={""}/>
+                <img src={"upload/" + ands.auctionImg} alt={ands.auctionTitle} />
               </div>
               <div className='new-font'>
                 <h5>{ands.auctionTitle}</h5>
-                <p className={isShortTime ? "p-time-short" : ""}>
-                  마감시간 : <span>{timeRemaining}</span>
-                </p>
+                  <p className={isShortTime || (calculateTimeDifference(ands.auctionEndDate).hours < 8) ? "p-time-short" : ""}>
+                    {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
+                  </p>
                 <p>
                   현재가 : <span>{ands.currentPrice}</span>원
                 </p>
@@ -334,21 +338,19 @@ const Home=()=> {
 
       </Lower>
 
-      {isModalOpen && (
+      {isModalOpen && selectedItem &&  (
         <Modal>
-          {andList.map((ands, index) => (
             <div className="content">
-              <h2>{ands.auctionTitle}</h2>
+              <h2>{selectedItem.auctionTitle}</h2>
               <div className="flex-row">
                 <p className="times">
-                  마감시간 : <span>{timeRemaining}</span>
+                  {calculateTimeDifference(selectedItem.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(selectedItem.auctionEndDate).days}일`) : calculateTimeDifference(selectedItem.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(selectedItem.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).hours}:${(calculateTimeDifference(selectedItem.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).minutes}:${(calculateTimeDifference(selectedItem.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).seconds}`) : ("경매 마감")}
                 </p>
                 <p className="values">
-                  현재가 : <span>30,000</span>원
+                  현재가 : <span>{selectedItem.currentPrice}</span>원
                 </p>
               </div>
             </div>
-          ))}
           <button className="move-page" onClick={openPage}>상세 페이지로</button>
           <button className="close-button" onClick={closeModal}>닫기</button>
         </Modal>
