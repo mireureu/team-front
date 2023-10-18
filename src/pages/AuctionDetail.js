@@ -198,7 +198,7 @@ const App = () => {
             items.map((item, index) => (
               <Card key={index} style={{ width: '18rem', marginTop: '30px' }} className="hover">
                 <a href="#" style={{ textDecoration: "none" }}>
-                  <Card.Img variant="top" src={imgtest1} />
+                  <Card.Img variant="top" src={item.auctionImg} />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
