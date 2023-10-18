@@ -31,13 +31,13 @@ const router = createBrowserRouter([
         element: <QnAboard />,
       },
       // {
-      //   path: "/AskPage",
+      //   path: "/Askpage",
       //   element: <AskPage />,
       // },
       {
         path: "/Post",
         element: <Post />,
-      },
+      }
     ],
   },
   {
