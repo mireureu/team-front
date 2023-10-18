@@ -9,6 +9,7 @@ import QnAboard from "./pages/QnAboard";
 import AskPage from "./pages/Askpage";
 import Post from "./pages/Post";
 import Register from "./pages/Register";
+import SearchResult from "./pages/SearchResult";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,7 +39,10 @@ const router = createBrowserRouter([
         path: "/Post",
         element: <Post />,
       },
-
+      {
+        path:"/SearchResult",
+        element: <SearchResult/>
+      }
       
     ],
   },
