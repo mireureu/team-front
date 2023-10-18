@@ -12,24 +12,24 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { getCategories } from "../api/connection";
 import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
-import { getSearchResult } from "../api/search";
 import Kakaopay from "../api/KakaoPay";
+import { asyncSearch } from "../store/searchSlice";
 const StyledHeader = styled.header`
-  #basic-navbar-nav {
-    display: flex;
-    justify-content: flex-end;
-    font-size: 12px;
-  }
-`;
+    #basic-navbar-nav {
+      display: flex;
+      justify-content: flex-end;
+      font-size: 12px;
+    }
+  `;
 
 const Divider = styled.div`
-  border-top: 1px solid #ccc;
-  margin: 5px 0;
-`;
+    border-top: 1px solid #ccc;
+    margin: 5px 0;
+  `;
 
 const CategoryColor = styled.div`
-  background-color: whitesmoke;
-`;
+    background-color: whitesmoke;
+  `;
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -37,13 +37,17 @@ const Header = () => {
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const Search = async (e)=>{
-    setKeyword(e.target.value);
-    const formData = new FormData();
-    formData.append("keyword",keyword);
+
+
+  const Search = () => {
+  
     console.log(keyword);
-     await getSearchResult(formData);
+    dispatch(asyncSearch({keyword : keyword}));
+    movePage("/SearchResult");
   }
+
+
+
   const user = useSelector((state) => {
     return state.user;
   });
@@ -86,6 +90,7 @@ const Header = () => {
     }
   };
 
+
   return (
     <>
       <StyledHeader id="fill-tab-style">
@@ -113,6 +118,9 @@ const Header = () => {
         </Navbar>
         <Divider />
         <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline: "none" }}>
+
+
+
           <Form.Control
             placeholder="검색어를 입력해주세요"
             style={{
@@ -120,10 +128,11 @@ const Header = () => {
               boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
               borderColor: "#d9d9d9",
               borderRight: "none",
-
             }}
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
           />
-          <Link to="/AuctionDetail">
+          <Nav.Link>
             <Button
               variant="outline-secondary"
               id="button-addon2"
@@ -135,14 +144,14 @@ const Header = () => {
                 borderColor: "#d9d9d9",
                 borderLeft: "none",
               }}
-              value={keyword}
-              onChange={Search}
-              
+              onClick={Search}
               className="custom-button"
             >
               <AiOutlineSearch className="aiBtn" style={{ fontSize: "30px", color: "black" }} />
             </Button>
-          </Link>
+          </Nav.Link>
+
+
         </InputGroup>
 
 
