@@ -191,6 +191,7 @@ const App = () => {
           <option value="3">등록순</option>
           <option value="4">낮은 가격순</option>
           <option value="5">높은 가격순</option>
+          
         </Form.Select>
         <div className="cards-container">
           {items.length > 0 &&
@@ -208,7 +209,7 @@ const App = () => {
                         남은 시간: {calculateTimeDifference(item.auctionEndDate).days}일{' '}
                         {calculateTimeDifference(item.auctionEndDate).hours}시간{' '}
                         {calculateTimeDifference(item.auctionEndDate).minutes}분{' '}
-                        {calculateTimeDifference(item.auctionEndDate).seconds}초
+                        {/* {calculateTimeDifference(item.auctionEndDate).seconds}초 */}
                       </p>
                     )}
                     <div className="hover-button">
