@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
-import { async } from "q";
+
 // import { getAuctionBoard } from "./api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
@@ -198,12 +198,7 @@ const Modal = styled.div`
 
 const Home=()=> {
   // const [categories, setCategories] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시 미리보기
-  // const [timeRemaining, setTimeRemaining] = useState([]);
-  
-  const [timeRemaining, setTimeRemaining] = useState(''); // 남은 시간 표시
-
-  // const [isShortTime, setIsShortTime] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
 
   const [andList, setAndList] = useState([]);
 
@@ -310,9 +305,9 @@ const Home=()=> {
       <NewItem className='div-item'>
         <News className='new-container'>
           {andList.map((ands, index) => (
-            <div onClick={() => openModal(ands)} className='new-box'>
+            <div key={ands.auctionNo} onClick={() => openModal(ands)} className='new-box'>
               <div className='new-image'>
-                <img src={"upload/" + ands.auctionImg} alt={ands.auctionTitle} />
+                <img src={"/upload/" + ands.auctionImg} alt={ands.auctionTitle} />
               </div>
               <div className='new-font'>
                 <h5>{ands.auctionTitle}</h5>
