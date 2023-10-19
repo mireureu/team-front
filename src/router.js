@@ -23,7 +23,7 @@ const router = createBrowserRouter([
         element: <AuctionDetail />,
       },
       {
-        path: "/Auctionpost",
+        path: "/Auctionpost/:auctionNo",
         element: <Auctionpost />,
       },
       {

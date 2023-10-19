@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import styled from 'styled-components';
-import Form from 'react-bootstrap/Form';
-import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import Pagination from 'react-bootstrap/Pagination';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import { getCategories, getItem } from '../api/auctionBoard';
-import imgtest1 from '../img/image.jpg';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import styled from "styled-components";
+import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
+import Pagination from "react-bootstrap/Pagination";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { getCategories, getItem } from "../api/auctionBoard";
+import imgtest1 from "../img/image.jpg";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -184,7 +185,11 @@ const App = () => {
             </tr>
           </thead>
         </Table>
-        <Form.Select aria-label="정렬기준" value={sortOption} onChange={handleSortOptionChange}>
+        <Form.Select
+          aria-label="정렬기준"
+          value={sortOption}
+          onChange={handleSortOptionChange}
+        >
           <option value="0">기본</option>
           <option value="1">입찰 높은 순</option>
           <option value="2">조회순</option>
@@ -195,8 +200,14 @@ const App = () => {
         <div className="cards-container">
           {items.length > 0 &&
             items.map((item, index) => (
-              <Card key={index} style={{ width: '18rem', marginTop: '30px' }} className="hover">
-                <a href="#" style={{ textDecoration: "none" }}>
+              <Card
+                key={index}
+                style={{ width: "18rem", marginTop: "30px" }}
+                className="hover"
+              >
+                <Link to={`/auctionpost/${item.auctionNo}`}>
+                  {" "}
+                  {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
                   <Card.Img variant="top" src={imgtest1} />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
@@ -205,16 +216,15 @@ const App = () => {
                     <p>조회 : {item.auctionCheckNo}</p>
                     {item.auctionEndDate && (
                       <p>
-                        남은 시간: {calculateTimeDifference(item.auctionEndDate).days}일{' '}
-                        {calculateTimeDifference(item.auctionEndDate).hours}시간{' '}
-                        {calculateTimeDifference(item.auctionEndDate).minutes}분{' '}
+                        남은 시간:{" "}
+                        {calculateTimeDifference(item.auctionEndDate).days}일{" "}
+                        {calculateTimeDifference(item.auctionEndDate).hours}시간{" "}
+                        {calculateTimeDifference(item.auctionEndDate).minutes}분{" "}
                         {calculateTimeDifference(item.auctionEndDate).seconds}초
                       </p>
                     )}
                     <div className="hover-button">
-                      <div>
-                        현재가 : {item.currentPrice}원
-                      </div>
+                      <div>현재가 : {item.currentPrice}원</div>
                       <div
                         className="hidden-hover"
                         onMouseEnter={() => {
@@ -226,7 +236,7 @@ const App = () => {
                       <div
                         className="show-hover"
                         id={`show-hover-${index}`}
-                        style={{ display: 'none' }}
+                        style={{ display: "none" }}
                         onMouseLeave={() => {
                           // ...
                         }}
@@ -236,13 +246,25 @@ const App = () => {
                       <div className="small-text">클릭 시 경매 참가</div>
                     </div>
                   </Card.Body>
-                </a>
+                </Link>
               </Card>
             ))}
         </div>
-        <Pagination style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-          <Pagination.First onClick={() => handlePageChange(1)} disabled={page === 1} />
-          <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 1} />
+        <Pagination
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "20px 0",
+          }}
+        >
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={page === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          />
           {Array.from({ length: totalPages }, (_, i) => (
             <Pagination.Item
               key={i}

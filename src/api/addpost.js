@@ -13,6 +13,6 @@ export const addPost = async (data) => {
   return await instance.post("/public/post", data);
 };
 
-export const getPost = async (data) => {
-  return await instance.post("/auction/{no}", data);
+export const getPost = async (auctionNo) => {
+  return await instance.get(`/public/auction/${auctionNo}`);
 };
