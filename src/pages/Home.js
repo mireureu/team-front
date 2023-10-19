@@ -165,7 +165,84 @@ const Home=()=> {
   // }
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openModal = () => {
+  const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
+
+
+  // 남은 시간을 1초마다 갱신
+  const calculateTimeDifference = (auctionEndDate) => {
+    if (!auctionEndDate) {
+      return {
+        days: 0,
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+      };
+    }
+
+    const endDate = new Date(auctionEndDate);
+    const currentDate = new Date();
+    const timeDifference = endDate - currentDate;
+    const secondsDifference = Math.floor(timeDifference / 1000);
+    const minutesDifference = Math.floor(secondsDifference / 60);
+    const hoursDifference = Math.floor(minutesDifference / 60);
+    const daysDifference = Math.floor(hoursDifference / 24);
+
+    return {
+      days: daysDifference,
+      hours: hoursDifference % 24,
+      minutes: minutesDifference % 60,
+      seconds: secondsDifference % 60,
+    };
+  };
+
+
+  const startTimer = () => {
+    const timerId = setInterval(() => {
+      // 1초마다 시간을 갱신
+      setAndList((prevAndList) => {
+        return prevAndList.map((ands) => {
+          const timeDifference = calculateTimeDifference(ands.auctionEndDate);
+          const newAnds = {
+            ...ands,
+            timeDifference,
+          };
+          return newAnds;
+        });
+      });
+    }, 1000);
+    
+    // 컴포넌트 언마운트 시 타이머 해제
+    return () => {
+      clearInterval(timerId);
+    };
+  };
+
+  const andListAPI = async () => {
+    let clicks = "a";
+    let result = null;
+
+    if(clicks === "a"){
+      result = await getHotList();
+    } else if (clicks === "b"){
+      result = await getNewList();
+    }
+
+
+    
+
+    console.log(result.data);
+    setAndList(result.data);
+  }
+  
+  useEffect(() => {
+    andListAPI();
+    // categoryAPI();
+    startTimer();
+  }, []);
+
+  // 미리보기 창 열기
+  const openModal = (item) => {
+    setSelectedItem(item);
     setIsModalOpen(true);
   };
 
