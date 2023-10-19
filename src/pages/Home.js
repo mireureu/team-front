@@ -203,11 +203,9 @@ const Home=()=> {
   
   const [timeRemaining, setTimeRemaining] = useState(''); // 남은 시간 표시
 
-  const [isShortTime, setIsShortTime] = useState(false);
+  // const [isShortTime, setIsShortTime] = useState(false);
 
   const [andList, setAndList] = useState([]);
-
-  // const [andList, setAndList] = useState([]);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
 
@@ -318,7 +316,7 @@ const Home=()=> {
               </div>
               <div className='new-font'>
                 <h5>{ands.auctionTitle}</h5>
-                  <p className={isShortTime || (calculateTimeDifference(ands.auctionEndDate).hours < 8) ? "p-time-short" : ""}>
+                  <p className={(calculateTimeDifference(ands.auctionEndDate).hours < 8) ? "p-time-short" : ""}>
                     {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
                   </p>
                 <p>
