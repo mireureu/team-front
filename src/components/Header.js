@@ -43,10 +43,13 @@ const Header = () => {
   
     console.log(keyword);
     dispatch(asyncSearch({keyword : keyword}));
-    movePage("/SearchResult");
+    if(keyword!=null){
+      movePage("/SearchResult",{state: {keyword}});
+    }else{
+      movePage("/SearchResult",{state: ""});
+    }
+                            
   }
-
-
 
   const user = useSelector((state) => {
     return state.user;

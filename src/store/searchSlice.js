@@ -7,7 +7,7 @@ const asyncSearch = createAsyncThunk("searchSlice/asyncSearch", async(keyword) =
     // console.log("searchSlice에 넘어온값:: " + key);
 
     const result = await getSearchResult(keyword);
-
+            
     console.log(result.data);
     return result.data;
 });

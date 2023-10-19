@@ -5,3 +5,6 @@ const instance = axios.create({
 export const getSearchResult = async (keyword) =>{
     return await instance.post("public/search",keyword);    
 } 
+export const getTotalPages = async (keyword,page) =>{
+    return await instance.post("public/search", {keyword,page});
+}
