@@ -264,6 +264,9 @@ const Home=()=> {
       result = await getNewList();
     }
 
+
+    
+
     console.log(result.data);
     setAndList(result.data);
   }
