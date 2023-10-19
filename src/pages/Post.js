@@ -1,10 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Container } from "react-bootstrap";
-import styled from "styled-components";
+import { Container, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { getCategories, addPost } from "../api/addpost";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Post = () => {
   const [categories, setCategories] = useState([]);
@@ -17,7 +17,11 @@ const Post = () => {
   const [select, setSelect] = useState(1);
   const [isBuyNowChecked, setIsBuyNowChecked] = useState(false);
   const [images, setImages] = useState([]);
+  const [checkNo, setcheckNo] = useState(0);
+  const [attendNo, setattendNo] = useState(0);
   const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 배열
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
 
   const onClick = async () => {
     const formData = new FormData();
@@ -29,6 +33,8 @@ const Post = () => {
     formData.append("eMoney", eMoney);
     formData.append("gMoney", gMoney);
     formData.append("categoryNo", select);
+    formData.append("checkNo", checkNo);
+    formData.append("attendNo", attendNo);
     formData.append("nowBuy", isBuyNowChecked ? "Y" : "N"); // 즉시 구매 여부를 "Y" 또는 "N"으로 설정
 
     // 이미지를 FormData에 추가
@@ -37,10 +43,11 @@ const Post = () => {
     }
 
     try {
-      const response = await addPost(formData); // 서버로 데이터 업로드
+      const response = await addPost(formData);
       if (response.status === 200) {
-        // 업로드 성공 처리
-        console.log("게시물이 성공적으로 업로드되었습니다.");
+        // 업로드 성공 시 모달 열기
+        setIsModalOpen(true);
+        navigate("/AuctionDetail");
       } else {
         // 업로드 실패 처리
         console.error("게시물 업로드 중 오류발생.");
@@ -65,6 +72,17 @@ const Post = () => {
 
     setImages(newImages);
     setImagePreviews([...imagePreviews, ...imagePreviewsArray]);
+  };
+
+  const removeImage = (index) => {
+    const newImagePreviews = [...imagePreviews];
+    newImagePreviews.splice(index, 1); // 선택한 이미지 미리보기 제거
+
+    const newImages = [...images];
+    newImages.splice(index, 1); // 선택한 이미지 배열에서 제거
+
+    setImagePreviews(newImagePreviews);
+    setImages(newImages);
   };
 
   const categoryAPI = async () => {
@@ -156,12 +174,16 @@ const Post = () => {
           <Form.Control type="file" onChange={onUploadImage} multiple />
         </Form.Group>
         {imagePreviews.map((imagePreview, index) => (
-          <img
-            key={index}
-            src={imagePreview}
-            alt={`Image ${index}`}
-            style={{ maxWidth: "100px", maxHeight: "100px" }}
-          />
+          <div key={index}>
+            <img
+              src={imagePreview}
+              alt={`Image ${index}`}
+              style={{ maxWidth: "100px", maxHeight: "100px" }}
+            />
+            <button onClick={() => removeImage(index)} type="button">
+              삭제
+            </button>
+          </div>
         ))}
         <Button
           variant="danger"
@@ -171,6 +193,17 @@ const Post = () => {
           저장
         </Button>
       </Form>
+      <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>업로드 성공</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>게시물이 성공적으로 업로드되었습니다.</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+            확인
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
