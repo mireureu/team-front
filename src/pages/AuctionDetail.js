@@ -90,7 +90,7 @@ const App = () => {
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
       // 서버에서 데이터 불러오기
-      const result = await getItem(selectedPage, selectedCategory);
+      const result = await getItem(selectedPage, selectedCategory, sortOption);
 
       console.log("aaaaaaaaaaaaa"+result.data); // 응답 데이터를 콘솔로 출력하여 응답 구조를 확인합니다.
       console.log(result.data.totalPages);
