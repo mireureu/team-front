@@ -9,6 +9,7 @@ import Pagination from 'react-bootstrap/Pagination';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 import { getCategories, getItem } from '../api/auctionBoard';
 import imgtest1 from '../img/image.jpg';
+import { Link } from 'react-router-dom';
 
 const StyledHeader = styled.header`
   display: flex;
