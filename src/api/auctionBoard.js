@@ -30,9 +30,6 @@ export const getCategories = async () => {
 
 export const getItem = async (page, category, sortOption) => {
   let url = `public/auction?page=${page}`;
-  if(page == null){
-    url = `public/auction?category=${category}`;
-  }
   if (category !== null) {
     url += `&category=${category}`;
   }
