@@ -201,9 +201,15 @@ const App = () => {
         <div className="cards-container">
           {items.length > 0 &&
             items.map((item, index) => (
-              <Card key={index} style={{ width: '18rem', marginTop: '30px' }} className="hover">
-                <a href="#" style={{ textDecoration: "none" }}>
-                  <Card.Img variant="top" src={item.auctionImg} />
+              <Card
+                key={index}
+                style={{ width: "18rem", marginTop: "30px" }}
+                className="hover"
+              >
+                <Link to={`/auctionpost/${item.auctionNo}`}>
+                  {" "}
+                  {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
+                  <Card.Img variant="top" src={imgtest1} />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
