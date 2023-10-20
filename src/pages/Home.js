@@ -18,7 +18,7 @@ const Main = styled.div`
   margin: 30px;
   grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
-    "g-left g-banner g-right" 
+    "g-left g-banner g-right"
     "g-left g-newitem g-right"
     "g-lower g-lower g-lower";
   gap: 20px;
@@ -70,78 +70,75 @@ const News = styled.div`
   max-width: 1000px;
 
   /* section { */
-    .new-box {
-      width: 200px;
-      height: 250px;
-      background-color: rgba(234, 234, 234);
-      border: 1px solid black;
-      justify-self: center;
-      border-radius: 5%;
-      transition: 0.5s;
-      position: relative;
-      z-index: 1;
-      cursor: pointer; /* 커서를 포인터로 변경 */
-      /* background-image: none; */
+  .new-box {
+    width: 200px;
+    height: 250px;
+    background-color: rgba(234, 234, 234);
+    border: 1px solid black;
+    justify-self: center;
+    border-radius: 5%;
+    transition: 0.5s;
+    position: relative;
+    z-index: 1;
+    cursor: pointer; /* 커서를 포인터로 변경 */
+    /* background-image: none; */
 
-      .new-image {
-        margin-top: 10px;
-        margin-left: 10px;
-        width: 180px;
-        height: 180px;
-        overflow: hidden;
+    .new-image {
+      margin-top: 10px;
+      margin-left: 10px;
+      width: 180px;
+      height: 180px;
+      overflow: hidden;
 
-        img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          object-position: center;
-        }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
       }
-
-      .new-font {
-        position: absolute;
-        width: 80%;
-        left: 10%;
-        height: auto;
-        text-align: center;
-        bottom: 0;
-        line-height: 1;
-
-        h5 {
-          background-color: rgba(217, 220, 253);
-          border-radius: 10px;
-        }
-
-        p {
-          background-color: rgba(172, 180, 246);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 5px;
-          height: 30px;
-          border: 1px solid black;
-          border-radius: 10px;
-          white-space: pre;
-            
-          &.p-time-short {
-            background-color: rgba(255, 70, 70);
-            color: white;
-          }
-        }
-
-      }
-
     }
 
-    .new-box:hover {
-      transform: scale(1.5);
-      
-      transform-origin: center;
-      z-index: 2;
+    .new-font {
+      position: absolute;
+      width: 80%;
+      left: 10%;
+      height: auto;
+      text-align: center;
+      bottom: 0;
+      line-height: 1;
+
+      h5 {
+        background-color: rgba(217, 220, 253);
+        border-radius: 10px;
+      }
+
+      p {
+        background-color: rgba(172, 180, 246);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5px;
+        height: 30px;
+        border: 1px solid black;
+        border-radius: 10px;
+        white-space: pre;
+
+        &.p-time-short {
+          background-color: rgba(255, 70, 70);
+          color: white;
+        }
+      }
     }
+  }
+
+  .new-box:hover {
+    transform: scale(1.5);
+
+    transform-origin: center;
+    z-index: 2;
+  }
   /* } */
 `;
-
 
 const Modal = styled.div`
   position: fixed;
@@ -175,7 +172,8 @@ const Modal = styled.div`
     right: 20px;
   }
 
-  .flex-row .times, .flex-row .values {
+  .flex-row .times,
+  .flex-row .values {
     margin: 0;
   }
 
@@ -184,26 +182,25 @@ const Modal = styled.div`
     margin-right: 10px;
   }
 
-  .clows-button, .move-page {
+  .clows-button,
+  .move-page {
     position: absolute;
     right: 20px;
   }
 
-  .clows-button .move-page::after{
+  .clows-button .move-page::after {
     content: "";
     margin-right: 10px;
   }
 `;
 
-
-const Home=()=> {
+const Home = () => {
   // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
 
   const [andList, setAndList] = useState([]);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
-
 
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
@@ -232,7 +229,6 @@ const Home=()=> {
     };
   };
 
-
   const startTimer = () => {
     const timerId = setInterval(() => {
       // 1초마다 시간을 갱신
@@ -247,7 +243,7 @@ const Home=()=> {
         });
       });
     }, 1000);
-    
+
     // 컴포넌트 언마운트 시 타이머 해제
     return () => {
       clearInterval(timerId);
@@ -258,19 +254,16 @@ const Home=()=> {
     let clicks = "a";
     let result = null;
 
-    if(clicks === "a"){
+    if (clicks === "a") {
       result = await getHotList();
-    } else if (clicks === "b"){
+    } else if (clicks === "b") {
       result = await getNewList();
     }
 
-
-    
-
     console.log(result.data);
     setAndList(result.data);
-  }
-  
+  };
+
   useEffect(() => {
     andListAPI();
     // categoryAPI();
@@ -294,29 +287,61 @@ const Home=()=> {
   };
 
   return (
-    <Main className='div-container'>
+    <Main className="div-container">
+      <Left className="div-item"></Left>
 
-      <Left className='div-item'>
-
-      </Left>
-      
       <Banner>
         <h1>[ 주간 핫! 베스트 상품 ]</h1>
         {/* <h1>[ 주간 New 경매! ]</h1> */}
       </Banner>
 
-      <NewItem className='div-item'>
-        <News className='new-container'>
+      <NewItem className="div-item">
+        <News className="new-container">
           {andList.map((ands, index) => (
-            <div key={ands.auctionNo} onClick={() => openModal(ands)} className='new-box'>
-              <div className='new-image'>
-                <img src={"/upload/" + ands.auctionImg} alt={ands.auctionTitle} />
+            <div
+              key={ands.auctionNo}
+              onClick={() => openModal(ands)}
+              className="new-box"
+            >
+              <div className="new-image">
+                <img
+                  src={"/upload/" + ands.auctionImg.split(",", 1)}
+                  alt={ands.auctionTitle}
+                />
               </div>
-              <div className='new-font'>
+              <div className="new-font">
                 <h5>{ands.auctionTitle}</h5>
-                  <p className={(calculateTimeDifference(ands.auctionEndDate).hours < 8) ? "p-time-short" : ""}>
-                    {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
-                  </p>
+                <p
+                  className={
+                    calculateTimeDifference(ands.auctionEndDate).hours < 8
+                      ? "p-time-short"
+                      : ""
+                  }
+                >
+                  {calculateTimeDifference(ands.auctionEndDate).days > 0
+                    ? `남은 시간: ${
+                        calculateTimeDifference(ands.auctionEndDate).days
+                      }일`
+                    : calculateTimeDifference(ands.auctionEndDate).hours >= 0
+                    ? `남은 시간: ${
+                        calculateTimeDifference(ands.auctionEndDate).hours < 10
+                          ? "0"
+                          : ""
+                      }${calculateTimeDifference(ands.auctionEndDate).hours}:${
+                        calculateTimeDifference(ands.auctionEndDate).minutes <
+                        10
+                          ? "0"
+                          : ""
+                      }${
+                        calculateTimeDifference(ands.auctionEndDate).minutes
+                      }:${
+                        calculateTimeDifference(ands.auctionEndDate).seconds <
+                        10
+                          ? "0"
+                          : ""
+                      }${calculateTimeDifference(ands.auctionEndDate).seconds}`
+                    : "경매 마감"}
+                </p>
                 <p>
                   현재가 : <span>{ands.currentPrice}</span>원
                 </p>
@@ -326,33 +351,63 @@ const Home=()=> {
         </News>
       </NewItem>
 
-      <Right className='div-item'>
+      <Right className="div-item"></Right>
 
-      </Right>
+      <Lower className="div-item"></Lower>
 
-      <Lower className="div-item">
-
-      </Lower>
-
-      {isModalOpen && selectedItem &&  (
+      {isModalOpen && selectedItem && (
         <Modal>
-            <div className="content">
-              <h2>{selectedItem.auctionTitle}</h2>
-              <div className="flex-row">
-                <p className="times">
-                  {calculateTimeDifference(selectedItem.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(selectedItem.auctionEndDate).days}일`) : calculateTimeDifference(selectedItem.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(selectedItem.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).hours}:${(calculateTimeDifference(selectedItem.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).minutes}:${(calculateTimeDifference(selectedItem.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).seconds}`) : ("경매 마감")}
-                </p>
-                <p className="values">
-                  현재가 : <span>{selectedItem.currentPrice}</span>원
-                </p>
-              </div>
+          <div className="content">
+            <h2>{selectedItem.auctionTitle}</h2>
+            <div className="flex-row">
+              <p className="times">
+                {calculateTimeDifference(selectedItem.auctionEndDate).days > 0
+                  ? `남은 시간: ${
+                      calculateTimeDifference(selectedItem.auctionEndDate).days
+                    }일`
+                  : calculateTimeDifference(selectedItem.auctionEndDate)
+                      .hours >= 0
+                  ? `남은 시간: ${
+                      calculateTimeDifference(selectedItem.auctionEndDate)
+                        .hours < 10
+                        ? "0"
+                        : ""
+                    }${
+                      calculateTimeDifference(selectedItem.auctionEndDate).hours
+                    }:${
+                      calculateTimeDifference(selectedItem.auctionEndDate)
+                        .minutes < 10
+                        ? "0"
+                        : ""
+                    }${
+                      calculateTimeDifference(selectedItem.auctionEndDate)
+                        .minutes
+                    }:${
+                      calculateTimeDifference(selectedItem.auctionEndDate)
+                        .seconds < 10
+                        ? "0"
+                        : ""
+                    }${
+                      calculateTimeDifference(selectedItem.auctionEndDate)
+                        .seconds
+                    }`
+                  : "경매 마감"}
+              </p>
+              <p className="values">
+                현재가 : <span>{selectedItem.currentPrice}</span>원
+              </p>
             </div>
-          <button className="move-page" onClick={openPage}>상세 페이지로</button>
-          <button className="close-button" onClick={closeModal}>닫기</button>
+          </div>
+          <button className="move-page" onClick={openPage}>
+            상세 페이지로
+          </button>
+          <button className="close-button" onClick={closeModal}>
+            닫기
+          </button>
         </Modal>
       )}
     </Main>
   );
-}
+};
 
 export default Home;
