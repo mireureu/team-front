@@ -310,7 +310,7 @@ const Home=()=> {
           {andList.map((ands, index) => (
             <div key={ands.auctionNo} onClick={() => openModal(ands)} className='new-box'>
               <div className='new-image'>
-                <img src={"/upload/" + ands.auctionImg} alt={ands.auctionTitle} />
+                <img src={"/upload/" + ands.auctionImg.split(",", 1)} alt={ands.auctionTitle} />
               </div>
               <div className='new-font'>
                 <h5>{ands.auctionTitle}</h5>

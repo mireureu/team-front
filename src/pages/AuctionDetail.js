@@ -9,7 +9,6 @@ import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { getCategories, getItem } from "../api/auctionBoard";
-import imgtest1 from "../img/image.jpg";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -208,7 +207,7 @@ const App = () => {
                 <Link to={`/auctionpost/${item.auctionNo}`}>
                   {" "}
                   {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
-                  <Card.Img variant="top" src={imgtest1} />
+                  <Card.Img variant="top" src={"/upload/" + item.auctionImg.split(",", 1)} />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
