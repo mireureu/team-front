@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../api/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
+
 const StyledHeader = styled.header`
     #basic-navbar-nav {
       display: flex;

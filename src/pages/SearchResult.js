@@ -281,4 +281,4 @@ const SearchResult = () => {
   );
 };
 
-export default App;
+export default SearchResult;
