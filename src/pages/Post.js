@@ -47,7 +47,6 @@ const Post = () => {
       if (response.status === 200) {
         // 업로드 성공 시 모달 열기
         setIsModalOpen(true);
-        navigate("/AuctionDetail");
       } else {
         // 업로드 실패 처리
         console.error("게시물 업로드 중 오류발생.");
@@ -199,7 +198,13 @@ const Post = () => {
         </Modal.Header>
         <Modal.Body>게시물이 성공적으로 업로드되었습니다.</Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setIsModalOpen(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setIsModalOpen(false);
+              navigate("/AuctionDetail"); // 이 부분에서 페이지 이동
+            }}
+          >
             확인
           </Button>
         </Modal.Footer>
