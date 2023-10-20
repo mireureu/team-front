@@ -144,6 +144,10 @@ const News = styled.div`
 
 
 const Modal = styled.div`
+  display: grid;
+  grid-template-rows: repeat(6, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+
   position: fixed;
   top: 50%;
   left: 50%;
@@ -164,34 +168,6 @@ const Modal = styled.div`
     white-space: pre;
     border: 1px solid black;
     border-radius: 5px;
-  }
-
-  .flex-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
-  }
-
-  .flex-row .times, .flex-row .values {
-    margin: 0;
-  }
-
-  .flex-row .times::after {
-    content: "";
-    margin-right: 10px;
-  }
-
-  .clows-button, .move-page {
-    position: absolute;
-    right: 20px;
-  }
-
-  .clows-button .move-page::after{
-    content: "";
-    margin-right: 10px;
   }
 `;
 
