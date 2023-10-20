@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import styled from 'styled-components';
-import Form from 'react-bootstrap/Form';
-import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import Pagination from 'react-bootstrap/Pagination';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import { getCategories, getItem } from '../api/auctionBoard';
-import imgtest1 from '../img/image.jpg';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import styled from "styled-components";
+import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
+import Pagination from "react-bootstrap/Pagination";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { getCategories, getItem } from "../api/auctionBoard";
+import imgtest1 from "../img/image.jpg";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -89,13 +90,8 @@ const App = () => {
 
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
-      // 서버에서 데이터 불러오기
       const result = await getItem(selectedPage, selectedCategory, sortOption);
-
-      console.log("aaaaaaaaaaaaa"+result.data); // 응답 데이터를 콘솔로 출력하여 응답 구조를 확인합니다.
-      console.log(result.data.totalPages);
-      console.log(result.data.content);
-      // 불러온 데이터로 items 상태 업데이트
+      console.log(result);
       setTotalPages(result.data.totalPages);
       setItems(result.data.content);
     } catch (error) {
@@ -154,8 +150,8 @@ const App = () => {
   };
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0){
-    setPage(newPage);
+    if (newPage > 0) {
+      setPage(newPage);
     } else if (items.length === 0) {
       setPage(1);
     }
@@ -189,7 +185,11 @@ const App = () => {
             </tr>
           </thead>
         </Table>
-        <Form.Select aria-label="정렬기준" value={sortOption} onChange={handleSortOptionChange}>
+        <Form.Select
+          aria-label="정렬기준"
+          value={sortOption}
+          onChange={handleSortOptionChange}
+        >
           <option value="0">기본</option>
           <option value="1">입찰 높은 순</option>
           <option value="2">조회순</option>
@@ -218,9 +218,7 @@ const App = () => {
                       </p>
                     )}
                     <div className="hover-button">
-                      <div>
-                        현재가 : {item.currentPrice}원
-                      </div>
+                      <div>현재가 : {item.currentPrice}원</div>
                       <div
                         className="hidden-hover"
                         onMouseEnter={() => {
@@ -232,7 +230,7 @@ const App = () => {
                       <div
                         className="show-hover"
                         id={`show-hover-${index}`}
-                        style={{ display: 'none' }}
+                        style={{ display: "none" }}
                         onMouseLeave={() => {
                           // ...
                         }}
@@ -242,13 +240,25 @@ const App = () => {
                       <div className="small-text">클릭 시 경매 참가</div>
                     </div>
                   </Card.Body>
-                </a>
+                </Link>
               </Card>
             ))}
         </div>
-        <Pagination style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-          <Pagination.First onClick={() => handlePageChange(1)} disabled={page === 1} />
-          <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 1} />
+        <Pagination
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "20px 0",
+          }}
+        >
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={page === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          />
           {Array.from({ length: totalPages }, (_, i) => (
             <Pagination.Item
               key={i}
