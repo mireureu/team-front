@@ -16,13 +16,13 @@ export const getCategories = async () => {
   return await instance.get("public/category");
 };
 
-export const getItem = async (page, category) => {
+export const getItem = async (page, category, sortOption) => {
   let url = `public/auction?page=${page}`;
-  if(page == null){
-    url = `public/auction?category=${category}`;
-  }
   if (category !== null) {
     url += `&category=${category}`;
+  }
+  if (sortOption !== null) {
+    url += `&sortOption=${sortOption}`;
   }
   return await instance.get(url);
 };

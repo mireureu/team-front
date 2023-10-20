@@ -94,9 +94,9 @@ const SearchResult = () => {
     setCategories(result.data);
   };
 
-  const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
+  const itemAPI = async (selectedPage, sortOption) => {
     try {
-      const getResult = await getTotalPages(keyword,selectedPage);      
+      const getResult = await getTotalPages(keyword,selectedPage,sortOption);      
       setItems(getResult.data.content);
       
     } catch (error) {
@@ -109,7 +109,7 @@ const SearchResult = () => {
     setSortOption(newSortOption);
     setPage(1);
     setItems([]);
-    itemAPI(category, page, newSortOption);
+    itemAPI(page, newSortOption);
   };
 
   useEffect(() => {
@@ -118,21 +118,13 @@ const SearchResult = () => {
 
   useEffect(() => {
     if(keyword!=null){
-      itemAPI(category, page, keyword);
+      itemAPI(page, sortOption);
     }    
-  }, [category, page, keyword]);
+  }, [sortOption, page, keyword]);
 
   useEffect(()=>{
     itemAPI();
   },[]);
-
-  const handleCategoryChange = (selectedCategory) => {
-    if (selectedCategory !== category) {
-      setCategory(selectedCategory);
-      setPage(1);
-      setItems([]);
-    }
-  };
 
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
@@ -170,38 +162,13 @@ const SearchResult = () => {
   return (
     <StyledHeader>
       <Container>
-        <Table striped bordered hover>
-          <thead>
-            <tr>
-              <th>
-                <Offcanvas.Body>
-                  <Button
-                    variant="link"
-                    onClick={() => handleCategoryChange(null)}
-                  >
-                    전체목록
-                  </Button>
-                  {categories.map((category) => (
-                    <Button
-                      variant="link"
-                      key={category.categoryNo}
-                      onClick={() => handleCategoryChange(category.categoryNo)}
-                    >
-                      {category.categoryName}
-                    </Button>
-                  ))}
-                </Offcanvas.Body>
-              </th>
-            </tr>
-          </thead>
-        </Table>
         <Form.Select aria-label="정렬기준" value={sortOption} onChange={handleSortOptionChange}>
-          <option value="0">기본</option>
-          <option value="1">입찰 높은 순</option>
-          <option value="2">조회순</option>
-          <option value="3">등록순</option>
-          <option value="4">낮은 가격순</option>
-          <option value="5">높은 가격순</option>
+          <option value="1">기본</option>
+          <option value="2">입찰 높은 순</option>
+          <option value="3">조회순</option>
+          <option value="4">등록순</option>
+          <option value="5">낮은 가격순</option>
+          <option value="6">높은 가격순</option>
         </Form.Select>
         <div className="cards-container">
           {items.length > 0 &&
