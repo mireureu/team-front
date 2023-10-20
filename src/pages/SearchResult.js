@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import styled from 'styled-components';
@@ -7,9 +7,10 @@ import Table from 'react-bootstrap/Table';
 import Container from 'react-bootstrap/Container';
 import Pagination from 'react-bootstrap/Pagination';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import { getTotalPages } from '../api/search';
 import { getCategories, getItem } from '../api/auctionBoard';
-import imgtest1 from '../img/image.jpg';
 import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
 const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
@@ -74,7 +75,7 @@ const StyledHeader = styled.header`
   }
 `;
 
-const App = () => {
+const SearchResult = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
@@ -83,6 +84,10 @@ const App = () => {
   const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
   const searchResult = useSelector((state) => (state.search));
   const content = searchResult?.content || [];
+  const location = useLocation();
+  const keyword = location.state ? location.state.keyword : null;
+
+  const TotalPage = searchResult?.getTotalPages || 1;
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
@@ -90,15 +95,9 @@ const App = () => {
 
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
-      // 서버에서 데이터 불러오기
-      const result = await getItem(selectedPage, selectedCategory, sortOption);
-
-      console.log("aaaaaaaaaaaaa"+result.data); // 응답 데이터를 콘솔로 출력하여 응답 구조를 확인합니다.
-      console.log(result.data.totalPages);
-      console.log(result.data.content);
-      // 불러온 데이터로 items 상태 업데이트
-      setTotalPages(result.data.totalPages);
-      setItems(result.data.content);
+      const getResult = await getTotalPages(keyword,selectedPage);      
+      setItems(getResult.data.content);
+      
     } catch (error) {
       console.error("데이터 불러오기 오류:", error);
     }
@@ -117,8 +116,14 @@ const App = () => {
   }, []);
 
   useEffect(() => {
-    itemAPI(category, page, sortOption);
-  }, [category, page, sortOption]);
+    if(keyword!=null){
+      itemAPI(category, page, keyword);
+    }    
+  }, [category, page, keyword]);
+
+  useEffect(()=>{
+    itemAPI();
+  },[]);
 
   const handleCategoryChange = (selectedCategory) => {
     if (selectedCategory !== category) {
@@ -156,12 +161,11 @@ const App = () => {
 
   const handlePageChange = (newPage) => {
     if (newPage > 0){
-    setPage(newPage);
+      setPage(newPage);
     } else if (items.length === 0) {
       setPage(1);
     }
   };
-
   return (
     <StyledHeader>
       <Container>
@@ -200,8 +204,8 @@ const App = () => {
           
         </Form.Select>
         <div className="cards-container">
-          {content.length > 0 &&
-            content.map((item) => (
+          {items.length > 0 &&
+            items.map((item) => (
               <Card key={item.auctionNo} style={{ width: '18rem', marginTop: '30px' }} className="hover">
                 <a href="#" style={{ textDecoration: "none" }}>
                   <Card.Img variant="top" src={item.auctionImg} />
@@ -225,7 +229,7 @@ const App = () => {
                       <div
                         className="hidden-hover"
                         onMouseEnter={() => {
-                          // ...
+                      
                         }}
                       >
                         현재가 : {item.currentPrice}원
@@ -235,7 +239,7 @@ const App = () => {
                         id={`show-hover-${item.auctionAttendNo}`}
                         style={{ display: 'none' }}
                         onMouseLeave={() => {
-                          // ...
+                  
                         }}
                       >
                         현재가 : {item.currentPrice}원
@@ -247,25 +251,26 @@ const App = () => {
               </Card>
             ))}
         </div>
+        
         <Pagination style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
           <Pagination.First onClick={() => handlePageChange(1)} disabled={page === 1} />
           <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 1} />
-          {Array.from({ length: totalPages }, (_, i) => (
+          {Array.from({ length: TotalPage }, (_, i) => (
             <Pagination.Item
               key={i}
               active={i + 1 === page}
               onClick={() => handlePageChange(i + 1)}
-            >
+            >              
               {i + 1}
             </Pagination.Item>
-          ))}
+          ))} 
           <Pagination.Next
             onClick={() => handlePageChange(page + 1)}
-            disabled={page === totalPages}
+            disabled={page === TotalPage}
           />
           <Pagination.Last
             onClick={() => handlePageChange(totalPages)}
-            disabled={page === totalPages}
+            disabled={page === TotalPage}
           />
         </Pagination>
         <div className="current-page">
