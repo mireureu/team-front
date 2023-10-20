@@ -175,7 +175,7 @@ const SearchResult = () => {
             items.map((item) => (
               <Card key={item.auctionNo} style={{ width: '18rem', marginTop: '30px' }} className="hover">
                 <a href="#" style={{ textDecoration: "none" }}>
-                  <Card.Img variant="top" src={item.auctionImg} />
+                  <Card.Img variant="top" src={"/upload/" + item.auctionImg.split(",", 1)} />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
