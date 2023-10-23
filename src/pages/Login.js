@@ -32,6 +32,8 @@ const Login = () => {
     e.preventDefault();
     const id = e.target.id.value;
     const password = e.target.password.value;
+
+    console.log(localStorage.getItem("user")+"아");
     dispatch(asyncLogin({ id, password })).then((response) => {
       if (response.payload) {
         navigate('/'); 
