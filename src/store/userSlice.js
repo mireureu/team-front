@@ -15,9 +15,7 @@ const userSlice = createSlice({
         },
         userLogout: (state, action)=>{
             return {};
-        },
-
-        
+        },        
     },
 
     extraReducers: (builder) => {
@@ -34,9 +32,9 @@ export {asyncLogin};
 export const {userSave, userLogout} = userSlice.actions;
 
 
-//  데이터 저장
-localStorage.setItem("myKey", "This is a value");
+// //  데이터 저장
+// localStorage.setItem("myKey", "This is a value");
 
-//  데이터 검색
-const myValue = localStorage.getItem("user");
-console.log(myValue+"로그인");  // "This is a value"
+// //  데이터 검색
+// const myValue = localStorage.getItem("user");
+// console.log(myValue+"로그인");  // "This is a value"
