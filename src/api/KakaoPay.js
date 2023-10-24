@@ -1,5 +1,9 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Nav } from 'react-bootstrap';
+import getUserInfo from "./user";
+
+
+const { storedToken, userObject } = getUserInfo();
 
 const Kakaopay = () => {
     const userCode = "imp55224240";
@@ -11,9 +15,10 @@ const Kakaopay = () => {
             pg: "kakaopay",
             pay_method: "card",
             merchant_uid: 'merchant_' + new Date().getTime(),
-            name: "테스트 결dd제",
+            name: "중번당 포인트충전",
             amount: 10000000,
-            buyer_tel: "010-6471-7247",
+            buyer_name: userObject.name,
+            buyer_tel: "",
             
         }, callback);
         
@@ -26,11 +31,13 @@ const Kakaopay = () => {
           pg,
           buyer_tel,
           paid_amount,
+          name,
+          buyer_name,
           error_msg
         } = response;
     
         if (success) {
-          alert(`결제 성공: ${status} ${merchant_uid} ${buyer_tel} ${pg} ${paid_amount}`);
+          alert(`결제 성공: ${status} ${buyer_name} ${merchant_uid} ${buyer_tel} ${pg} ${paid_amount} ${name}`);
         } else {
           alert(`결제 실패: ${error_msg} ${merchant_uid} ${buyer_tel} ${pg}`);
         }

@@ -14,6 +14,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../api/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
+import getUserInfo from "../api/user";
+
+
+const { storedToken, userObject } = getUserInfo();
+
+console.log("토큰:", storedToken);
+console.log("유저 정보:", userObject);
+
 const StyledHeader = styled.header`
     #basic-navbar-nav {
       display: flex;
@@ -110,11 +118,11 @@ const Header = () => {
                 <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
 
               ) : (
-                <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>)}
+                <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃{userObject.name}</Nav.Link>)}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
-          </Navbar.Collapse>
+          </Navbar.Collapse>  
         </Navbar>
         <Divider />
         <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline: "none" }}>

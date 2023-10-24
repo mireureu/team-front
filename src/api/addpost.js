@@ -10,5 +10,5 @@ export const getCategories = async () => {
 };
 
 export const addPost = async (data) => {
-  return await instance.post("/public/post", data);
+  return await instance.post("/user/post", data);
 };

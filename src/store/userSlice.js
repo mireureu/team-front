@@ -34,9 +34,18 @@ export {asyncLogin};
 export const {userSave, userLogout} = userSlice.actions;
 
 
-//  데이터 저장
-// localStorage.setItem("myKey", "This is a value");
+// const storedToken = localStorage.getItem("token");
+// const storedUser = localStorage.getItem("user");
 
-//  데이터 검색
-// const myValue = localStorage.getItem("myKey");
-// console.log(myValue);  // "This is a value"
+// if (storedToken && storedUser) {
+  
+//   const userObject = JSON.parse(storedUser);
+// //   const userName = userObject.name;
+//   console.log("토큰:", storedToken);
+//   console.log("유저 정보:", userObject.name);
+// //   console.log('유저 이름:', userName);
+// } else {
+  
+//   console.log("토큰 또는 유저 정보를 찾을 수 없습니다.");
+// }
+
