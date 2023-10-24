@@ -11,7 +11,7 @@ import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
 // import imgTest1 from "../img/가로tast.png";
-// import imgTest2 from "../img/세로tast.png";
+import hot from "../components/hot.png";
 
 const Main = styled.div`
   display: grid;
@@ -26,14 +26,17 @@ const Main = styled.div`
 
 const Banner = styled.div`
   grid-area: g-banner;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 217, 250);
+  background-color: rgba(255, 246, 18);
   /* width: 80%; */
-  height: 150px;
   /* margin: 0 auto; */
+  img {
+    width: auto;
+    height: 180px;
+  }
 `;
 
 const Left = styled.div`
@@ -145,8 +148,13 @@ const News = styled.div`
 
 const Modal = styled.div`
   display: grid;
-  grid-template-rows: repeat(6, 1fr);
+  grid-template-rows: 80px 1fr 50px;
   grid-template-columns: repeat(3, 1fr);
+  grid-template-areas:
+    "itemTitle itemTitle itemTitle" 
+    "itemImg itemImg itemBoard"
+    "itemLower-left . itemLower-right";
+
 
   position: fixed;
   top: 50%;
@@ -158,17 +166,79 @@ const Modal = styled.div`
   padding: 20px;
   z-index: 3;
   border: 1px solid black;
+  border-radius: 20px;
 
-  h2 {
+  .itemTitle {
+    grid-area: itemTitle;
     display: flex;
+    align-items: center;
     justify-content: center;
   }
 
-  p {
+  .itemImg {
+    grid-area: itemImg;
+    margin: 10px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+  }
+
+  .itemBoard {
+    grid-area: itemBoard;
+    margin-top: 20px;
+    .times {
+      text-align: center;
+      
+    }
+    
+    .p-time-short {
+      background-color: rgba(255, 70, 70);
+      color: white;
+      text-align: center;
+    }
+
+    .values {
+      text-align: right;
+    }
+
+    .attend {
+      text-align: center;
+    }
+  }
+
+  .itemBoard p {
+    font-size: 20px;
     white-space: pre;
     border: 1px solid black;
     border-radius: 5px;
+    margin-left: 15px;
+    margin-right: 15px;
   }
+
+  .itemLower-left {
+    grid-area: itemLower-left;
+    display: flex;
+    align-items: center;
+    right: 0;
+    margin-left: 10px;
+  }
+
+  .itemLower-right {
+    grid-area: itemLower-right;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: 20px;
+  }
+
+  h4 {
+    text-align: center;
+  }
+
+  
 `;
 
 
@@ -179,7 +249,6 @@ const Home=()=> {
   const [andList, setAndList] = useState([]);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
-
 
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
@@ -264,9 +333,10 @@ const Home=()=> {
     setIsModalOpen(false);
   };
 
-  // 해당 페이지로 이동 = 연결해야함 아직 연결 안함
-  const openPage = () => {
-    setIsModalOpen(false);
+  // 해당 페이지로 이동
+  const openPage = (auctionNo) => {
+    // 페이지 이동을 위해 window.location.href를 사용
+    window.location.href = `/auctionpost/${auctionNo}`;
   };
 
   return (
@@ -277,7 +347,8 @@ const Home=()=> {
       </Left>
       
       <Banner>
-        <h1>[ 주간 핫! 베스트 상품 ]</h1>
+        {/* <h1>[ 주간 HOT 경매! ]</h1> */}
+        <img src={hot}/>
         {/* <h1>[ 주간 New 경매! ]</h1> */}
       </Banner>
 
@@ -290,9 +361,9 @@ const Home=()=> {
               </div>
               <div className='new-font'>
                 <h5>{ands.auctionTitle}</h5>
-                  <p className={(calculateTimeDifference(ands.auctionEndDate).hours < 8) ? "p-time-short" : ""}>
-                    {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
-                  </p>
+                <p className={((calculateTimeDifference(ands.auctionEndDate).hours < 8) && (calculateTimeDifference(ands.auctionEndDate).days === 0)) || (calculateTimeDifference(ands.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
+                  {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
+                </p>
                 <p>
                   현재가 : <span>{ands.currentPrice}</span>원
                 </p>
@@ -312,19 +383,38 @@ const Home=()=> {
 
       {isModalOpen && selectedItem &&  (
         <Modal>
-            <div className="content">
-              <h2>{selectedItem.auctionTitle}</h2>
-              <div className="flex-row">
-                <p className="times">
-                  {calculateTimeDifference(selectedItem.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(selectedItem.auctionEndDate).days}일`) : calculateTimeDifference(selectedItem.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(selectedItem.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).hours}:${(calculateTimeDifference(selectedItem.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).minutes}:${(calculateTimeDifference(selectedItem.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).seconds}`) : ("경매 마감")}
-                </p>
-                <p className="values">
-                  현재가 : <span>{selectedItem.currentPrice}</span>원
-                </p>
-              </div>
-            </div>
-          <button className="move-page" onClick={openPage}>상세 페이지로</button>
-          <button className="close-button" onClick={closeModal}>닫기</button>
+          <div className="itemTitle">
+            <h2>{selectedItem.auctionTitle}</h2>
+          </div>
+          <div className="itemImg">
+            <img src={"/upload/" + selectedItem.auctionImg.split(",", 1)} alt={selectedItem.auctionTitle} />
+          </div>
+          <div className="itemBoard">
+            <h4>남은 시간</h4>
+            <p className={((calculateTimeDifference(selectedItem.auctionEndDate).hours < 8) && (calculateTimeDifference(selectedItem.auctionEndDate).days === 0)) || (calculateTimeDifference(selectedItem.auctionEndDate).hours < 0) ? "p-time-short" : "times"}>
+              {calculateTimeDifference(selectedItem.auctionEndDate).days > 0 ? (`${calculateTimeDifference(selectedItem.auctionEndDate).days}일`) : calculateTimeDifference(selectedItem.auctionEndDate).hours >= 0 ? (`${(calculateTimeDifference(selectedItem.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).hours}:${(calculateTimeDifference(selectedItem.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).minutes}:${(calculateTimeDifference(selectedItem.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(selectedItem.auctionEndDate).seconds}`) : ("경매 마감")}
+            </p>
+            <h4>시작가</h4>
+            <p className="values">
+              <span>{selectedItem.auctionSMoney}</span>원
+            </p>
+            <h4>현재가</h4>
+            <p className="values">
+              <span>{selectedItem.currentPrice}</span>원
+            </p>
+            <h4>입찰 참여 인원</h4>
+            <p className="attend">
+              <span>{selectedItem.auctionAttendNo}</span>
+            </p>
+          </div>
+          <div className="itemLower-left">
+            <button className="move-page" onClick={() => openPage(selectedItem.auctionNo)}>상세 페이지</button>
+          </div>
+          <div className="itemLower-right">
+            <button className="close-button" onClick={closeModal}>닫기</button>
+          </div>
+          
+          
         </Modal>
       )}
     </Main>
