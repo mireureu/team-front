@@ -29,6 +29,8 @@ const Divider = styled.div`
 
 const CategoryColor = styled.div`
     background-color: whitesmoke;
+    max-width: 1295px;
+    margin: 0 auto;
   `;
 
 const Header = () => {
