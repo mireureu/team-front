@@ -3,55 +3,91 @@ import { Nav } from 'react-bootstrap';
 import styled from 'styled-components';
 import { updatePoint } from '../api/pay';
 const Modal = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 2fr 2fr;
+  
   position: fixed;
   top: 50%;
   left: 50%;
   width: 800px;
-  height: 600px;
+  height: 400px;
   transform: translate(-50%, -50%);
   background-color: white;
   padding: 20px;
   z-index: 4;
   border: 1px solid black;
+  border-radius: 20px;
 
-  h2 {
+  .top {
+
+    h2 {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+  }
+
+  .close {
+    position: absolute;
+    border-radius: 5px;
+    top: 15px;
+    right: 15px;
+  }
+
+  .mid {
     display: flex;
     justify-content: center;
+    margin: 20px;
+
+    .myPoint {
+      border: 1px solid black;
+      border-radius: 10px;
+      width: 300px;
+      background-color: skyblue; // 내 포인트 잔액 배경 색
+
+      h4 {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      p {
+        font-size: 20px;
+        border: 1px solid black;
+        border-radius: 5px;
+        width: 200px;
+        margin: 0 auto;
+        margin-bottom: 20px;
+        text-align: right;
+        white-space: pre;
+        background-color: white; // 포인트 출력칸 배경색
+      }
+    }
+    
   }
 
-  p {
-    white-space: pre;
-    border: 1px solid black;
-    border-radius: 5px;
-  }
-
-  .flex-row {
+  .bottom {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    height: 120px;
+
+    input {
+      width: 320px;
+    }
+
+    input, button {
+      font-size: 25px;
+      text-align: right;
+      border-radius: 10px;
+    }
+    
   }
 
-  .flex-row .times, .flex-row .values {
-    margin: 0;
+  .bottom input, .bottom button {
+    margin: 5px; /* 원하는 간격 설정 */
   }
 
-  .flex-row .times::after {
-    content: "";
-    margin-right: 10px;
-  }
-
-  .clows-button, .move-page {
-    position: absolute;
-    right: 20px;
-  }
-
-  .clows-button .move-page::after{
-    content: "";
-    margin-right: 10px;
-  }
 `;
 
 
@@ -127,16 +163,27 @@ const Kakaopay = () => {
     <div>
       <Nav.Link onClick={openModal} style={{ color: "black" }}>카카오페이로 결제</Nav.Link>
       {isModalOpen && (
-        <Modal        
-        >
-          <h2>금액 선택</h2>
-          <input
-            type="number"
-            placeholder="결제할 금액을 입력하세요"
-            onChange={(e) => setAmount(e.target.value)}
-          />
-          <button onClick={() => handlePayment(amount)}>선택</button>
-          <button onClick={closeModal}>닫기</button>
+        <Modal>
+          <div className='top'>
+            <h2>포인트 충전</h2>
+            <button className='close' onClick={closeModal}>X</button>
+          </div>
+          <div className='mid'>
+            <div className='myPoint'>
+              <h4>내 포인트 잔액</h4>
+              <p>
+                <span> 포인트 </span>
+              </p>
+            </div>
+          </div>
+          <div className='bottom'>
+            <input
+                type="number"
+                placeholder="충전할 금액을 입력하세요"
+                onChange={(e) => setAmount(e.target.value)}
+              />
+            <button onClick={() => handlePayment(amount)}>결제하기</button>
+          </div>
         </Modal>
       )}
     </div>
