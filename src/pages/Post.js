@@ -6,10 +6,14 @@ import { getCategories, addPost } from "../api/addpost";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import getUserInfo from "../api/user";
+
+const { userObject } = getUserInfo();
+
 const Post = () => {
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
-  const [itemName, setitemName] = useState("");
+  const [itemName, setItemName] = useState("");
   const [desc, setDesc] = useState("");
   const [sMoney, setSmoney] = useState("");
   const [eMoney, setEmoney] = useState("");
@@ -17,11 +21,12 @@ const Post = () => {
   const [select, setSelect] = useState(1);
   const [isBuyNowChecked, setIsBuyNowChecked] = useState(false);
   const [images, setImages] = useState([]);
-  const [checkNo, setcheckNo] = useState(0);
-  const [attendNo, setattendNo] = useState(0);
+  const [checkNo, setCheckNo] = useState(0);
+  const [attendNo, setAttendNo] = useState(0);
   const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 배열
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
+  const [eMoneyError, setEMoneyError] = useState("");
 
   const onClick = async () => {
     const formData = new FormData();
@@ -98,6 +103,20 @@ const Post = () => {
     setSelect(e.currentTarget.value);
   };
 
+  const handleEMoneyChange = (e) => {
+    const newEMoney = e.target.value;
+    setEmoney(newEMoney);
+
+    const minBidLimit = sMoney * 0.1;
+    if (newEMoney > minBidLimit) {
+      setEMoneyError(
+        "최소입찰가는 경매 시작가의 10% 이하로 입력되어야 합니다."
+      );
+    } else {
+      setEMoneyError(""); // Reset the error message if valid
+    }
+  };
+
   return (
     <Container>
       <h1>경매글 작성</h1>
@@ -115,7 +134,7 @@ const Post = () => {
             type="text"
             value={itemName}
             placeholder="상품명"
-            onChange={(e) => setitemName(e.target.value)}
+            onChange={(e) => setItemName(e.target.value)}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -140,8 +159,9 @@ const Post = () => {
             type="number"
             value={eMoney}
             placeholder="최소입찰가"
-            onChange={(e) => setEmoney(e.target.value)}
+            onChange={handleEMoneyChange}
           />
+          {eMoneyError && <div className="text-danger">{eMoneyError}</div>}
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Check
@@ -170,7 +190,12 @@ const Post = () => {
         </Form.Select>
         <Form.Group className="mb-3">
           <Form.Label>이미지 업로드</Form.Label>
-          <Form.Control type="file" onChange={onUploadImage} multiple />
+          <Form.Control
+            type="file"
+            onChange={onUploadImage}
+            multiple
+            accept="image/*"
+          />
         </Form.Group>
         {imagePreviews.map((imagePreview, index) => (
           <div key={index}>
@@ -188,6 +213,15 @@ const Post = () => {
           variant="danger"
           style={{ marginTop: "20px" }}
           onClick={onClick}
+          disabled={
+            title === "" ||
+            itemName === "" ||
+            desc === "" ||
+            sMoney === "" ||
+            eMoney === "" ||
+            (isBuyNowChecked && gMoney === "") ||
+            images.length === 0
+          }
         >
           저장
         </Button>

@@ -1,16 +1,16 @@
-import { useState, useEffect } from 'react';
-import Button from 'react-bootstrap/Button';
-import Card from 'react-bootstrap/Card';
-import styled from 'styled-components';
-import Form from 'react-bootstrap/Form';
-import Table from 'react-bootstrap/Table';
-import Container from 'react-bootstrap/Container';
-import Pagination from 'react-bootstrap/Pagination';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import { getTotalPages } from '../api/search';
-import { getCategories, getItem } from '../api/auctionBoard';
-import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import Button from "react-bootstrap/Button";
+import Card from "react-bootstrap/Card";
+import styled from "styled-components";
+import Form from "react-bootstrap/Form";
+import Table from "react-bootstrap/Table";
+import Container from "react-bootstrap/Container";
+import Pagination from "react-bootstrap/Pagination";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { getTotalPages } from "../api/search";
+import { getCategories, getItem } from "../api/auctionBoard";
+import { useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
@@ -82,7 +82,7 @@ const SearchResult = () => {
   const [category, setCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
-  const searchResult = useSelector((state) => (state.search));
+  const searchResult = useSelector((state) => state.search);
   const content = searchResult?.content || [];
   const location = useLocation();
   const keyword = location.state ? location.state.keyword : null;
@@ -95,9 +95,8 @@ const SearchResult = () => {
 
   const itemAPI = async (selectedPage, sortOption) => {
     try {
-      const getResult = await getTotalPages(keyword,selectedPage,sortOption);      
+      const getResult = await getTotalPages(keyword, selectedPage, sortOption);
       setItems(getResult.data.content);
-      
     } catch (error) {
       console.error("데이터 불러오기 오류:", error);
     }
@@ -116,14 +115,14 @@ const SearchResult = () => {
   }, []);
 
   useEffect(() => {
-    if(keyword!=null){
+    if (keyword != null) {
       itemAPI(page, sortOption);
-    }    
+    }
   }, [sortOption, page, keyword]);
 
-  useEffect(()=>{
+  useEffect(() => {
     itemAPI();
-  },[]);
+  }, []);
 
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
@@ -152,7 +151,7 @@ const SearchResult = () => {
   };
 
   const handlePageChange = (newPage) => {
-    if (newPage > 0){
+    if (newPage > 0) {
       setPage(newPage);
     } else if (items.length === 0) {
       setPage(1);
@@ -161,21 +160,31 @@ const SearchResult = () => {
   return (
     <StyledHeader>
       <Container>
-        <Form.Select aria-label="정렬기준" value={sortOption} onChange={handleSortOptionChange}>
+        <Form.Select
+          aria-label="정렬기준"
+          value={sortOption}
+          onChange={handleSortOptionChange}
+        >
           <option value="0">기본</option>
           <option value="1">입찰 높은 순</option>
           <option value="2">조회순</option>
           <option value="3">등록순</option>
           <option value="4">낮은 가격순</option>
           <option value="5">높은 가격순</option>
-          
         </Form.Select>
         <div className="cards-container">
           {items.length > 0 &&
             items.map((item) => (
-              <Card key={item.auctionNo} style={{ width: '18rem', marginTop: '30px' }} className="hover">
+              <Card
+                key={item.auctionNo}
+                style={{ width: "18rem", marginTop: "30px" }}
+                className="hover"
+              >
                 <a href="#" style={{ textDecoration: "none" }}>
-                  <Card.Img variant="top" src={"/upload/" + item.auctionImg.split(",", 1)} />
+                  <Card.Img
+                    variant="top"
+                    src={"/upload/" + item.auctionImg.split(",", 1)}
+                  />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
@@ -183,31 +192,23 @@ const SearchResult = () => {
                     <p>조회 : {item.auctionCheckNo}</p>
                     {item.auctionEndDate && (
                       <p>
-                        남은 시간: {calculateTimeDifference(item.auctionEndDate).days}일{' '}
-                        {calculateTimeDifference(item.auctionEndDate).hours}시간{' '}
-                        {calculateTimeDifference(item.auctionEndDate).minutes}분{' '}
+                        남은 시간:{" "}
+                        {calculateTimeDifference(item.auctionEndDate).days}일{" "}
+                        {calculateTimeDifference(item.auctionEndDate).hours}시간{" "}
+                        {calculateTimeDifference(item.auctionEndDate).minutes}분{" "}
                         {/* {calculateTimeDifference(item.auctionEndDate).seconds}초 */}
                       </p>
                     )}
                     <div className="hover-button">
-                      <div>
-                        현재가 : {item.currentPrice}원
-                      </div>
-                      <div
-                        className="hidden-hover"
-                        onMouseEnter={() => {
-                      
-                        }}
-                      >
+                      <div>현재가 : {item.currentPrice}원</div>
+                      <div className="hidden-hover" onMouseEnter={() => {}}>
                         현재가 : {item.currentPrice}원
                       </div>
                       <div
                         className="show-hover"
                         id={`show-hover-${item.auctionAttendNo}`}
-                        style={{ display: 'none' }}
-                        onMouseLeave={() => {
-                  
-                        }}
+                        style={{ display: "none" }}
+                        onMouseLeave={() => {}}
                       >
                         현재가 : {item.currentPrice}원
                       </div>
@@ -218,19 +219,31 @@ const SearchResult = () => {
               </Card>
             ))}
         </div>
-        
-        <Pagination style={{ display: 'flex', justifyContent: 'center', margin: '20px 0' }}>
-          <Pagination.First onClick={() => handlePageChange(1)} disabled={page === 1} />
-          <Pagination.Prev onClick={() => handlePageChange(page - 1)} disabled={page === 1} />
+
+        <Pagination
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            margin: "20px 0",
+          }}
+        >
+          <Pagination.First
+            onClick={() => handlePageChange(1)}
+            disabled={page === 1}
+          />
+          <Pagination.Prev
+            onClick={() => handlePageChange(page - 1)}
+            disabled={page === 1}
+          />
           {Array.from({ length: TotalPage }, (_, i) => (
             <Pagination.Item
               key={i}
               active={i + 1 === page}
               onClick={() => handlePageChange(i + 1)}
-            >              
+            >
               {i + 1}
             </Pagination.Item>
-          ))} 
+          ))}
           <Pagination.Next
             onClick={() => handlePageChange(page + 1)}
             disabled={page === TotalPage}
