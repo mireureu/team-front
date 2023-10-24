@@ -42,6 +42,8 @@ const Post = () => {
     formData.append("attendNo", attendNo);
     formData.append("nowBuy", isBuyNowChecked ? "Y" : "N"); // 즉시 구매 여부를 "Y" 또는 "N"으로 설정
 
+
+
     // 이미지를 FormData에 추가
     for (let i = 0; i < images.length; i++) {
       formData.append("image", images[i]);
@@ -118,6 +120,7 @@ const Post = () => {
   };
 
   return (
+    
     <Container>
       <h1>경매글 작성</h1>
       <Form>

@@ -40,8 +40,7 @@ const Login = () => {
         console.log(response.payload);
         navigate('/'); 
       } else {
-        alert('아이디 또는 비밀번호가 틀렸습니다.');
-        
+        alert('아이디 또는 비밀번호가 틀렸습니다.');        
       }
     });
 

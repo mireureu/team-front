@@ -26,7 +26,6 @@ const Divider = styled.div`
     border-top: 1px solid #ccc;
     margin: 5px 0;
   `;
-  
 
 const CategoryColor = styled.div`
     background-color: whitesmoke;
@@ -38,7 +37,10 @@ const Header = () => {
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
+  const userData = JSON.parse(localStorage.getItem("user"));
 
+  const name = userData ? userData.name : '';
+  const point = userData ? userData.point : 0;
 
   const Search = () => {
   
@@ -67,6 +69,9 @@ const Header = () => {
     movePage("/");
     window.location.replace("/"); // 새로고침
   }
+
+
+
   const [categories, setCategories] = useState([]);
   const categoryAPI = async () => {
     const result = await getCategories();
@@ -103,6 +108,9 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
+            <p>{name}</p> 
+            <p>{point}</p>
+            
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
 
               <Kakaopay />
@@ -115,6 +123,8 @@ const Header = () => {
                 <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>)}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
+                
+
             </Nav>
           </Navbar.Collapse>
         </Navbar>

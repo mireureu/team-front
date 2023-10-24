@@ -143,7 +143,7 @@ const Kakaopay = () => {
       const data = { ...updateUserData, point: amount };
       updatePoint(data);
       console.log(data);
-
+      
     } else {
       alert(`결제 실패: ${error_msg} ${merchant_uid} ${buyer_tel} ${pg}`);
     }
