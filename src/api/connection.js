@@ -8,9 +8,9 @@ export const getCategories = async () => {
     return await instance.get("/public/category");
 }
 export const duplicate = async (data) => {
-    return await instance.post("/user/duplicate", data);
+    return await instance.post("/public/duplicate", data);
 }
 export const addUser = async (data) => {
-    return await instance.post("/user/create", data);
+    return await instance.post("/public/create", data);
 };
 
