@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Nav } from 'react-bootstrap';
 import styled from 'styled-components';
 import { updatePoint } from '../api/pay';
+import { userInfo } from '../api/user';
 const Modal = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr 2fr;
@@ -85,7 +86,7 @@ const Modal = styled.div`
   }
 
   .bottom input, .bottom button {
-    margin: 5px; /* 원하는 간격 설정 */
+    margin: 5px;
   }
 
 `;
@@ -96,14 +97,11 @@ const Kakaopay = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
   const name = userData ? userData.name : '';
   const phone = userData ? userData.phone : '';
-  const point = userData ? userData.point : '';
+  const [point, setPoint] = useState(userData ? userData.point : 0);
   const id = userData ? userData.id : '';
-
-
   const userCode = "imp55224240";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState(0);
-
   const openModal = () => {
     setIsModalOpen(true);
   };
@@ -112,7 +110,6 @@ const Kakaopay = () => {
     setIsModalOpen(false);
   };
   const handlePayment = () => {
-    // 여기에서 결제 요청 로직을 실행
     window.IMP.request_pay({
       pg: "kakaopay",
       pay_method: "card",
@@ -127,15 +124,16 @@ const Kakaopay = () => {
     const {
       success,
       merchant_uid,
-      status,
       pg,
-      name,
       buyer_tel,
-      paid_amount,
       error_msg
     } = response;
 
     if (success) {
+      const updatedPoint = parseInt(point) + parseInt(amount);
+      setPoint(updatedPoint);
+      console.log(updatedPoint);
+      console.log(point);
       const updateUserData = {
         point: point,
         id: id,
@@ -143,11 +141,21 @@ const Kakaopay = () => {
       const data = { ...updateUserData, point: amount };
       updatePoint(data);
       console.log(data);
-      
+      window.location.replace("/");
     } else {
       alert(`결제 실패: ${error_msg} ${merchant_uid} ${buyer_tel} ${pg}`);
     }
   }
+  const updateUserInfo = async () => {
+      const response = await userInfo();
+      const newPoint = response.data.point;
+      console.log(response.data.point);      
+      setPoint(newPoint);
+  };
+  useEffect(() => {
+    updateUserInfo();
+    console.log(point);
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -172,16 +180,16 @@ const Kakaopay = () => {
             <div className='myPoint'>
               <h4>내 포인트 잔액</h4>
               <p>
-                <span> 포인트 </span>
+                <span>{point} 포인트 </span>
               </p>
             </div>
           </div>
           <div className='bottom'>
             <input
-                type="number"
-                placeholder="충전할 금액을 입력하세요"
-                onChange={(e) => setAmount(e.target.value)}
-              />
+              type="number"
+              placeholder="충전할 금액을 입력하세요"
+              onChange={(e) => setAmount(e.target.value)}
+            />
             <button onClick={() => handlePayment(amount)}>결제하기</button>
           </div>
         </Modal>
