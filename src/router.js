@@ -10,6 +10,7 @@ import AskPage from "./pages/Askpage";
 import Post from "./pages/Post";
 import Register from "./pages/Register";
 import SearchResult from "./pages/SearchResult";
+import UserPage from "./pages/UserPage";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "/SearchResult",
         element: <SearchResult />,
+      },
+      {
+        path: "/UserPage",
+        element: <UserPage />,
       },
     ],
   },

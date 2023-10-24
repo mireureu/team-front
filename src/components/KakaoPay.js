@@ -80,14 +80,10 @@ const Modal = styled.div`
       font-size: 25px;
       text-align: right;
       border-radius: 10px;
+      margin: 5px;
     }
     
   }
-
-  .bottom input, .bottom button {
-    margin: 5px; /* 원하는 간격 설정 */
-  }
-
 `;
 
 
