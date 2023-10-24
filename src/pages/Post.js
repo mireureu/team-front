@@ -193,7 +193,12 @@ const Post = () => {
         </Form.Select>
         <Form.Group className="mb-3">
           <Form.Label>이미지 업로드</Form.Label>
-          <Form.Control type="file" onChange={onUploadImage} multiple />
+          <Form.Control
+            type="file"
+            onChange={onUploadImage}
+            multiple
+            accept="image/*"
+          />
         </Form.Group>
         {imagePreviews.map((imagePreview, index) => (
           <div key={index}>
@@ -211,6 +216,15 @@ const Post = () => {
           variant="danger"
           style={{ marginTop: "20px" }}
           onClick={onClick}
+          disabled={
+            title === "" ||
+            itemName === "" ||
+            desc === "" ||
+            sMoney === "" ||
+            eMoney === "" ||
+            (isBuyNowChecked && gMoney === "") ||
+            images.length === 0
+          }
         >
           저장
         </Button>

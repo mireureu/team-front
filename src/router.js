@@ -24,26 +24,25 @@ const router = createBrowserRouter([
         element: <AuctionDetail />,
       },
       {
-        path: "/Auctionpost",
+        path: "/Auctionpost/:auctionNo",
         element: <Auctionpost />,
       },
       {
         path: "/qnapost",
         element: <QnAboard />,
       },
-      {
-        path: "/AskPage",
-        element: <AskPage />,
-      },
+      // {
+      //   path: "/AskPage",
+      //   element: <AskPage />,
+      // },
       {
         path: "/Post",
         element: <Post />,
       },
       {
-        path:"/SearchResult",
-        element: <SearchResult/>
-      }
-      
+        path: "/SearchResult",
+        element: <SearchResult />,
+      },
     ],
   },
   {

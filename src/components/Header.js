@@ -12,7 +12,7 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { getCategories } from "../api/connection";
 import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
-import Kakaopay from "../api/KakaoPay";
+import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
 import getUserInfo from "../api/user";
 
@@ -45,16 +45,20 @@ const Header = () => {
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
+  const userData = JSON.parse(localStorage.getItem("user"));
 
+  const name = userData ? userData.name : '';
+  const point = userData ? userData.point : 0;
 
   const Search = () => {
   
     console.log(keyword);
     dispatch(asyncSearch({keyword : keyword}));
-    movePage("/SearchResult");
+    
+    movePage("/SearchResult",{state: {keyword}});
+ 
+                            
   }
-
-
 
   const user = useSelector((state) => {
     return state.user;
@@ -73,6 +77,9 @@ const Header = () => {
     movePage("/");
     window.location.replace("/"); // 새로고침
   }
+
+
+
   const [categories, setCategories] = useState([]);
   const categoryAPI = async () => {
     const result = await getCategories();
@@ -109,6 +116,9 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
+            <p>{name}</p> 
+            <p>{point}</p>
+            
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
 
               <Kakaopay />
@@ -121,6 +131,8 @@ const Header = () => {
                 <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃{userObject.name}</Nav.Link>)}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
+                
+
             </Nav>
           </Navbar.Collapse>  
         </Navbar>

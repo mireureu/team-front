@@ -20,6 +20,8 @@ import { useNavigate } from "react-router-dom";
 const defaultTheme = createTheme();
 
 const Login = () => {
+
+  
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const StyledTextField = styled(TextField)({
@@ -29,15 +31,16 @@ const Login = () => {
   });
 
   const onSubmit = (e) => {
+    
     e.preventDefault();
     const id = e.target.id.value;
     const password = e.target.password.value;
     dispatch(asyncLogin({ id, password })).then((response) => {
       if (response.payload) {
+        console.log(response.payload);
         navigate('/'); 
       } else {
-        alert('아이디 또는 비밀번호가 틀렸습니다.');
-        
+        alert('아이디 또는 비밀번호가 틀렸습니다.');        
       }
     });
 

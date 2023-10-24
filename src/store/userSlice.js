@@ -15,15 +15,13 @@ const userSlice = createSlice({
         },
         userLogout: (state, action)=>{
             return {};
-        },
-
-        
+        },        
     },
 
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{
             localStorage.setItem("token",action.payload.token);  
-            localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장
+            localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장            
             return action.payload;
         });
     }
@@ -34,18 +32,9 @@ export {asyncLogin};
 export const {userSave, userLogout} = userSlice.actions;
 
 
-// const storedToken = localStorage.getItem("token");
-// const storedUser = localStorage.getItem("user");
+// //  데이터 저장
+// localStorage.setItem("myKey", "This is a value");
 
-// if (storedToken && storedUser) {
-  
-//   const userObject = JSON.parse(storedUser);
-// //   const userName = userObject.name;
-//   console.log("토큰:", storedToken);
-//   console.log("유저 정보:", userObject.name);
-// //   console.log('유저 이름:', userName);
-// } else {
-  
-//   console.log("토큰 또는 유저 정보를 찾을 수 없습니다.");
-// }
-
+// //  데이터 검색
+// const myValue = localStorage.getItem("user");
+// console.log(myValue+"로그인");  // "This is a value"
