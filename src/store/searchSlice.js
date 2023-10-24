@@ -27,4 +27,4 @@ const searchSlice = createSlice({
     },
 });
 export default searchSlice;
-export { asyncSearch };
+export { asyncSearch }; 

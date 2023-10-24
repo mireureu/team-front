@@ -50,7 +50,7 @@ const Register = () => {
         }
     };
 
-    const onClick = async () => {
+    const onClick = () => {
         const userData = {
             id: id,
             password: password,

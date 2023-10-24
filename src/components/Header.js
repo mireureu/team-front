@@ -12,9 +12,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import { getCategories } from "../api/connection";
 import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
-import Kakaopay from "../api/KakaoPay";
+import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-
 const StyledHeader = styled.header`
     #basic-navbar-nav {
       display: flex;
@@ -27,6 +26,7 @@ const Divider = styled.div`
     border-top: 1px solid #ccc;
     margin: 5px 0;
   `;
+  
 
 const CategoryColor = styled.div`
     background-color: whitesmoke;
@@ -44,11 +44,9 @@ const Header = () => {
   
     console.log(keyword);
     dispatch(asyncSearch({keyword : keyword}));
-    if(keyword!=null){
-      movePage("/SearchResult",{state: {keyword}});
-    }else{
-      movePage("/SearchResult",{state: ""});
-    }
+    
+    movePage("/SearchResult",{state: {keyword}});
+ 
                             
   }
 
