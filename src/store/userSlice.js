@@ -11,13 +11,20 @@ const userSlice = createSlice({
     initialState: {},
     reducers: {
         userSave: (state, action)=>{
+            // localStorage.setItem("user",JSON.stringify(action.payload));
             return action.payload;
         },
         userLogout: (state, action)=>{
             return {};
         },        
+        updateUser:(state, action) => {
+            const user = JSON.parse(localStorage.getItem("user"));
+            user.point = action.payload.point;
+            localStorage.setItem("user", JSON.stringify(user));
+            state.point = action.payload.point;
+            return state;
+        }
     },
-
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{
             localStorage.setItem("token",action.payload.token);  
@@ -29,7 +36,7 @@ const userSlice = createSlice({
 
 export default userSlice;
 export {asyncLogin};
-export const {userSave, userLogout} = userSlice.actions;
+export const {userSave, userLogout, updateUser} = userSlice.actions;
 
 
 // //  데이터 저장
