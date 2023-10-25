@@ -33,6 +33,7 @@ const CategoryColor = styled.div`
     background-color: whitesmoke;
     max-width: 1295px;
     margin: 0 auto;
+
   `;
 
 const Header = () => {
@@ -77,7 +78,7 @@ const Header = () => {
       const response = await userInfo(user.token);
       const newPoint = response.data.point;
       const newName = response.data.name;
-      const formatPoint = newPoint.toLocaleString('ko-KR');
+      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
       setPoint(formatPoint);
       setName(newName);
     }

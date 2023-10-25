@@ -137,7 +137,7 @@ const Kakaopay = () => {
     if (user) {
       const response = await userInfo(user.token);
       const newPoint = response.data.point;
-      const formatPoint = newPoint.toLocaleString('ko-KR');
+      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
       const newName = response.data.name;
       const newId = response.data.id;
 

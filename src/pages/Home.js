@@ -17,7 +17,7 @@ const Main = styled.div`
   /* display: grid; */
   max-width: 1295px;
   margin: 0 auto;
-  height: 100%;
+  height: 1200px;
   /* grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
     "g-left g-banner g-right"
@@ -27,13 +27,14 @@ const Main = styled.div`
 `;
 
 const Banner = styled.div`
-  grid-area: g-banner;
+  /* grid-area: g-banner; */
   /* border: 1px solid black; */
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 246, 18);
   width: 100%;
+  margin-bottom: 20px;
   /* margin: 0 auto; */
   img {
     width: auto;
@@ -47,7 +48,7 @@ const Left = styled.div`
 `;
 
 const NewItem = styled.div`
-  grid-area: g-newitem;
+  /* grid-area: g-newitem; */
   width: 100%;
   height: auto;
   display: flex;
