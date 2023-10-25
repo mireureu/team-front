@@ -10,6 +10,12 @@ import getUserInfo from "../api/user";
 
 const { userObject } = getUserInfo();
 
+function convertToSeoulTime(date) {
+  const seoulOffset = 9 * 60; // 서울은 UTC+9
+  const seoulTime = new Date(date.getTime() + seoulOffset * 60000);
+  return seoulTime;
+}
+
 const Post = () => {
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
@@ -27,8 +33,11 @@ const Post = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [eMoneyError, setEMoneyError] = useState("");
+  const [auctionDate, setAuctionDate] = useState(new Date());
+  const [auctionEndDate, setAuctionEndDate] = useState(new Date());
 
   const onClick = async () => {
+    // 정보 업데이트
     const formData = new FormData();
 
     formData.append("title", title);
@@ -42,7 +51,10 @@ const Post = () => {
     formData.append("attendNo", attendNo);
     formData.append("nowBuy", isBuyNowChecked ? "Y" : "N"); // 즉시 구매 여부를 "Y" 또는 "N"으로 설정
 
-
+    const seoulAuctionDate = convertToSeoulTime(auctionDate);
+    const seoulAuctionEndDate = convertToSeoulTime(auctionEndDate);
+    formData.append("auctionDate", seoulAuctionDate.toISOString());
+    formData.append("auctionEndDate", seoulAuctionEndDate.toISOString());
 
     // 이미지를 FormData에 추가
     for (let i = 0; i < images.length; i++) {
@@ -64,7 +76,7 @@ const Post = () => {
   };
 
   const onUploadImage = (e) => {
-    // 이미지 파일 배열을 새로운 배열에 추가
+    // 이미지 업로드
     const selectedImages = e.target.files;
     const newImages = [...images];
     for (let i = 0; i < selectedImages.length; i++) {
@@ -81,6 +93,7 @@ const Post = () => {
   };
 
   const removeImage = (index) => {
+    // 이미지 삭제
     const newImagePreviews = [...imagePreviews];
     newImagePreviews.splice(index, 1); // 선택한 이미지 미리보기 제거
 
@@ -92,35 +105,24 @@ const Post = () => {
   };
 
   const categoryAPI = async () => {
+    // 카테고리 불러오기
     const result = await getCategories();
     console.log(result);
     setCategories(result.data);
   };
 
   useEffect(() => {
+    // 카테고리 호출
     categoryAPI();
-  }, []);
+    const minBidLimit = sMoney * 0.1;
+    setEmoney(minBidLimit);
+  }, [sMoney]);
 
   const onChangeCategory = (e) => {
     setSelect(e.currentTarget.value);
   };
 
-  const handleEMoneyChange = (e) => {
-    const newEMoney = e.target.value;
-    setEmoney(newEMoney);
-
-    const minBidLimit = sMoney * 0.1;
-    if (newEMoney > minBidLimit) {
-      setEMoneyError(
-        "최소입찰가는 경매 시작가의 10% 이하로 입력되어야 합니다."
-      );
-    } else {
-      setEMoneyError(""); // Reset the error message if valid
-    }
-  };
-
   return (
-    
     <Container>
       <h1>경매글 작성</h1>
       <Form>
@@ -160,11 +162,10 @@ const Post = () => {
         <Form.Group className="mb-3">
           <Form.Control
             type="number"
-            value={eMoney}
-            placeholder="최소입찰가"
-            onChange={handleEMoneyChange}
+            value={Math.floor(eMoney)}
+            placeholder="최소입찰가 (자동 설정)"
+            disabled // 입력 필드 비활성화
           />
-          {eMoneyError && <div className="text-danger">{eMoneyError}</div>}
         </Form.Group>
         <Form.Group className="mb-3">
           <Form.Check
