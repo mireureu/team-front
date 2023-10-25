@@ -93,12 +93,9 @@ const Modal = styled.div`
 
 
 const Kakaopay = () => {
-
-  const userData = JSON.parse(localStorage.getItem("user"));
-  const name = userData ? userData.name : '';
-  const phone = userData ? userData.phone : '';
-  const [point, setPoint] = useState(userData ? userData.point : 0);
-  const id = userData ? userData.id : '';
+  const [name, setName] = useState("");
+  const [point, setPoint] = useState(0);
+  const [id, setId] = useState("");
   const userCode = "imp55224240";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -115,25 +112,18 @@ const Kakaopay = () => {
       pay_method: "card",
       merchant_uid: 'merchant_' + new Date().getTime(),
       name: name,
-      amount: amount,
-      buyer_tel: phone,
+      amount: amount,      
     }, callback);
   };
 
   function callback(response) {
     const {
-      success,
-      merchant_uid,
-      pg,
-      buyer_tel,
-      error_msg
+      success,      
     } = response;
 
     if (success) {
       const updatedPoint = parseInt(point) + parseInt(amount);
-      setPoint(updatedPoint);
-      console.log(updatedPoint);
-      console.log(point);
+      setPoint(updatedPoint);      
       const updateUserData = {
         point: point,
         id: id,
@@ -143,18 +133,28 @@ const Kakaopay = () => {
       console.log(data);
       window.location.replace("/");
     } else {
-      alert(`결제 실패: ${error_msg} ${merchant_uid} ${buyer_tel} ${pg}`);
+      alert("결제를 실패했습니다. 다시 시도해주세요");
     }
   }
-  const updateUserInfo = async () => {
-      const response = await userInfo();
+  // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
+  const updateUserInfo = async (user) => {
+    if (user) {
+      const response = await userInfo(user.token);
       const newPoint = response.data.point;
-      console.log(response.data.point);      
-      setPoint(newPoint);
+      const formatPoint = newPoint.toLocaleString('ko-KR');
+      const newName = response.data.name;
+      const newId = response.data.id;
+
+      setPoint(formatPoint);
+      setName(newName);
+      setId(newId);
+    }
   };
   useEffect(() => {
-    updateUserInfo();
-    console.log(point);
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
   }, []);
 
   useEffect(() => {
@@ -169,7 +169,9 @@ const Kakaopay = () => {
 
   return (
     <div>
-      <Nav.Link onClick={openModal} style={{ color: "black" }}>카카오페이로 결제</Nav.Link>
+      {name && (
+        <Nav.Link onClick={openModal} style={{ color: "black" }}>카카오페이로 결제</Nav.Link>
+      )}
       {isModalOpen && (
         <Modal>
           <div className='top'>

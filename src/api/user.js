@@ -1,18 +1,20 @@
 import axios from "axios";
-const token = localStorage.getItem("token");
+// const token = localStorage.getItem("token");
 const instance = axios.create({
   baseURL: "http://localhost:8080/api",
-  headers: {
-    Authorization: `Bearer ${token}`,
-  },
 });
 
 export const login = async (data) => {
   return await instance.post("/public/signin", data);
 };
 
-export const userInfo = async() =>{
-  return await instance.get("/user")
+export const userInfo = async(token) =>{
+  console.log(token);
+  return await instance.get("/user",{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 

@@ -39,11 +39,8 @@ const Header = () => {
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
-
-  const userData = JSON.parse(localStorage.getItem("user"));
-
-  const [name, setName] = useState(userData ? userData.name : '');
-  const [point, setPoint] = useState(userData ? userData.point : 0);
+  const [name, setName] = useState("");
+  const [point, setPoint] = useState(0);
 
   const Search = () => {
     console.log(keyword);
@@ -72,25 +69,25 @@ const Header = () => {
     window.location.replace("/"); // 새로고침
   }
 
-  const updateUserInfo = async () => {
-    try {
-      const response = await userInfo();
+  // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
+  const updateUserInfo = async (user) => {
+    if (user) {
+      const response = await userInfo(user.token);
       const newPoint = response.data.point;
-      setPoint(newPoint);
-      console.log(newPoint);
-      console.log("아아");
-    } catch (error) {
-      console.error("사용자 정보를 불러오는 중 오류 발생:", error);
+      const newName = response.data.name;
+      const formatPoint = newPoint.toLocaleString('ko-KR');
+      setPoint(formatPoint);
+      setName(newName);
     }
   };
-
   useEffect(() => {
-    updateUserInfo();
-    console.log(point);
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
   }, []);
-
   const [categories, setCategories] = useState([]);
-  
+
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
@@ -127,11 +124,11 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              <p>{name}</p>
-              <p>{point}</p>
 
+              {name && 
+                <Nav.Link style={{ color: "black" }}> {name} 님 {point} point</Nav.Link>
+              }
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
-
               <Kakaopay />
 
               {Object.keys(user).length === 0 ? (
@@ -146,42 +143,42 @@ const Header = () => {
         </Navbar>
         <Divider />
         <Form onSubmit={(e) => {
-  e.preventDefault();
-  Search();
-}}>
-  <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline: "none" }}>
-    <Form.Control
-      placeholder="검색어를 입력해주세요"
-      style={{
-        borderRadius: "25px 0 0 25px",
-        boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
-        borderColor: "#d9d9d9",
-        borderRight: "none",
-      }}
-      value={keyword}
-      onChange={(e) => setKeyword(e.target.value)}
-    />
-    <Nav.Link>
-      <Button
-        type="submit"
-        variant="outline-secondary"
-        id="button-addon2"
-        style={{
-          height: "100%",
-          background: "white",
-          borderRadius: "0",
-          boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
-          borderColor: "#d9d9d9",
-          borderLeft: "none",
-        }}
-        onClick={Search}
-        className="custom-button"
-      >
-        <AiOutlineSearch className="aiBtn" style={{ fontSize: "30px", color: "black" }} />
-      </Button>
-    </Nav.Link>
-  </InputGroup>
-</Form>
+          e.preventDefault();
+          Search();
+        }}>
+          <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline: "none" }}>
+            <Form.Control
+              placeholder="검색어를 입력해주세요"
+              style={{
+                borderRadius: "25px 0 0 25px",
+                boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
+                borderColor: "#d9d9d9",
+                borderRight: "none",
+              }}
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+            />
+            <Nav.Link>
+              <Button
+                type="submit"
+                variant="outline-secondary"
+                id="button-addon2"
+                style={{
+                  height: "100%",
+                  background: "white",
+                  borderRadius: "0",
+                  boxShadow: "5px 5px 4px rgba(0, 0, 0, 0.5)",
+                  borderColor: "#d9d9d9",
+                  borderLeft: "none",
+                }}
+                onClick={Search}
+                className="custom-button"
+              >
+                <AiOutlineSearch className="aiBtn" style={{ fontSize: "30px", color: "black" }} />
+              </Button>
+            </Nav.Link>
+          </InputGroup>
+        </Form>
 
 
 
@@ -224,4 +221,3 @@ const Header = () => {
 };
 
 export default Header;
-  
