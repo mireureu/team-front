@@ -6,9 +6,9 @@ import { getCategories, addPost } from "../api/addpost";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import getUserInfo from "../api/user";
+// import getUserInfo from "../api/user";
 
-const { userObject } = getUserInfo();
+// const { userObject } = getUserInfo();
 
 const Post = () => {
   const [categories, setCategories] = useState([]);

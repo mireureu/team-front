@@ -142,7 +142,7 @@ const Header = () => {
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
-          </Navbar.Collapse>
+          </Navbar.Collapse>  
         </Navbar>
         <Divider />
         <Form onSubmit={(e) => {
