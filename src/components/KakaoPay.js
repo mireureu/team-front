@@ -123,7 +123,7 @@ const Kakaopay = () => {
     }, callback);
   };
 
-  function callback(response) {
+  async function callback (response)  {
     const {
       success,
       merchant_uid,
@@ -141,7 +141,7 @@ const Kakaopay = () => {
         id: id,
       };
       const data = { ...updateUserData, point: amount };
-      updatePoint(data);
+      await updatePoint(data);
       console.log(data);
       
     } else {

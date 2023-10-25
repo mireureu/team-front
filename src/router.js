@@ -28,6 +28,10 @@ const router = createBrowserRouter([
         element: <Auctionpost />,
       },
       {
+        path: "/comments",
+        element: <Auctionpost />,
+      },
+      {
         path: "/qnapost",
         element: <QnAboard />,
       },

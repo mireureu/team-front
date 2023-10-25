@@ -128,7 +128,7 @@ const Header = () => {
                 <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
 
               ) : (
-                <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃{userObject.name}</Nav.Link>)}
+                <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>)}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
               <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
                 

@@ -20,6 +20,11 @@ const StyledHeader = styled.header`
     width: 100%;
     height: 100%;
   }
+  .image-container {
+  width: 250px; /* 원하는 가로 너비 설정 */
+  height: 250px; /* 원하는 세로 높이 설정 */
+  object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
+}
   .Pagination.Item.active {
     background-color: #007bff;
     border-color: #007bff;
@@ -207,7 +212,11 @@ const App = () => {
                 <Link to={`/auctionpost/${item.auctionNo}`}>
                   {" "}
                   {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
-                  <Card.Img variant="top" src={"/upload/" + item.auctionImg.split(",", 1)} />
+                  <Card.Img
+                    variant="top"
+                    src={"/upload/" + item.auctionImg.split(",", 1)}
+                    className="image-container"
+                  />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
