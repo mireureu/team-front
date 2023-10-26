@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
 import { updateUser } from "../api/user";
@@ -62,21 +62,33 @@ const MyPage = styled.div`
 `;
 
 const UserPage = () => {
-  const userData = JSON.parse(localStorage.getItem("user"));
-  
   const [initialFieldValues, setInitialFieldValues] = useState({
-    nick: userData?.nick || '',
-    phone: userData?.phone || '',
-    email: userData?.email || '',
-    addr: userData?.addr || '',
+    nick: "",
+    phone: "",
+    email: "",
+    addr: "",
   });
-  
+
   const [fields, setFields] = useState({
-    nick: { value: initialFieldValues.nick, isEditable: false },
-    phone: { value: initialFieldValues.phone, isEditable: false },
-    email: { value: initialFieldValues.email, isEditable: false },
-    addr: { value: initialFieldValues.addr, isEditable: false },
+    nick: { value: "", isEditable: false },
+    phone: { value: "", isEditable: false },
+    email: { value: "", isEditable: false },
+    addr: { value: "", isEditable: false },
   });
+
+  // 페이지 로드 시 localStorage에서 데이터를 가져옴
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    if (userData) {
+      setInitialFieldValues(userData);
+      setFields({
+        nick: { value: userData.nick, isEditable: false },
+        phone: { value: userData.phone, isEditable: false },
+        email: { value: userData.email, isEditable: false },
+        addr: { value: userData.addr, isEditable: false },
+      });
+    }
+  }, []);
 
   const toggleEditable = (field) => {
     setFields((prevFields) => {
@@ -126,6 +138,10 @@ const UserPage = () => {
           }
           return updatedFields;
         });
+
+        // 데이터베이스에서 가져온 값을 로컬 스토리지에 다시 저장
+        localStorage.setItem("user", JSON.stringify(updatedData));
+
       } else {
         console.error('데이터 업데이트 실패');
       }
@@ -133,10 +149,7 @@ const UserPage = () => {
       console.error('데이터 업데이트 오류:', error);
     }
   };
-
-  // useEffect(() => {
-  //   // memberAPI();
-  // }, []);
+  
   
 
   return (
