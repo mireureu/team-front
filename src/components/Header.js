@@ -37,13 +37,14 @@ const CategoryColor = styled.div`
   `;
 
 const Header = () => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const point = useSelector((state) => state.user.point);
   const dispatch = useDispatch();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const [name, setName] = useState("");
-  const [point, setPoint] = useState(0);
+  const [name, setName] = useState(userData ? userData.name : "");  
 
   const Search = () => {
     console.log(keyword);
@@ -59,11 +60,10 @@ const Header = () => {
     const save = localStorage.getItem("user");
     if (Object.keys(user).length === 0 && save != null) {
       const savedUser = JSON.parse(save);
-      dispatch(userSave(savedUser));
-      setPoint(savedUser.point); // 포인트 상태 업데이트
+      dispatch(userSave(savedUser));      
     }
   }, [user]);
-
+ 
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -73,22 +73,22 @@ const Header = () => {
   }
 
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
-  const updateUserInfo = async (user) => {
-    if (user) {
-      const response = await userInfo(user.token);
-      const newPoint = response.data.point;
-      const newName = response.data.name;
-      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
-      setPoint(formatPoint);
-      setName(newName);
-    }
-  };
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) {
-      updateUserInfo(savedUser);
-    }
-  }, []);
+  // const updateUserInfo = async (user) => {
+  //   if (user) {
+  //     const response = await userInfo(user.token);
+  //     const newPoint = response.data.point;
+  //     const newName = response.data.name;
+  //     const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
+  //     setPoint(formatPoint);
+  //     setName(newName);
+  //   }
+  // };
+  // useEffect(() => {
+  //   const savedUser = JSON.parse(localStorage.getItem("user"));
+  //   if (savedUser) {
+  //     updateUserInfo(savedUser);
+  //   }
+  // }, []);
   const [categories, setCategories] = useState([]);
 
   const categoryAPI = async () => {
@@ -128,9 +128,9 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
 
-              {name && 
-                <Nav.Link style={{ color: "black" }}> {name} 님 {point} point</Nav.Link>
-              }
+               {name &&
+                <Nav.Link style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR'):0} point</Nav.Link>
+               }
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
               <Kakaopay />
 
