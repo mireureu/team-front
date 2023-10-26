@@ -3,6 +3,29 @@ import { useParams } from "react-router-dom";
 import { getPost, updateCurrentPrice } from "../api/addpost"; // 추가: updateCurrentPrice 함수 import
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getComments } from "../api/auctionBoard";
+import styled  from "styled-components";
+import { Margin } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { addComment } from "../store/commentSlice";
+const CommentContainer = styled.div`
+
+  .comment {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    .author {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .content {
+      margin-left: 5px;
+    }
+  }
+`;
 
 
 function convertToSeoulTime(utcDateString) {
@@ -14,11 +37,15 @@ function convertToSeoulTime(utcDateString) {
 }
 
 const Auctionpost = () => {
+  const dispatch =useDispatch();
   const [auctionPost, setAuctionPost] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [newCurrentPrice, setNewCurrentPrice] = useState(0); // 현재 가격 변경
+  const [newCurrentPrice, setNewCurrentPrice] = useState(0); //현재가격 변경
+  const [addComments, setaddComments] = useState("");
   const { auctionNo } = useParams();
   const [comments, setComments] = useState([]);
+
+  
 
   useEffect(() => {
     const fetchAuctionPost = async () => {
@@ -49,6 +76,12 @@ const Auctionpost = () => {
     }
   }, [auctionPost]);
 
+  const clickAddComment =  () =>{
+    const data = { content: addComments, auctionNo:auctionNo };
+    dispatch(addComment(data)); 
+    setaddComments(" ");
+  }
+
   const handlePrevImage = () => {
     // 이미지 이전버튼
     setCurrentImageIndex((prevIndex) =>
@@ -64,8 +97,9 @@ const Auctionpost = () => {
           console.log(auctionNo);
           const response = await getComments(auctionNo);
           console.log(response.data);
-          // console.log("댓글 데이터:", response.data.content);
+          console.log("댓글 데이터:", response.data.content);
           setComments(response.data);
+          console.log(comments);
         }
       } catch (error) {
         console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
@@ -228,14 +262,33 @@ useEffect(() => {
           )}
         </Col>
       </Row>
-      <Form>
+      <Form onSubmit={clickAddComment}>
         {/* 댓글 추가 입력 폼 */}
+        <div className="mt-3">
+          <h3>댓글 작성</h3>
+          <Form.Group>
+            <Form.Label>댓글 내용</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="댓글을 입력하세요"
+              onChange={(e) => setaddComments(e.target.value)}
+              value={addComments}
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            댓글 작성
+          </Button>
+        </div>
       </Form>
       <div>
         {comments.map((comment) => (
-          <div key={comment.commentNo}>
-            {comment.content}
+          <CommentContainer key={comment.commentNo}>
+            <div className="comment">
+              <span className="author">{comment.member.nick}:</span>
+              <span className="content">{comment.content}</span>
             </div>
+          </CommentContainer>
         ))}
       </div>
       <style>

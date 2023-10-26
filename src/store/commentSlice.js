@@ -62,7 +62,7 @@ const commentSlice = createSlice({
       } else {
         // 대댓글 : 해당 부모 댓글의 답글로 추가
         const index = state.findIndex(
-          (comment) => comment.commentCode === action.payload.commentParent
+          (comment) => comment.commentNo === action.payload.commentParent
         );
         state[index].replies?.push(action.payload);
       }
@@ -78,15 +78,15 @@ const commentSlice = createSlice({
       if (action.payload.commentParent === null) {
         // 댓글 : 해당 댓글을 배열에서 삭제
         return state.filter(
-          (item) => item.commentCode !== action.payload.commentCode
+          (item) => item.commentNo !== action.payload.commentNo
         );
       } else {
         // 대댓글 : 해당 부모 댓글의 답글에서 해당 댓글 삭제
         const index = state.findIndex(
-          (comment) => comment.commentCode === action.payload.commentParent
+          (comment) => comment.commentNo === action.payload.commentParent
         );
         const replyIndex = state[index].replies.findIndex(
-          (item) => item.commentCode === action.payload.commentCode
+          (item) => item.commentNo === action.payload.commentNo
         );
         state[index].replies.splice(replyIndex, 1);
       }

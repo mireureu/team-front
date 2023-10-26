@@ -29,12 +29,12 @@ export const getCategories = async () => {
 };
 
 export const getPostitem = async (id) => {
-  return await instance.get(`/public/auction/${id}`);
+  return await instance.get(`public/auction/${id}`);
 };
 
 export const getComments = async (auctionNo) =>{
   console.log("12345"+auctionNo);
-  return await instance.get(`public/video/${auctionNo}/comment`);
+  return await instance.get(`public/${auctionNo}/comment`);
 }
 
 export const getItem = async (page, category, sortOption) => {
