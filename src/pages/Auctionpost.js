@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getPost, updateCurrentPrice, getCountAuction } from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import { getComments } from "../api/auctionBoard";
 import styled  from "styled-components";
 import { Margin } from "@mui/icons-material";
@@ -43,6 +44,8 @@ const Auctionpost = () => {
   const [newCurrentPrice, setNewCurrentPrice] = useState(0); //현재가격 변경
   const [addComments, setaddComments] = useState("");
   const { auctionNo } = useParams();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
   const [comments, setComments] = useState([]);
 
   
