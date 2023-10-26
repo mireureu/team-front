@@ -116,7 +116,7 @@ const Kakaopay = () => {
     }, callback);
   };
 
-  function callback(response) {
+  async function callback (response)  {
     const {
       success,
     } = response;
@@ -129,15 +129,11 @@ const Kakaopay = () => {
       const updateUserData = {
         point: updatedPoint, // 업데이트된 포인트를 사용합니다.
         id: id,
-      };      
-      updatePoint(updateUserData);
-
-      dispatch(updateUser({ point: updatedPoint }));   
-
-      // console.log(dispatch(userSave({ point: updatedPoint })));
-      // console.log(data);
-      console.log()
-      // window.location.replace("/");
+      };
+      const data = { ...updateUserData, point: amount };
+      await updatePoint(data);
+      console.log(data);
+      window.location.replace("/");
     } else {
       alert("결제를 실패했습니다. 다시 시도해주세요");
     }

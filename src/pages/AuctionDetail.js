@@ -8,7 +8,7 @@ import Table from "react-bootstrap/Table";
 import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
 import Offcanvas from "react-bootstrap/Offcanvas";
-import { getCategories, getItem } from "../api/auctionBoard";
+import { getCategories, getItem, getComments } from "../api/auctionBoard";
 
 const StyledHeader = styled.header`
   display: flex;
@@ -20,6 +20,11 @@ const StyledHeader = styled.header`
     width: 100%;
     height: 100%;
   }
+  .image-container {
+  width: 250px; /* 원하는 가로 너비 설정 */
+  height: 250px; /* 원하는 세로 높이 설정 */
+  object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
+}
   .Pagination.Item.active {
     background-color: #007bff;
     border-color: #007bff;
@@ -90,11 +95,20 @@ const App = () => {
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
       const result = await getItem(selectedPage, selectedCategory, sortOption);
-      console.log(result);
+      console.log("dddasdasdsadsa"+result.data.content);
       setTotalPages(result.data.totalPages);
       setItems(result.data.content);
     } catch (error) {
       console.error("데이터 불러오기 오류:", error);
+    }
+  };
+
+  const loadComments = async (auctionId) => {
+    try {
+      const response = await getComments(auctionId);
+      console.log("댓글 데이터:", response.data);
+    } catch (error) {
+      console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
     }
   };
 
@@ -108,6 +122,7 @@ const App = () => {
 
   useEffect(() => {
     categoryAPI();
+    loadComments(1);
   }, []);
 
   useEffect(() => {
@@ -207,7 +222,11 @@ const App = () => {
                 <Link to={`/auctionpost/${item.auctionNo}`}>
                   {" "}
                   {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
-                  <Card.Img variant="top" src={"/upload/" + item.auctionImg.split(",", 1)} />
+                  <Card.Img
+                    variant="top"
+                    src={"/upload/" + item.auctionImg.split(",", 1)}
+                    className="image-container"
+                  />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
@@ -227,10 +246,11 @@ const App = () => {
                       <div
                         className="hidden-hover"
                         onMouseEnter={() => {
-                          // ...
+                        
                         }}
                       >
                         현재가 : {item.currentPrice}원
+          
                       </div>
                       <div
                         className="show-hover"

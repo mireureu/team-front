@@ -38,11 +38,16 @@ const Login = () => {
     dispatch(asyncLogin({ id, password })).then((response) => {
       if (response.payload) {
         console.log(response.payload);
+        localStorage.setItem("token",response.payload.token);  
+        localStorage.setItem("user",JSON.stringify(response.payload));
         navigate('/'); 
       } else {
         alert('아이디 또는 비밀번호가 틀렸습니다.');        
       }
     });
+
+    // localStorage.setItem("token",action.payload.token);  
+            // localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장     
 
   };
 

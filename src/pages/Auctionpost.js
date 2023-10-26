@@ -2,7 +2,31 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getPost, updateCurrentPrice, getCountAuction } from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
-import { Modal } from "react-bootstrap";
+import { getComments } from "../api/auctionBoard";
+import styled  from "styled-components";
+import { Margin } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { addComment } from "../store/commentSlice";
+const CommentContainer = styled.div`
+
+  .comment {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f5f5f5;
+    display: flex;
+    align-items: center;
+    .author {
+      font-weight: bold;
+      margin-right: 5px;
+    }
+    .content {
+      margin-left: 5px;
+    }
+  }
+`;
+
 
 function convertToSeoulTime(utcDateString) {
   // 시간 설정
@@ -13,12 +37,15 @@ function convertToSeoulTime(utcDateString) {
 }
 
 const Auctionpost = () => {
+  const dispatch =useDispatch();
   const [auctionPost, setAuctionPost] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [newCurrentPrice, setNewCurrentPrice] = useState(0); // 현재 가격 변경
+  const [newCurrentPrice, setNewCurrentPrice] = useState(0); //현재가격 변경
+  const [addComments, setaddComments] = useState("");
   const { auctionNo } = useParams();
-  const [showSuccessModal, setShowSuccessModal] = useState(false);
-  const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
+  const [comments, setComments] = useState([]);
+
+  
 
   useEffect(() => {
     // 데이터 가져오는 함수
@@ -57,6 +84,12 @@ const Auctionpost = () => {
     }
   }, [auctionPost]);
 
+  const clickAddComment =  () =>{
+    const data = { content: addComments, auctionNo:auctionNo };
+    dispatch(addComment(data)); 
+    setaddComments(" ");
+  }
+
   const handlePrevImage = () => {
     // 이미지 이전버튼
     setCurrentImageIndex((prevIndex) =>
@@ -65,6 +98,44 @@ const Auctionpost = () => {
         : prevIndex - 1
     );
   };
+  useEffect(() => {
+    const loadComments = async () => {
+      try {
+        if (auctionNo) {
+          console.log(auctionNo);
+          const response = await getComments(auctionNo);
+          console.log(response.data);
+          console.log("댓글 데이터:", response.data.content);
+          setComments(response.data);
+          console.log(comments);
+        }
+      } catch (error) {
+        console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
+      }
+    };
+  
+    if (auctionPost) {
+      loadComments();
+      console.log(loadComments());
+    }
+  }, [auctionPost]);
+  
+
+useEffect(() => {
+  const fetchAuctionPost = async () => {
+    try {
+      const response = await getPost(auctionNo);
+      setAuctionPost(response.data);
+    } catch (error) {
+      console.error("게시글 정보를 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  if (auctionNo) {
+    fetchAuctionPost();
+  }
+}, [auctionNo]);
+
 
   const handleNextImage = () => {
     // 이미지 다음버튼
@@ -172,8 +243,8 @@ const Auctionpost = () => {
                   경매 종료일: {formatSeoulTime(auctionPost.auctionEndDate)}
                 </p>
                 <Row className="border-top justify-content-center">
-                  <p>판매자 정보: {auctionPost.memberId.id}</p>
-                  <p>등록건수: {sellerAuctionCount}</p>
+                <p>판매자 정보: {auctionPost.memberId.id}</p>
+                  <p>등록건수: </p>
                   <p>회원 등급: </p>
                 </Row>
               </Col>
@@ -240,6 +311,35 @@ const Auctionpost = () => {
           )}
         </Col>
       </Row>
+      <Form onSubmit={clickAddComment}>
+        {/* 댓글 추가 입력 폼 */}
+        <div className="mt-3">
+          <h3>댓글 작성</h3>
+          <Form.Group>
+            <Form.Label>댓글 내용</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              placeholder="댓글을 입력하세요"
+              onChange={(e) => setaddComments(e.target.value)}
+              value={addComments}
+            />
+          </Form.Group>
+          <Button variant="primary" type="submit">
+            댓글 작성
+          </Button>
+        </div>
+      </Form>
+      <div>
+        {comments.map((comment) => (
+          <CommentContainer key={comment.commentNo}>
+            <div className="comment">
+              <span className="author">{comment.member.nick}:</span>
+              <span className="content">{comment.content}</span>
+            </div>
+          </CommentContainer>
+        ))}
+      </div>
       <style>
         {`
           .item-desc {
@@ -268,6 +368,7 @@ const Auctionpost = () => {
         </Modal.Footer>
       </Modal>
     </Container>
+    
   );
 };
 
