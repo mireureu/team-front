@@ -37,7 +37,7 @@ const Login = () => {
     const password = e.target.password.value;
     dispatch(asyncLogin({ id, password })).then((response) => {
       if (response.payload) {
-        console.log(response.payload);
+    
         navigate('/'); 
       } else {
         alert('아이디 또는 비밀번호가 틀렸습니다.');        

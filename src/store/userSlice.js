@@ -19,9 +19,8 @@ const userSlice = createSlice({
         },        
         updateUser:(state, action) => {
             const user = JSON.parse(localStorage.getItem("user"));
-            user.point = action.payload.point;
-            localStorage.setItem("user", JSON.stringify(user));
-            state.point = action.payload.point;
+            user.point = action.payload.point;                             
+            state.point = action.payload.point;            
             return state;
         }
     },
