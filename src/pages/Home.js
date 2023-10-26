@@ -14,24 +14,27 @@ import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import hot from "../components/hot.png";
 
 const Main = styled.div`
-  display: grid;
-  margin: 30px;
-  grid-template-columns: 1fr 4fr 1fr;
+  /* display: grid; */
+  max-width: 1295px;
+  margin: 0 auto;
+  height: 1200px;
+  /* grid-template-columns: 1fr 4fr 1fr;
   grid-template-areas:
     "g-left g-banner g-right"
     "g-left g-newitem g-right"
     "g-lower g-lower g-lower";
-  gap: 20px;
+  gap: 20px; */
 `;
 
 const Banner = styled.div`
-  grid-area: g-banner;
+  /* grid-area: g-banner; */
   /* border: 1px solid black; */
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 246, 18);
-  /* width: 80%; */
+  width: 100%;
+  margin-bottom: 20px;
   /* margin: 0 auto; */
   img {
     width: auto;
@@ -45,7 +48,7 @@ const Left = styled.div`
 `;
 
 const NewItem = styled.div`
-  grid-area: g-newitem;
+  /* grid-area: g-newitem; */
   width: 100%;
   height: auto;
   display: flex;
@@ -333,7 +336,7 @@ const Home = () => {
 
   return (
     <Main className="div-container">
-      <Left className="div-item"></Left>
+      
 
       <Banner>
         {/* <h1>[ 주간 HOT 경매! ]</h1> */}
@@ -369,9 +372,7 @@ const Home = () => {
         </News>
       </NewItem>
 
-      <Right className="div-item"></Right>
-
-      <Lower className="div-item"></Lower>
+      
 
       {isModalOpen && selectedItem && (
         <Modal>
