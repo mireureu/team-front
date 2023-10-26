@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getPost, updateCurrentPrice } from "../api/addpost"; // 추가: updateCurrentPrice 함수 import
+import { getPost, updateCurrentPrice, getCountAuction } from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 function convertToSeoulTime(utcDateString) {
   // 시간 설정
@@ -16,12 +17,22 @@ const Auctionpost = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newCurrentPrice, setNewCurrentPrice] = useState(0); // 현재 가격 변경
   const { auctionNo } = useParams();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
 
   useEffect(() => {
+    // 데이터 가져오는 함수
     const fetchAuctionPost = async () => {
       try {
         const response = await getPost(auctionNo);
         setAuctionPost(response.data);
+
+        // 추가: 판매자의 등록 게시물 수 가져오기
+        const sellerId = response.data?.memberId?.id;
+        if (sellerId) {
+          const sellerCountResponse = await getCountAuction(sellerId);
+          setSellerAuctionCount(sellerCountResponse.data[0]?.AUCTION_COUNT);
+        }
       } catch (error) {
         console.error("게시글 정보를 불러오는 중 오류 발생:", error);
       }
@@ -63,9 +74,9 @@ const Auctionpost = () => {
   };
 
   function formatSeoulTime(dateString) {
-    // 시간설정
     const seoulDate = convertToSeoulTime(dateString);
     const options = {
+      timeZone: "Asia/Seoul", // 서울 시간대로 설정
       year: "numeric",
       month: "long",
       day: "numeric",
@@ -76,21 +87,31 @@ const Auctionpost = () => {
   }
 
   const handleImmediatePurchase = () => {
+    // 즉시구매 관련 (미구현)
     alert("즉시구매가 완료되었습니다.");
   };
 
-  const handlePriceChange = () => {
-    if (newCurrentPrice > auctionPost.currentPrice) {
-      // 서버로 현재 가격을 업데이트
-      updateCurrentPrice(auctionPost.auctionNo, newCurrentPrice)
-        .then((updatedPost) => {
-          // 업데이트가 성공하면 업데이트된 게시글을 받아와서 상태를 업데이트
-          setAuctionPost(updatedPost);
-        })
-        .catch((error) => {
-          // 에러 처리
-          console.error("현재 가격 업데이트 실패:", error);
-        });
+  const handlePriceChangeSuccess = () => {
+    // 입찰 성공 시 팝업
+    setShowSuccessModal(true);
+  };
+
+  const handlePriceChange = async (e) => {
+    // 입찰가격 변경
+    try {
+      const newPrice =
+        auctionPost.currentNum === 0
+          ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
+          : auctionPost.currentPrice + auctionPost.auctionEMoney;
+
+      await updateCurrentPrice(auctionPost.auctionNo, {
+        currentPrice: newPrice,
+      });
+
+      // 입찰 변경이 성공하면 성공 모달을 표시합니다.
+      handlePriceChangeSuccess();
+    } catch (error) {
+      console.error("입찰 변경 실패:", error);
     }
   };
 
@@ -104,21 +125,44 @@ const Auctionpost = () => {
             </h2>
             <Row className="justify-content-center">
               <Col xs={12} md={6} className="border-right">
-                <img
-                  src={
-                    "/upload/" +
-                    auctionPost.auctionImg.split(",")[currentImageIndex]
-                  }
-                  alt="Auction Image"
-                  style={{ maxWidth: "100%" }}
-                />
-                <div>
-                  <Button variant="primary" onClick={handlePrevImage}>
-                    이전 이미지
-                  </Button>
-                  <Button variant="primary" onClick={handleNextImage}>
-                    다음 이미지
-                  </Button>
+                <div
+                  style={{
+                    width: "100%",
+                    height: "300px",
+                    overflow: "hidden",
+                    position: "relative",
+                  }}
+                >
+                  <img
+                    src={
+                      "/upload/" +
+                      auctionPost.auctionImg.split(",")[currentImageIndex]
+                    }
+                    alt="Auction Image"
+                    style={{
+                      width: "auto",
+                      height: "100%",
+                      display: "block",
+                      position: "absolute",
+                      top: "50%",
+                      left: "50%",
+                      transform: "translate(-50%, -50%)",
+                    }}
+                  />
+                </div>
+                <div className="text-center">
+                  <p>
+                    이미지 {currentImageIndex + 1} /{" "}
+                    {auctionPost.auctionImg.split(",").length}
+                  </p>
+                  <div>
+                    <Button variant="primary" onClick={handlePrevImage}>
+                      이전
+                    </Button>
+                    <Button variant="primary" onClick={handleNextImage}>
+                      다음
+                    </Button>
+                  </div>
                 </div>
               </Col>
               <Col xs={12} md={6}>
@@ -128,8 +172,8 @@ const Auctionpost = () => {
                   경매 종료일: {formatSeoulTime(auctionPost.auctionEndDate)}
                 </p>
                 <Row className="border-top justify-content-center">
-                  <p>판매자 정보: </p>
-                  <p>등록건수: </p>
+                  <p>판매자 정보: {auctionPost.memberId.id}</p>
+                  <p>등록건수: {sellerAuctionCount}</p>
                   <p>회원 등급: </p>
                 </Row>
               </Col>
@@ -138,20 +182,28 @@ const Auctionpost = () => {
               <Col xs={12} md={6} className="border-right">
                 <p>경매 시작가: {auctionPost.auctionSMoney}원</p>
                 <p>최소 입찰가: {auctionPost.auctionEMoney}원</p>
+                <p>총 입찰 횟수: {auctionPost.currentNum}</p>
                 <p>입찰 인원: {auctionPost.auctionAttendNo}명</p>
                 <p>현재 가격: {auctionPost.currentPrice}원</p>
+              </Col>
+              <Col xs={12} md={6}>
+                입찰하기
                 <Form.Group>
                   <Form.Control
                     type="number"
-                    value={newCurrentPrice}
+                    style={{ width: "300px" }} // 원하는 폭(가로 크기)으로 설정
+                    value={
+                      auctionPost.currentNum === 0
+                        ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
+                        : auctionPost.currentPrice + auctionPost.auctionEMoney
+                    }
                     onChange={(e) => setNewCurrentPrice(e.target.value)}
                   />
                 </Form.Group>
                 <Button variant="primary" onClick={handlePriceChange}>
-                  입력가격 입찰
+                  입찰
                 </Button>
-              </Col>
-              <Col xs={12} md={6}>
+                <div className="border-top my-3"></div>
                 <Row>
                   <Col xs={6}>
                     <p>즉시구매여부: {auctionPost.auctionNowbuy}</p>
@@ -180,7 +232,7 @@ const Auctionpost = () => {
         <p>Loading...</p>
       )}
       <Row className="border-top">
-        <Col xs={12} md={6} className="border-right">
+        <Col xs={12} md={12} className="border-right">
           {auctionPost && (
             <p className="text-right mt-3 item-desc">
               게시글 내용: {auctionPost.itemDesc}
@@ -196,6 +248,25 @@ const Auctionpost = () => {
           }
         `}
       </style>
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>입찰 변경 성공</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>입찰가 변경이 성공적으로 제출되었습니다.</p>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="primary"
+            onClick={() => {
+              setShowSuccessModal(false);
+              window.location.reload(); // 팝업 닫기 후 페이지 새로고침
+            }}
+          >
+            닫기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
