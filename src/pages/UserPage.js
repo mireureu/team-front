@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
+import { updateUser } from "../api/user";
 
 const MyPage = styled.div`
   max-width: 1295px;
@@ -62,31 +63,32 @@ const MyPage = styled.div`
 
 const UserPage = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
-  const [fields, setFields] = useState({
-    nick: { value: userData?.nick || "D_Clown", isEditable: false },
-    phone: { value: userData?.phone || "01024026092", isEditable: false },
-    email: { value: userData?.email || "wawd@naver.com", isEditable: false },
-    addr: { value: userData?.addr || "서울", isEditable: false },
+  
+  const [initialFieldValues, setInitialFieldValues] = useState({
+    nick: userData?.nick || '',
+    phone: userData?.phone || '',
+    email: userData?.email || '',
+    addr: userData?.addr || '',
   });
   
-  // "취소" 버튼을 누를 때 필드의 초기값을 저장하는 상태 변수
-  const [initialFieldValues, setInitialFieldValues] = useState({});
+  const [fields, setFields] = useState({
+    nick: { value: initialFieldValues.nick, isEditable: false },
+    phone: { value: initialFieldValues.phone, isEditable: false },
+    email: { value: initialFieldValues.email, isEditable: false },
+    addr: { value: initialFieldValues.addr, isEditable: false },
+  });
 
   const toggleEditable = (field) => {
-    // 필드의 수정 모드가 활성화되면 현재 값 저장
-    if (!fields[field].isEditable) {
-      setInitialFieldValues({
-        ...initialFieldValues,
-        [field]: fields[field].value,
-      });
-    }
-
-    setFields({
-      ...fields,
-      [field]: {
-        ...fields[field],
-        isEditable: !fields[field].isEditable,
-      },
+    setFields((prevFields) => {
+      const isEditable = !prevFields[field].isEditable;
+      return {
+        ...prevFields,
+        [field]: {
+          ...prevFields[field],
+          value: isEditable ? prevFields[field].value : initialFieldValues[field], // 초기값으로 복원
+          isEditable: isEditable,
+        },
+      };
     });
   };
 
@@ -100,42 +102,36 @@ const UserPage = () => {
     });
   };
 
-  const handleCancel = (field) => {
-    // "취소" 버튼을 누를 때 필드를 초기값으로 복원하고 수정 모드 비활성화
-    setFields({
-      ...fields,
-      [field]: {
-        ...fields[field],
-        value: initialFieldValues[field], // 초기값으로 복원
-        isEditable: false, // 수정 모드 비활성화
-      },
-    });
-  };
+  const handleSave = async () => {
+    const updatedData = {};
 
-  const handleSave = () => {
-    // // "닉네임" 필드
-    // if (isEditableNick) {
-    //   setInputValueNick(prevValueNick);
-    //   setIsEditableNick(false);
-    // }
-    
-    // // "전화번호" 필드
-    // if (isEditablePhone) {
-    //   setInputValuePhone(prevValuePhone);
-    //   setIsEditablePhone(false);
-    // }
-  
-    // // "이메일" 필드
-    // if (isEditableEmail) {
-    //   setInputValueEmail(prevValueEmail);
-    //   setIsEditableEmail(false);
-    // }
-  
-    // // "주소" 필드
-    // if (isEditableAddr) {
-    //   setInputValueAddr(prevValueAddr);
-    //   setIsEditableAddr(false);
-    // }
+    // 수정된 필드 확인
+    for (const field of Object.keys(fields)) {
+      if (fields[field].isEditable) {
+        updatedData[field] = fields[field].value;
+      }
+    }
+
+    try {
+      // updateUser 함수를 호출하여 업데이트를 시도
+      const response = await updateUser(updatedData);
+
+      if (response.status === 200) {
+        console.log('데이터 업데이트 성공');
+        // 필드를 읽기 전용으로 설정하고 상태를 업데이트합니다.
+        setFields((prevFields) => {
+          const updatedFields = { ...prevFields };
+          for (const field of Object.keys(fields)) {
+            updatedFields[field].isEditable = false;
+          }
+          return updatedFields;
+        });
+      } else {
+        console.error('데이터 업데이트 실패');
+      }
+    } catch (error) {
+      console.error('데이터 업데이트 오류:', error);
+    }
   };
 
   // useEffect(() => {
@@ -152,11 +148,9 @@ const UserPage = () => {
               <p className="title">{field === "nick" ? "닉네임" : field}</p>
               <input
                 type="text"
-                className={`adds ${
-                  fields[field].isEditable ? "edit-mode" : "normal-mode"
-                }`}
+                className={`adds ${!fields[field].isEditable ? "normal-mode" : "edit-mode"}`}
                 readOnly={!fields[field].isEditable}
-                value={fields[field].value}
+                value={!fields[field].isEditable ? initialFieldValues[field] : fields[field].value}
                 onChange={(e) => handleInputChange(field, e)}
               />
               <button className="buttons" onClick={() => toggleEditable(field)}>

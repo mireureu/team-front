@@ -17,6 +17,10 @@ export const userInfo = async(token) =>{
   });
 }
 
+export const updateUser = async (data) => {
+  return await instance.post("/user/updateuser", data);
+};
+
 
 const getUserInfo = () => {
   const storedToken = localStorage.getItem("token");
