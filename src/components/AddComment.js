@@ -31,7 +31,7 @@ const AddComment = ({ code, active, parent }) => {
   const [comment, setComment] = useState("");
   const onSubmit = (e) => {
     e.preventDefault();
-    const data = { videoCode: code, commentDesc: comment };
+    const data = { auctionNo: code, commentDesc: comment };
     if (parent !== undefined) {
       data.commentParent = parent;
     }

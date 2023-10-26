@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getComments } from "../api/video";
+import { getComments } from "../api/auctionBoard";
 import { postComment, putComment, delComment } from "../api/comment";
 
 // redux-toolkit : createSlice 사용

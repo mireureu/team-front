@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getPost, updateCurrentPrice } from "../api/addpost"; // 추가: updateCurrentPrice 함수 import
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import { getComments } from "../api/auctionBoard";
+
 
 function convertToSeoulTime(utcDateString) {
   // 시간 설정
@@ -16,6 +18,7 @@ const Auctionpost = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newCurrentPrice, setNewCurrentPrice] = useState(0); // 현재 가격 변경
   const { auctionNo } = useParams();
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const fetchAuctionPost = async () => {
@@ -54,6 +57,43 @@ const Auctionpost = () => {
         : prevIndex - 1
     );
   };
+  useEffect(() => {
+    const loadComments = async () => {
+      try {
+        if (auctionNo) {
+          console.log(auctionNo);
+          const response = await getComments(auctionNo);
+          console.log(response.data);
+          // console.log("댓글 데이터:", response.data.content);
+          setComments(response.data);
+        }
+      } catch (error) {
+        console.error("댓글 데이터를 불러오는 중 오류 발생:", error);
+      }
+    };
+  
+    if (auctionPost) {
+      loadComments();
+      console.log(loadComments());
+    }
+  }, [auctionPost]);
+  
+
+useEffect(() => {
+  const fetchAuctionPost = async () => {
+    try {
+      const response = await getPost(auctionNo);
+      setAuctionPost(response.data);
+    } catch (error) {
+      console.error("게시글 정보를 불러오는 중 오류 발생:", error);
+    }
+  };
+
+  if (auctionNo) {
+    fetchAuctionPost();
+  }
+}, [auctionNo]);
+
 
   const handleNextImage = () => {
     // 이미지 다음버튼
@@ -128,7 +168,7 @@ const Auctionpost = () => {
                   경매 종료일: {formatSeoulTime(auctionPost.auctionEndDate)}
                 </p>
                 <Row className="border-top justify-content-center">
-                  <p>판매자 정보: </p>
+                <p>판매자 정보: {auctionPost.memberId.id}</p>
                   <p>등록건수: </p>
                   <p>회원 등급: </p>
                 </Row>
@@ -188,6 +228,16 @@ const Auctionpost = () => {
           )}
         </Col>
       </Row>
+      <Form>
+        {/* 댓글 추가 입력 폼 */}
+      </Form>
+      <div>
+        {comments.map((comment) => (
+          <div key={comment.commentNo}>
+            {comment.content}
+            </div>
+        ))}
+      </div>
       <style>
         {`
           .item-desc {
@@ -196,7 +246,9 @@ const Auctionpost = () => {
           }
         `}
       </style>
+      
     </Container>
+    
   );
 };
 

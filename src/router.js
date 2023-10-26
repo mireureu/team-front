@@ -10,6 +10,7 @@ import AskPage from "./pages/Askpage";
 import Post from "./pages/Post";
 import Register from "./pages/Register";
 import SearchResult from "./pages/SearchResult";
+import Watch from "./pages/Watch";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
       {
         path: "/Auctionpost/:auctionNo",
         element: <Auctionpost />,
+      },
+      {
+        path: "watch/:id",
+        element: <Watch />,
       },
       {
         path: "/comments",
