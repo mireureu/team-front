@@ -17,8 +17,22 @@ export const userInfo = async(token) =>{
   });
 }
 
+export const addUser = async (data) => {
+  return await instance.get("/user/{id}", data)
+}
+
 export const updateUser = async (data) => {
   return await instance.post("/user/updateuser", data);
+};
+
+export const getUserData = async (id) => {
+  try {
+    const response = await instance.get(`/user/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching user data: " + error);
+    throw error;
+  }
 };
 
 

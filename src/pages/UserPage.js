@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
-import { updateUser } from "../api/user";
 
 const MyPage = styled.div`
   max-width: 1295px;
@@ -62,45 +61,42 @@ const MyPage = styled.div`
 `;
 
 const UserPage = () => {
-  const [initialFieldValues, setInitialFieldValues] = useState({
-    nick: "",
-    phone: "",
-    email: "",
-    addr: "",
-  });
-
   const [fields, setFields] = useState({
-    nick: { value: "", isEditable: false },
-    phone: { value: "", isEditable: false },
-    email: { value: "", isEditable: false },
-    addr: { value: "", isEditable: false },
+    nick: { value: '', isEditable: false },
+    phone: { value: '', isEditable: false },
+    email: { value: '', isEditable: false },
+    addr: { value: '', isEditable: false },
   });
 
-  // 페이지 로드 시 localStorage에서 데이터를 가져옴
+  // "취소" 버튼을 누를 때 필드의 초기값을 저장하는 상태 변수
+  const [initialFieldValues, setInitialFieldValues] = useState({});
+
+  // 페이지가 로드될 때 localStorage에서 사용자 정보를 가져와 fields 상태 업데이트
   useEffect(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
-    if (userData) {
-      setInitialFieldValues(userData);
-      setFields({
-        nick: { value: userData.nick, isEditable: false },
-        phone: { value: userData.phone, isEditable: false },
-        email: { value: userData.email, isEditable: false },
-        addr: { value: userData.addr, isEditable: false },
-      });
-    }
-  }, []);
+    setFields({
+      nick: { value: userData?.nick || '', isEditable: false },
+      phone: { value: userData?.phone || '', isEditable: false },
+      email: { value: userData?.email || '', isEditable: false },
+      addr: { value: userData?.addr || '', isEditable: false },
+    });
+  }, []); // 빈 배열을 전달하여 페이지가 로드될 때 한 번만 실행
 
   const toggleEditable = (field) => {
-    setFields((prevFields) => {
-      const isEditable = !prevFields[field].isEditable;
-      return {
-        ...prevFields,
-        [field]: {
-          ...prevFields[field],
-          value: isEditable ? prevFields[field].value : initialFieldValues[field], // 초기값으로 복원
-          isEditable: isEditable,
-        },
-      };
+    // 필드의 수정 모드가 활성화되면 현재 값 저장
+    if (!fields[field].isEditable) {
+      setInitialFieldValues({
+        ...initialFieldValues,
+        [field]: fields[field].value,
+      });
+    }
+
+    setFields({
+      ...fields,
+      [field]: {
+        ...fields[field],
+        isEditable: !fields[field].isEditable,
+      },
     });
   };
 
@@ -114,43 +110,37 @@ const UserPage = () => {
     });
   };
 
-  const handleSave = async () => {
-    const updatedData = {};
-
-    // 수정된 필드 확인
-    for (const field of Object.keys(fields)) {
-      if (fields[field].isEditable) {
-        updatedData[field] = fields[field].value;
-      }
-    }
-
-    try {
-      // updateUser 함수를 호출하여 업데이트를 시도
-      const response = await updateUser(updatedData);
-
-      if (response.status === 200) {
-        console.log('데이터 업데이트 성공');
-        // 필드를 읽기 전용으로 설정하고 상태를 업데이트합니다.
-        setFields((prevFields) => {
-          const updatedFields = { ...prevFields };
-          for (const field of Object.keys(fields)) {
-            updatedFields[field].isEditable = false;
-          }
-          return updatedFields;
-        });
-
-        // 데이터베이스에서 가져온 값을 로컬 스토리지에 다시 저장
-        localStorage.setItem("user", JSON.stringify(updatedData));
-
-      } else {
-        console.error('데이터 업데이트 실패');
-      }
-    } catch (error) {
-      console.error('데이터 업데이트 오류:', error);
-    }
+  const handleCancel = (field) => {
+    // "취소" 버튼을 누를 때 필드를 초기값으로 복원하고 수정 모드 비활성화
+    setFields({
+      ...fields,
+      [field]: {
+        ...fields[field],
+        value: initialFieldValues[field], // 초기값으로 복원
+        isEditable: false, // 수정 모드 비활성화
+      },
+    });
   };
-  
-  
+
+  const handleSave = () => {
+    // 이 부분에서 업데이트된 정보를 서버에 보내거나 로컬 스토리지에 저장할 수 있습니다.
+    // 예를 들어, 서버에 사용자 정보를 업데이트하고 서버에서 업데이트된 정보를 가져와
+    // localStorage에 저장할 수 있습니다.
+
+    // 사용자 정보를 업데이트하고 업데이트된 정보를 localStorage에 저장하는 예:
+    const updatedUserData = {
+      nick: fields.nick.value,
+      phone: fields.phone.value,
+      email: fields.email.value,
+      addr: fields.addr.value,
+    };
+
+    // 서버에 사용자 정보 업데이트 요청 (가상의 비동기 예시)
+    updateUserOnServer(updatedUserData).then(() => {
+      // 업데이트된 정보를 localStorage에 저장
+      localStorage.setItem("user", JSON.stringify(updatedUserData));
+    });
+  };
 
   return (
     <MyPage>
@@ -158,12 +148,14 @@ const UserPage = () => {
         <div className="my-names">
           {Object.keys(fields).map((field) => (
             <div className="my-column" key={field}>
-              <p className="title">{field === "nick" ? "닉네임" : field}</p>
+              <p className="title">{field}</p>
               <input
                 type="text"
-                className={`adds ${!fields[field].isEditable ? "normal-mode" : "edit-mode"}`}
+                className={`adds ${
+                  fields[field].isEditable ? "edit-mode" : "normal-mode"
+                }`}
                 readOnly={!fields[field].isEditable}
-                value={!fields[field].isEditable ? initialFieldValues[field] : fields[field].value}
+                value={fields[field].value}
                 onChange={(e) => handleInputChange(field, e)}
               />
               <button className="buttons" onClick={() => toggleEditable(field)}>
