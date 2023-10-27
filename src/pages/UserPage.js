@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
+import { updateUser, userInfo } from "../api/user";
 
 const MyPage = styled.div`
   max-width: 1295px;
   margin: 0 auto;
+  display: flex;
+  justify-content: center;
 
   .myPages {
-    margin-top: 60px;
+    margin-top: 40px;
     width: 80%;
   }
 
@@ -27,16 +30,15 @@ const MyPage = styled.div`
         margin: 30px;
       }
 
-      .title, .adds {
-        flex: 1;
-      }
 
       .title {
+        flex: 0.5;
         margin-left: 50px;
         text-align: left;
       }
 
       .adds {
+        flex: 2;
         border: 1px solid black;
         border-radius: 10px;
         text-align: center;
@@ -54,49 +56,43 @@ const MyPage = styled.div`
 
       .buttons {
         flex: 0.5;
-        text-align: right;
       }
+      
     }
+
+    
   }
+
 `;
 
 const UserPage = () => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+
+  const [initialFieldValues, setInitialFieldValues] = useState({
+    nick: userData?.nick || '',
+    phone: userData?.phone || '',
+    email: userData?.email || '',
+    addr: userData?.addr || '',
+  });
+  
   const [fields, setFields] = useState({
-    nick: { value: '', isEditable: false },
-    phone: { value: '', isEditable: false },
-    email: { value: '', isEditable: false },
-    addr: { value: '', isEditable: false },
+    nick: { value: initialFieldValues.nick, isEditable: false },
+    phone: { value: initialFieldValues.phone, isEditable: false },
+    email: { value: initialFieldValues.email, isEditable: false },
+    addr: { value: initialFieldValues.addr, isEditable: false },
   });
 
-  // "취소" 버튼을 누를 때 필드의 초기값을 저장하는 상태 변수
-  const [initialFieldValues, setInitialFieldValues] = useState({});
-
-  // 페이지가 로드될 때 localStorage에서 사용자 정보를 가져와 fields 상태 업데이트
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    setFields({
-      nick: { value: userData?.nick || '', isEditable: false },
-      phone: { value: userData?.phone || '', isEditable: false },
-      email: { value: userData?.email || '', isEditable: false },
-      addr: { value: userData?.addr || '', isEditable: false },
-    });
-  }, []); // 빈 배열을 전달하여 페이지가 로드될 때 한 번만 실행
-
   const toggleEditable = (field) => {
-    // 필드의 수정 모드가 활성화되면 현재 값 저장
-    if (!fields[field].isEditable) {
-      setInitialFieldValues({
-        ...initialFieldValues,
-        [field]: fields[field].value,
-      });
-    }
-
-    setFields({
-      ...fields,
-      [field]: {
-        ...fields[field],
-        isEditable: !fields[field].isEditable,
-      },
+    setFields((prevFields) => {
+      const isEditable = !prevFields[field].isEditable;
+      return {
+        ...prevFields,
+        [field]: {
+          ...prevFields[field],
+          value: isEditable ? prevFields[field].value : initialFieldValues[field], // 초기값으로 복원
+          isEditable: isEditable,
+        },
+      };
     });
   };
 
@@ -110,52 +106,85 @@ const UserPage = () => {
     });
   };
 
-  const handleCancel = (field) => {
-    // "취소" 버튼을 누를 때 필드를 초기값으로 복원하고 수정 모드 비활성화
-    setFields({
-      ...fields,
-      [field]: {
-        ...fields[field],
-        value: initialFieldValues[field], // 초기값으로 복원
-        isEditable: false, // 수정 모드 비활성화
-      },
-    });
+  const handleSave = async () => {
+    // 데이터를 저장할 객체 생성
+    const updatedData = {};
+  
+    // updatedData.id = userData.id;
+
+    // 각 필드를 확인하고 값이 비어있지 않은 경우에만 추가
+    if (fields.nick.value.trim() !== "") {
+      updatedData.nick = fields.nick.value;
+    }
+  
+    if (fields.phone.value.trim() !== "") {
+      updatedData.phone = fields.phone.value;
+    }
+  
+    if (fields.email.value.trim() !== "") {
+      updatedData.email = fields.email.value;
+    }
+  
+    if (fields.addr.value.trim() !== "") {
+      updatedData.addr = fields.addr.value;
+    }
+  
+    // 데이터가 비어있지 않은 경우에만 백엔드로 전송
+    if (Object.keys(updatedData).length > 0) {
+      // updateUser 함수를 호출하여 업데이트된 데이터를 전송
+      try {
+        const response = await updateUser(updatedData);
+        window.location.replace("/UserPage");
+        // 성공적으로 업데이트됐을 때의 처리
+      } catch (error) {
+        // 업데이트 실패 시의 처리
+      }
+    }
   };
 
-  const handleSave = () => {
-    // 이 부분에서 업데이트된 정보를 서버에 보내거나 로컬 스토리지에 저장할 수 있습니다.
-    // 예를 들어, 서버에 사용자 정보를 업데이트하고 서버에서 업데이트된 정보를 가져와
-    // localStorage에 저장할 수 있습니다.
+  const updateUserInfo = async (user) => {
+    if (user) {
+        const response = await userInfo(user.token);    
+        const newNick = response.data.nick;
+        const newPhone = response.data.phone;
+        const newEmail = response.data.email;
+        const newAddr = response.data.addr;
 
-    // 사용자 정보를 업데이트하고 업데이트된 정보를 localStorage에 저장하는 예:
-    const updatedUserData = {
-      nick: fields.nick.value,
-      phone: fields.phone.value,
-      email: fields.email.value,
-      addr: fields.addr.value,
-    };
+        setInitialFieldValues({
+          nick: newNick,
+          phone: newPhone,
+          email: newEmail,
+          addr: newAddr,
+        });
+    }
+  };
 
-    // 서버에 사용자 정보 업데이트 요청 (가상의 비동기 예시)
-    updateUserOnServer(updatedUserData).then(() => {
-      // 업데이트된 정보를 localStorage에 저장
-      localStorage.setItem("user", JSON.stringify(updatedUserData));
-    });
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
+  }, []);
+
+
+  const isEmailValid = (email) => {
+    const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    return emailRegExp.test(email);
   };
 
   return (
     <MyPage>
       <div className="myPages">
+        <h2 style={{marginLeft:"40px"}}>내 정보</h2>
         <div className="my-names">
           {Object.keys(fields).map((field) => (
             <div className="my-column" key={field}>
-              <p className="title">{field}</p>
+              <p className="title">{field === 'nick' ? '닉네임' : field === 'phone' ? '전화번호' : field === 'email' ? '이메일' : '주소'}</p>
               <input
                 type="text"
-                className={`adds ${
-                  fields[field].isEditable ? "edit-mode" : "normal-mode"
-                }`}
+                className={`adds ${!fields[field].isEditable ? "normal-mode" : "edit-mode"}`}
                 readOnly={!fields[field].isEditable}
-                value={fields[field].value}
+                value={!fields[field].isEditable ? initialFieldValues[field] : fields[field].value}
                 onChange={(e) => handleInputChange(field, e)}
               />
               <button className="buttons" onClick={() => toggleEditable(field)}>
@@ -165,8 +194,9 @@ const UserPage = () => {
             </div>
           ))}
         </div>
-        <input type="button" value={"취소"} />
-        <input type="button" value={"저장"} onClick={handleSave} />
+        <div style={{ display: "flex", justifyContent: "flex-end", margin:"20px" }}>
+          <input type="button" value={"저장"} onClick={handleSave} style={{ fontSize: "20px" }} disabled={!isEmailValid(fields.email.value)} />
+        </div>
         <div className="my-set">
           <div className="my-column">
             <p className="title">관심목록</p>
