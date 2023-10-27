@@ -74,13 +74,14 @@ const Header = () => {
 
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
   const updateUserInfo = async (user) => {
+    console.log(user);
     if (user) {
-      const response = await userInfo(user.token);
-      const newPoint = response.data.point;
-      const newName = response.data.name;
-      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
-      setPoint(formatPoint);
-      setName(newName);
+        const response = await userInfo(user.token);    
+        const newPoint = response.data.point;
+        const newName = response.data.name;
+        const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
+        setPoint(formatPoint);
+        setName(newName);     
     }
   };
   useEffect(() => {
@@ -89,6 +90,10 @@ const Header = () => {
       updateUserInfo(savedUser);
     }
   }, []);
+
+
+
+
   const [categories, setCategories] = useState([]);
 
   const categoryAPI = async () => {

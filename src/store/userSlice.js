@@ -16,13 +16,7 @@ const userSlice = createSlice({
         },
         userLogout: (state, action)=>{
             return {};
-        },        
-        updateUser:(state, action) => {
-            const user = JSON.parse(localStorage.getItem("user"));
-            user.point = action.payload.point;                             
-            state.point = action.payload.point;            
-            return state;
-        }
+        },           
     },
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{

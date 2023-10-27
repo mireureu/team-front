@@ -132,7 +132,7 @@ const Kakaopay = () => {
       };      
 
       updatePoint(data);      
-      window.location.replace("/"); // 새로고침
+      window.location.replace("/"); // 새로고침 
     } else {
       alert("결제를 실패했습니다. 다시 시도해주세요");
     }
@@ -140,8 +140,9 @@ const Kakaopay = () => {
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
   const updateUserInfo = async (user) => {
     if (user) {
-      const response = await userInfo(user.token);
-      const newPoint = response.data.point;
+      
+      const response = await userInfo(user.token);      
+      const newPoint = response.data.point;      
       // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
       const newName = response.data.name;
       const newId = response.data.id;

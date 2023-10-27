@@ -140,7 +140,7 @@ const Login = () => {
                 </Grid>
                 <Grid item>
                   <Link
-                    href="#"
+                    href="/register"
                     variant="body2"
                     style={{ textDecoration: "none" }}
                   >

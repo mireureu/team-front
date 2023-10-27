@@ -10,14 +10,12 @@ export const login = async (data) => {
 
 export const userInfo = async(token) =>{
   console.log(token);
-  return await instance.get("/user",{
+  return await instance.get("/user/show",{
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 }
-
-
 const getUserInfo = () => {
   const storedToken = localStorage.getItem("token");
   const storedUser = localStorage.getItem("user");
