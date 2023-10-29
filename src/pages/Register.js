@@ -7,6 +7,23 @@ import Container from 'react-bootstrap/Container';
 import { addUser, duplicate } from "../api/connection";
 import { useNavigate } from 'react-router-dom';
 import DaumPostcode from '../components/DaumPostcode';
+import styled from "styled-components";
+
+const MemberRegister = styled.div `
+    max-width: 1295px;
+    min-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    border: 1px solid black;
+`;
+
+
+
+
+
+
+
 
 const Register = () => {
     const [name, setName] = useState("");
@@ -144,160 +161,164 @@ const Register = () => {
     const inputWidth = "750px";
 
     return (
-        <Container className="panel">
-            <Form>
+        <MemberRegister className="main">
+            <Container className="panel">
+                <Form>
 
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} style={{ width: inputWidth }} />
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                    <Col>
-                        <Button disabled={!id} onClick={duplicateIdClick}>아이디 중복확인</Button>
-                    </Col>
-                </Form.Group>
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)} style={{ width: inputWidth }} />
+                        </Col>
+                        <Col>
+                            <Button disabled={!id} onClick={duplicateIdClick}>아이디 중복확인</Button>
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                    <Col sm>
-                        <Form.Control type="password" placeholder="비밀번호"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                checkPassword(e);
-                            }} style={{ width: inputWidth }} />
-                        {!isValidPasswordFormat && (
-                            <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 아이디를 다시 입력해주세요.</p>
-                        )}
-                    </Col>
-                </Form.Group>
+                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                        <Col sm>
+                            <Form.Control type="password" placeholder="비밀번호"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    checkPassword(e);
+                                }} style={{ width: inputWidth }} />
+                            {!isValidPasswordFormat && (
+                                <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 아이디를 다시 입력해주세요.</p>
+                            )}
+                        </Col>
+                    </Form.Group>
 
-                <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                    <Col sm>
-                        <Form.Control
-                            type="password"
-                            placeholder="비밀번호 확인"
-                            onChange={checkConfirmPassword}
-                            style={{ width: inputWidth }}
-                        />
-                        {isTyping && !passwordMatch && (
-                            <p className="text-danger">비밀번호가 일치하지 않습니다.</p>
-                        )}
-                    </Col>
-                </Form.Group>
-
-
-
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
+                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
+                        <Col sm>
+                            <Form.Control
+                                type="password"
+                                placeholder="비밀번호 확인"
+                                onChange={checkConfirmPassword}
+                                style={{ width: inputWidth }}
+                            />
+                            {isTyping && !passwordMatch && (
+                                <p className="text-danger">비밀번호가 일치하지 않습니다.</p>
+                            )}
+                        </Col>
+                    </Form.Group>
 
 
 
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} style={{ width: inputWidth }} />
+                        </Col>
+                    </Form.Group>
 
 
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="번호" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
-
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="번호" value={sphone} onChange={(e) => setsPhone(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
-
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Label>주민번호</Form.Label>
-                        <Row>
-                            <Col sm={5}>
-                                <Form.Control
-                                    type="text"
-                                    placeholder="앞자리"
-                                    value={registrationNumberFront}
-                                    onChange={(e) => {
-
-                                        handleFrontChange(e);
-                                    }}
-
-                                    style={{ width: "500px" }}
-                                />
-                            </Col>
-
-                            <Col sm={5}>
-                                <Form.Control
-                                    id="registrationNumberBack"
-                                    type="text"
-                                    placeholder="뒷자리"
-                                    onChange={(e) => {
-                                        handleBackChange(e);
-                                    }}
-                                    value={registrationNumberBack}
-                                    style={{ width: "500px" }}
-                                />
-                            </Col>
-                        </Row>
-                        {!registrationNumberValid && (
-                            <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>
-                        )}
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3" controlId="formBasicEmail">
-                    <Col sm>
-                        <Form.Control
-                            type="email"
-                            placeholder="이메일"
-                            value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                                checkEmail(e);
-                            }}
-                            style={{ width: inputWidth }}
-                        />
-                        {!emailValid && (
-                            <p className="text-danger">올바르지 않은 이메일입니다.</p>
-                        )}
-                    </Col>
-                </Form.Group>
 
 
-                
-                <Button
-                    onClick={() => {
-                        DaumPostcode({ onAddressSelected: handleAddressSelected });
-                    }}
-                    style={{ border: "1px solid red", backgroundColor: "white", color: "red" }}
-                >
-                    우편 번호 검색
-                </Button>
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
-                <Form.Group as={Row} className="mb-3">
-                    <Col sm>
-                        <Form.Control type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)} style={{ width: inputWidth }} />
-                    </Col>
-                </Form.Group>
-                <br />
+
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="번호" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ width: inputWidth }} />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="번호" value={sphone} onChange={(e) => setsPhone(e.target.value)} style={{ width: inputWidth }} />
+                        </Col>
+                    </Form.Group>
+
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Label>주민번호</Form.Label>
+                            <Row>
+                                <Col sm={5}>
+                                    <Form.Control
+                                        type="text"
+                                        placeholder="앞자리"
+                                        value={registrationNumberFront}
+                                        onChange={(e) => {
+
+                                            handleFrontChange(e);
+                                        }}
+
+                                        style={{ width: "500px" }}
+                                    />
+                                </Col>
+
+                                <Col sm={5}>
+                                    <Form.Control
+                                        id="registrationNumberBack"
+                                        type="text"
+                                        placeholder="뒷자리"
+                                        onChange={(e) => {
+                                            handleBackChange(e);
+                                        }}
+                                        value={registrationNumberBack}
+                                        style={{ width: "500px" }}
+                                    />
+                                </Col>
+                            </Row>
+                            {!registrationNumberValid && (
+                                <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>
+                            )}
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3" controlId="formBasicEmail">
+                        <Col sm>
+                            <Form.Control
+                                type="email"
+                                placeholder="이메일"
+                                value={email}
+                                onChange={(e) => {
+                                    setEmail(e.target.value);
+                                    checkEmail(e);
+                                }}
+                                style={{ width: inputWidth }}
+                            />
+                            {!emailValid && (
+                                <p className="text-danger">올바르지 않은 이메일입니다.</p>
+                            )}
+                        </Col>
+                    </Form.Group>
 
 
-                <div className="d-grid gap-1">
-                    <Button variant="secondary" onClick={onClick} disabled={!passwordMatch || !emailValid || !registrationNumberValid}>
-                        회원 가입
+                    
+                    <Button
+                        onClick={() => {
+                            DaumPostcode({ onAddressSelected: handleAddressSelected });
+                        }}
+                        style={{ border: "1px solid red", backgroundColor: "white", color: "red" }}
+                    >
+                        우편 번호 검색
                     </Button>
-                </div>
-            </Form>
-        </Container>
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}style={{ width: inputWidth }} />
+                        </Col>
+                    </Form.Group>
+                    <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                            <Form.Control type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)} style={{ width: inputWidth }} />
+                        </Col>
+                    </Form.Group>
+                    <br />
+
+
+                    <div className="d-grid gap-1">
+                        <Button variant="secondary" onClick={onClick} disabled={!passwordMatch || !emailValid || !registrationNumberValid}>
+                            회원 가입
+                        </Button>
+                    </div>
+                </Form>
+            </Container>
+        </MemberRegister>
+        
+        
     );
 }
 
