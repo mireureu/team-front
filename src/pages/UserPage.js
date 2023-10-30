@@ -1,7 +1,17 @@
+
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
+import { FaMapLocationDot } from "react-icons/fa6";
 import { updateUser, userInfo } from "../api/user";
+import DaumPostcode from '../components/DaumPostcode';
+import { useDispatch } from "react-redux";
+import { asyncLogin } from "../store/userSlice";
+import { useNavigate } from "react-router-dom";
+
+const Main = styled.div`
+
+`;
 
 const MyPage = styled.div`
   max-width: 1295px;
@@ -61,11 +71,64 @@ const MyPage = styled.div`
   }
 `;
 
+const PasswordCheckModal = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 2fr 2fr;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 4;
+  border: 3px solid blue;
+  border-radius: 20px;
+`;
+
+const PasswordChangeModal = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 2fr 2fr;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 4;
+  border: 3px solid blue;
+  border-radius: 20px;
+`;
+
 const UserPage = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModal1Open, setModal1Open] = useState(false);
+  const [isModal2Open, setModal2Open] = useState(false);
 
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [isValidPasswordFormat, setIsValidPasswordFormat] = useState(true);
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const [isTyping, setIsTyping] = useState(false);
+
+  const handleAddressSelected = (selectedAddress) => {
+    const selectedAddr = selectedAddress;
+  
+    // 주소 업데이트
+    setAddrField((prevField) => ({
+      ...prevField,
+      value: selectedAddr,
+    }));
+    setBaseAddr(selectedAddr); // 기본 주소 업데이트
+    console.log(selectedAddr);
+  };
+  
   // 초기 필드 값 설정
   const [initialFieldValues, setInitialFieldValues] = useState({
     nick: userData?.nick || "",
@@ -91,6 +154,12 @@ const UserPage = () => {
     value: initialFieldValues.addr,
     isEditable: false,
   });
+
+  
+  // 기본 주소
+  const [baseAddr, setBaseAddr] = useState("");
+  // 상세 주소
+  // const [detailAddr, setDetailAddr] = useState("");
 
   const toggleEditable = (field) => {
     // 편집 모드 전환 함수
@@ -119,15 +188,6 @@ const UserPage = () => {
           isEditable: !prevField.isEditable,
           value: !prevField.isEditable
             ? initialFieldValues.email
-            : prevField.value,
-        }));
-        break;
-      case "addr":
-        setAddrField((prevField) => ({
-          ...prevField,
-          isEditable: !prevField.isEditable,
-          value: !prevField.isEditable
-            ? initialFieldValues.addr
             : prevField.value,
         }));
         break;
@@ -178,8 +238,14 @@ const UserPage = () => {
     }
   
     if (addrField.value.trim() !== "") {
+      // 기본 주소만 추가하도록 변경
       updatedData.addr = addrField.value;
     }
+  
+    // if (detailAddr.trim() !== "") {
+    //   // 상세 주소가 있는 경우 추가
+    //   updatedData.addr = `${updatedData.addr}/${detailAddr}`;
+    // }
   
     // 데이터가 비어있지 않은 경우에만 백엔드로 전송
     if (Object.keys(updatedData).length > 0) {
@@ -218,11 +284,6 @@ const UserPage = () => {
     }
   }, []);
 
-  // 이메일 유효성 검사
-  const isEmailValid = (email) => {
-    const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
-    return emailRegExp.test(email);
-  };
 
   const isAllFieldsEmpty = () => {
     // 모든 필드가 비어 있는지 확인
@@ -237,133 +298,240 @@ const UserPage = () => {
     return false;
   };
 
-  // 미리보기
-  const openModal = (item) => {
-    // setSelectedItem(item);
-    setIsModalOpen(true);
+  // 이메일 유효성 검사
+  const isEmailValid = (email) => {
+    const emailRegExp = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/;
+    return emailRegExp.test(email);
   };
 
-  // 미리보기 창 닫기
+  const checkPassword = (e) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    // 비밀번호 형식 유효성 검사
+    const passwordRegExp = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])([0-9a-zA-Z@#$%^&+=!]){12,20}$/;
+    const isValidPassword = passwordRegExp.test(newPassword);
+
+    // 비밀번호 확인과 비교
+    const isMatch = newPassword === confirmPassword;
+    setPasswordMatch(isValidPassword && isMatch);
+
+    // 정규표현식과 다를 경우 메시지 표시
+    setIsValidPasswordFormat(isValidPassword);
+  }
+
+  const checkConfirmPassword = (e) => {
+    const newConfirmPassword = e.target.value;
+    setConfirmPassword(newConfirmPassword);
+    setIsTyping(true);
+
+    // 비밀번호와 비밀번호 확인 일치 여부 확인
+    const isMatch = password === newConfirmPassword;
+    setPasswordMatch(isTyping && isMatch);
+  }
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const onSubmit = (e) => {
+    
+    e.preventDefault();
+    const id = e.target.id.value;
+    const password = e.target.password.value;
+    dispatch(asyncLogin({ id, password })).then((response) => {
+      if (response.payload) {
+        console.log(response.payload);
+        localStorage.setItem("token",response.payload.token);  
+        localStorage.setItem("user",JSON.stringify(response.payload));
+        navigate('/'); 
+      } else {
+        alert('비밀번호가 틀렸습니다.');
+      }
+    });
+  };
+
+  // 비밀번호 변경 전 확인 창
+  const openPasswordChackModal = (item) => {
+    // setSelectedItem(item);
+    setModal1Open(true);
+  };
+
+  const openPasswordChangeModal = () => {
+    setModal2Open(true);
+  };
+
+  // 창 닫기
   const closeModal = () => {
-    setIsModalOpen(false);
+    setModal1Open(false);
+    setModal2Open(false);
   };
 
   return (
-    <MyPage>
-      <div className="myPages">
-        <h2 style={{ marginLeft: "40px" }}>내 정보</h2>
-        <div className="my-names">
-          {/* 닉네임 */}
-          <div className="my-column">
-            <p className="title">닉네임</p>
-            <input
-              type="text"
-              className={`adds ${
-                !nickField.isEditable ? "normal-mode" : "edit-mode"
-              }`}
-              readOnly={!nickField.isEditable}
-              value={
-                !nickField.isEditable
-                  ? initialFieldValues.nick
-                  : nickField.value
-              }
-              onChange={(e) => handleInputChange("nick", e)}
-            />
-            <button className="buttons" onClick={() => toggleEditable("nick")}>
-              <BsPencilSquare style={{ fontSize: "30px" }} />
-              {nickField.isEditable ? "취소" : "변경"}
-            </button>
-          </div>
+    <Main>
+      <MyPage>
+        <div className="myPages">
+          <h2 style={{ marginLeft: "40px" }}>내 정보</h2>
+          <div className="my-names">
+            {/* 닉네임 */}
+            <div className="my-column">
+              <p className="title">닉네임</p>
+              <input
+                type="text"
+                className={`adds ${
+                  !nickField.isEditable ? "normal-mode" : "edit-mode"
+                }`}
+                readOnly={!nickField.isEditable}
+                value={
+                  !nickField.isEditable
+                    ? initialFieldValues.nick
+                    : nickField.value
+                }
+                onChange={(e) => handleInputChange("nick", e)}
+              />
+              <button className="buttons" onClick={() => toggleEditable("nick")}>
+                <BsPencilSquare style={{ fontSize: "30px" }} />
+                {nickField.isEditable ? "취소" : "변경"}
+              </button>
+            </div>
 
-          {/* 전화번호 */}
-          <div className="my-column">
-            <p className="title">전화번호</p>
-            <input
-              type="text"
-              className={`adds ${
-                !phoneField.isEditable ? "normal-mode" : "edit-mode"
-              }`}
-              readOnly={!phoneField.isEditable}
-              value={
-                !phoneField.isEditable
-                  ? initialFieldValues.phone
-                  : phoneField.value
-              }
-              onChange={(e) => handleInputChange("phone", e)}
-            />
-            <button
-              className="buttons"
-              onClick={() => toggleEditable("phone")}
-            >
-              <BsPencilSquare style={{ fontSize: "30px" }} />
-              {phoneField.isEditable ? "취소" : "변경"}
-            </button>
-          </div>
+            {/* 전화번호 */}
+            <div className="my-column">
+              <p className="title">전화번호</p>
+              <input
+                type="text"
+                className={`adds ${
+                  !phoneField.isEditable ? "normal-mode" : "edit-mode"
+                }`}
+                readOnly={!phoneField.isEditable}
+                value={
+                  !phoneField.isEditable
+                    ? initialFieldValues.phone
+                    : phoneField.value
+                }
+                onChange={(e) => handleInputChange("phone", e)}
+              />
+              <button
+                className="buttons"
+                onClick={() => toggleEditable("phone")}
+              >
+                <BsPencilSquare style={{ fontSize: "30px" }} />
+                {phoneField.isEditable ? "취소" : "변경"}
+              </button>
+            </div>
 
-          {/* 이메일 */}
-          <div className="my-column">
-            <p className="title">이메일</p>
-            <input
-              type="text"
-              className={`adds ${
-                !emailField.isEditable ? "normal-mode" : "edit-mode"
-              }`}
-              readOnly={!emailField.isEditable}
-              value={
-                !emailField.isEditable
-                  ? initialFieldValues.email
-                  : emailField.value
-              }
-              onChange={(e) => handleInputChange("email", e)}
-            />
-            <button
-              className="buttons"
-              onClick={() => toggleEditable("email")}
-            >
-              <BsPencilSquare style={{ fontSize: "30px" }} />
-              {emailField.isEditable ? "취소" : "변경"}
-            </button>
-          </div>
+            {/* 이메일 */}
+            <div className="my-column">
+              <p className="title">이메일</p>
+              <input
+                type="text"
+                className={`adds ${
+                  !emailField.isEditable ? "normal-mode" : "edit-mode"
+                }`}
+                readOnly={!emailField.isEditable}
+                value={
+                  !emailField.isEditable
+                    ? initialFieldValues.email
+                    : emailField.value
+                }
+                onChange={(e) => handleInputChange("email", e)}
+              />
+              <button
+                className="buttons"
+                onClick={() => toggleEditable("email")}
+              >
+                <BsPencilSquare style={{ fontSize: "30px" }} />
+                {emailField.isEditable ? "취소" : "변경"}
+              </button>
+            </div>
 
-          {/* 주소 */}
-          <div className="my-column">
-            <p className="title">주소</p>
+            {/* 주소 */}
+            <div className="my-column">
+              <p className="title">기본 주소</p>
+              <input
+                type="text"
+                className={`adds edit-mode`}
+                value={baseAddr || initialFieldValues.addr}
+                onChange={(e) => handleInputChange("addr", e)}
+              />
+              <button className="buttons" onClick={() => DaumPostcode({ onAddressSelected: handleAddressSelected })}>
+                <FaMapLocationDot style={{ fontSize: "30px" }} />
+                검색
+              </button>
+            </div>
+          </div>
+          <div style={{ display: "flex", justifyContent: "flex-end", margin: "20px" }}>
             <input
-              type="text"
-              className={`adds ${
-                !addrField.isEditable ? "normal-mode" : "edit-mode"
-              }`}
-              readOnly={!addrField.isEditable}
-              value={
-                !addrField.isEditable
-                  ? initialFieldValues.addr
-                  : addrField.value
-              }
-              onChange={(e) => handleInputChange("addr", e)}
+              type="button"
+              value={"저장"}
+              onClick={handleSave}
+              style={{ fontSize: "20px" }}
+              disabled={isAllFieldsEmpty()}
             />
-            <button className="buttons" onClick={() => toggleEditable("addr")}>
-              <BsPencilSquare style={{ fontSize: "30px" }} />
-              {addrField.isEditable ? "취소" : "변경"}
-            </button>
+          </div>
+          <div className="my-set">
+            <div className="my-column">
+              <p className="title">비밀번호 변경</p>
+              <p className="title"></p>
+              <button className="buttons" onClick={openPasswordChackModal}>
+                <BsPencilSquare style={{ fontSize: "30px" }} /> 변경
+              </button>
+            </div>
           </div>
         </div>
-        <div style={{ display: "flex", justifyContent: "flex-end", margin: "20px" }}>
-          <input
-            type="button"
-            value={"저장"}
-            onClick={handleSave}
-            style={{ fontSize: "20px" }}
-            disabled={isAllFieldsEmpty()}
-          />
-        </div>
-        <div className="my-set">
-          <div className="my-column">
-            <p className="title">주소</p>
-            <p className="adds">970228</p>
+      </MyPage>
+      
+      
+
+      {isModal1Open && (
+        <PasswordCheckModal>
+          <form
+            noValidate
+            onSubmit={onSubmit}
+          >
+            <div>
+              <h1>현재 비밀번호 확인</h1>
+            </div>
+            <div>
+              <input required type="password"/>
+            </div>
+            <div>
+              <button type="submit" onClick={openPasswordChangeModal}>변경</button>
+              <button onClick={closeModal}>취소</button>
+            </div>
+          </form>
+        </PasswordCheckModal>
+      )}
+
+      {isModal2Open && (
+        <PasswordChangeModal>
+          <div>
+            <h1>비밀번호 변경</h1>
           </div>
-        </div>
-      </div>
-    </MyPage>
+          <div>
+            <h3>비밀번호</h3>
+            <input type="password" value={password}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                checkPassword(e);}}/>
+                {!isValidPasswordFormat && (
+                  <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 12~20글자 / 영문, 특수문자, 숫자 필수</p>
+              )}
+            <h3>비밀번호 확인</h3>
+            <input 
+              type="password"
+              onChange={checkConfirmPassword}
+            />
+            {isTyping && !passwordMatch && (
+              <p className="text-danger">비밀번호가 일치하지 않습니다.</p>
+            )}
+          </div>
+          <div>
+            {/* <button onClick={}>변경</button> */}
+            <button onClick={closeModal}>취소</button>
+          </div>
+        </PasswordChangeModal>
+      )}
+    </Main>
+    
   );
 };
 

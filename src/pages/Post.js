@@ -44,7 +44,7 @@ const Post = () => {
     formData.append("itemName", itemName);
     formData.append("desc", desc);
     formData.append("sMoney", sMoney);
-    formData.append("eMoney", eMoney);
+    formData.append("eMoney", Math.floor(eMoney));
     formData.append("gMoney", gMoney);
     formData.append("categoryNo", select);
     formData.append("checkNo", checkNo);
@@ -82,7 +82,7 @@ const Post = () => {
     for (let i = 0; i < selectedImages.length; i++) {
       newImages.push(selectedImages[i]);
     }
-
+    
     // 이미지 미리보기 배열 업데이트
     const imagePreviewsArray = Array.from(selectedImages).map((image) =>
       URL.createObjectURL(image)

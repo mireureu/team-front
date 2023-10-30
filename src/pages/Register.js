@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import Container from 'react-bootstrap/Container';
+// import Container from 'react-bootstrap/Container';
 import { addUser, duplicate } from "../api/connection";
 import { useNavigate } from 'react-router-dom';
 import DaumPostcode from '../components/DaumPostcode';
@@ -15,13 +15,93 @@ const MemberRegister = styled.div `
     margin: 0 auto;
     display: flex;
     justify-content: center;
-    border: 1px solid black;
+
 `;
 
+const Container = styled.div `
+    width: 100%;
+    width: 100%;
+    border: 5px solid skyblue;
+    border-radius: 20px;
 
+    h1 {
+        margin: 20px;
+        font-weight: bold;
+    }
 
+    
+    
+    .forms {
+        margin: 40px;
+        
+        display: flex;
+        flex-direction: column;
+        
+        .lables {
+            font-weight: bold;
+            margin-left: 20px;
+            margin-top: 20px;
+        }
 
+        .divs {
+            margin: 15px;
 
+            
+
+            &.v1 {
+                border: 2px solid pink;
+                border-radius: 20px;
+            }
+
+            &.idDiv {
+                display: flex;
+                align-items: center;
+
+                .idChackButton {
+                    margin-left: 20px;
+                }
+            }
+
+            &.regiNumDiv {
+                display: flex;
+            }
+
+            &.addrDiv {
+                display: flex;
+            }
+
+            &.registerButtonDiv {
+                display: grid;
+                justify-content: end;
+                
+                .registerButton {
+                    background: #3498db;
+                    color: #fff;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 10px; /* 곡면을 만들어주는 속성 */
+                    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+                    transition: transform 0.2s;
+                }
+
+                .registerButton:hover {
+                    transform: scale(1.1); /* 마우스 호버 시 버튼 확대 효과 */
+                }
+            }
+        }
+
+        .inputs {
+            border: 3px solid rgb(36, 120, 255);
+            border-radius: 5px;
+            width: 200px;
+            height: 35px;
+
+            &.regiNumberBack {
+                margin-left: 20px;
+            }
+        }
+    }
+`;
 
 
 
@@ -77,7 +157,7 @@ const Register = () => {
             email: email,
             phone: phone,
             sphone: sphone,
-            addr: addr + "" + detailaddr,
+            addr: addr + "/" + detailaddr,
         };
 
         // addUser 함수를 호출하여 사용자 데이터를 서버로 전송
@@ -163,95 +243,116 @@ const Register = () => {
     return (
         <MemberRegister className="main">
             <Container className="panel">
-                <Form>
+                <form className='forms'>
+                    <h1>회원 가입</h1>
+                    <div className="divs v1">
+                        <div>
+                            <label className='lables'>이름</label>
+                            <div className="divs nameDiv">
+                                <input className='inputs name' type="text" placeholder="이름" value={name} onChange={(e) => setName(e.target.value)}/>
+                            </div>
+                        </div>
+                    </div>
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="이름" value={name} onChange={(e) => setName(e.target.value)} style={{ width: inputWidth }} />
-                        </Col>
-                    </Form.Group>
+                    <div className="divs v1">
+                        <div>
+                            <label className='lables'>아이디</label>
+                            <div className="divs idDiv">
+                                <input className='inputs id' type="text" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)}/>
+                                <div className='idChackButton'>
+                                    <Button disabled={!id} onClick={duplicateIdClick}>아이디 중복확인</Button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)} style={{ width: inputWidth }} />
-                        </Col>
-                        <Col>
-                            <Button disabled={!id} onClick={duplicateIdClick}>아이디 중복확인</Button>
-                        </Col>
-                    </Form.Group>
-
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                        <Col sm>
-                            <Form.Control type="password" placeholder="비밀번호"
+                    <div className="divs v1" controlId="formPlaintextPassword">
+                        <div>
+                            <label className='lables'>비밀번호</label>
+                            <div className="divs passwordDiv">
+                                <input className='inputs password' type="password" placeholder="비밀번호"
                                 value={password}
                                 onChange={(e) => {
                                     setPassword(e.target.value);
                                     checkPassword(e);
-                                }} style={{ width: inputWidth }} />
-                            {!isValidPasswordFormat && (
-                                <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 아이디를 다시 입력해주세요.</p>
-                            )}
-                        </Col>
-                    </Form.Group>
+                                }}/>
+                                {!isValidPasswordFormat && (
+                                    <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 12~20글자 / 영문, 특수문자, 숫자 필수</p>
+                                )}
+                            </div>
+                        </div>
+                    </div>
 
-                    <Form.Group as={Row} className="mb-3" controlId="formPlaintextPassword">
-                        <Col sm>
-                            <Form.Control
+                    <div className="divs v1" controlId="formPlaintextPassword">
+                        <div>
+                            <label className='lables'>비밀번호 확인</label>
+                            <div className="divs passwordChackDiv">
+                               <input
+                                className='inputs passwordChack'
                                 type="password"
                                 placeholder="비밀번호 확인"
                                 onChange={checkConfirmPassword}
-                                style={{ width: inputWidth }}
                             />
-                            {isTyping && !passwordMatch && (
-                                <p className="text-danger">비밀번호가 일치하지 않습니다.</p>
-                            )}
-                        </Col>
-                    </Form.Group>
+                                {isTyping && !passwordMatch && (
+                                    <p className="text-danger">비밀번호가 일치하지 않습니다.</p>
+                                )} 
+                            </div>
+                        </div>
+                    </div>
 
 
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} style={{ width: inputWidth }} />
-                        </Col>
-                    </Form.Group>
+                    <div className="divs v1">
+                        <div>
+                            <label className='lables'>닉네임</label>
+                            <div className="divs nickDiv">
+                                <input className='inputs nick' type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} />
+                            </div>
+                        </div>
+                    </div>
 
 
 
 
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="번호" value={phone} onChange={(e) => setPhone(e.target.value)} style={{ width: inputWidth }} />
-                        </Col>
-                    </Form.Group>
+                    <div className="divs v1">
+                        <label className='lables'>전화번호</label>
+                        <div className="divs phoneDiv">
+                           <div>
+                                <input className='inputs phone' type="text" placeholder="번호" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                            </div> 
+                        </div>
+                    </div>
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="번호" value={sphone} onChange={(e) => setsPhone(e.target.value)} style={{ width: inputWidth }} />
-                        </Col>
-                    </Form.Group>
+                    <div className="divs v1">
+                        <label className='lables'>안심번호</label>
+                        <div className="divs sucretPhoneDiv">
+                            <div>
+                                <input className='inputs sicretPhone' type="text" placeholder="번호" value={sphone} onChange={(e) => setsPhone(e.target.value)} />
+                            </div>
+                        </div>
+                        
+                    </div>
 
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Label>주민번호</Form.Label>
-                            <Row>
-                                <Col sm={5}>
-                                    <Form.Control
+                    <div className="divs v1">
+                        <div>
+                            <label className='lables'>주민번호</label>
+                            <div className="divs regiNumDiv">
+                                <div>
+                                    <input
+                                        className='inputs regiNumberFront'
                                         type="text"
                                         placeholder="앞자리"
                                         value={registrationNumberFront}
                                         onChange={(e) => {
-
                                             handleFrontChange(e);
                                         }}
-
-                                        style={{ width: "500px" }}
                                     />
-                                </Col>
+                                </div>
 
-                                <Col sm={5}>
-                                    <Form.Control
+                                <div>
+                                    <input
+                                        className='inputs regiNumberBack'
                                         id="registrationNumberBack"
                                         type="text"
                                         placeholder="뒷자리"
@@ -259,18 +360,19 @@ const Register = () => {
                                             handleBackChange(e);
                                         }}
                                         value={registrationNumberBack}
-                                        style={{ width: "500px" }}
                                     />
-                                </Col>
-                            </Row>
+                                </div>
+                            </div>
                             {!registrationNumberValid && (
                                 <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>
                             )}
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3" controlId="formBasicEmail">
-                        <Col sm>
-                            <Form.Control
+                        </div>
+                    </div>
+                    <div className="divs v1" controlId="formBasicEmail">
+                        <label className='lables'>E-Mail</label>
+                        <div className="divs emailDiv">
+                            <input
+                                className='inputs email'
                                 type="email"
                                 placeholder="이메일"
                                 value={email}
@@ -278,43 +380,51 @@ const Register = () => {
                                     setEmail(e.target.value);
                                     checkEmail(e);
                                 }}
-                                style={{ width: inputWidth }}
                             />
                             {!emailValid && (
                                 <p className="text-danger">올바르지 않은 이메일입니다.</p>
                             )}
-                        </Col>
-                    </Form.Group>
+                        </div>
+                    </div>
 
 
                     
-                    <Button
-                        onClick={() => {
-                            DaumPostcode({ onAddressSelected: handleAddressSelected });
-                        }}
-                        style={{ border: "1px solid red", backgroundColor: "white", color: "red" }}
-                    >
-                        우편 번호 검색
-                    </Button>
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}style={{ width: inputWidth }} />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                            <Form.Control type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)} style={{ width: inputWidth }} />
-                        </Col>
-                    </Form.Group>
+                    
+                    <div className="divs v1">
+                        <div>
+                            <label className='lables'>주소</label>
+                            <div className="divs addrDiv">
+                                <div>
+                                    <input className='inputs addr' type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}/>
+                                </div>
+                                <button
+                                    className='searchButton'
+                                    onClick={() => {
+                                        DaumPostcode({ onAddressSelected: handleAddressSelected });
+                                    }}
+                                    style={{marginLeft: "20px", border: "1px solid red", backgroundColor: "white", color: "red" }}
+                                >
+                                    우편 번호 검색
+                                </button>
+                            </div>
+                        </div>
+                        <div className="divs detailAddrDiv">
+                            <div>
+                                <input className='inputs detailAddr' type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)}/>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
                     <br />
 
 
-                    <div className="d-grid gap-1">
-                        <Button variant="secondary" onClick={onClick} disabled={!passwordMatch || !emailValid || !registrationNumberValid}>
+                    <div className="divs registerButtonDiv">
+                        <button className='registerButton' onClick=     {onClick} disabled={!passwordMatch ||   !emailValid || !registrationNumberValid}>
                             회원 가입
-                        </Button>
+                        </button>
                     </div>
-                </Form>
+                </form>
             </Container>
         </MemberRegister>
         

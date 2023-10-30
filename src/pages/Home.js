@@ -108,6 +108,7 @@ const News = styled.div`
       width: 180px;
       height: 180px;
       overflow: hidden;
+      border-radius: 10px;
 
       img {
         width: 100%;
@@ -152,7 +153,6 @@ const News = styled.div`
 
   .new-box:hover {
     transform: scale(1.5);
-
     transform-origin: center;
     z-index: 2;
   }
@@ -178,7 +178,7 @@ const Modal = styled.div`
   background-color: white;
   padding: 20px;
   z-index: 3;
-  border: 1px solid black;
+  border: 5px solid skyblue;
   border-radius: 20px;
 
   .itemTitle {
@@ -191,6 +191,10 @@ const Modal = styled.div`
   .itemImg {
     grid-area: itemImg;
     margin: 10px;
+    overflow: hidden;
+    border: 2px solid skyblue;
+    border-radius: 15px;
+
     img {
       width: 100%;
       height: 100%;
@@ -225,7 +229,7 @@ const Modal = styled.div`
   .itemBoard p {
     font-size: 20px;
     white-space: pre;
-    border: 1px solid black;
+    border: 2px solid rgba(255, 205, 18);
     border-radius: 5px;
     margin-left: 15px;
     margin-right: 15px;
@@ -237,7 +241,22 @@ const Modal = styled.div`
     align-items: center;
     right: 0;
     margin-left: 10px;
+
+    .move-page {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px; /* 곡면을 만들어주는 속성 */
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+      transition: transform 0.2s; /* 마우스 호버 시 애니메이션 */
+    }
+    .move-page:hover {
+      transform: scale(1.1); /* 마우스 호버 시 버튼 확대 효과 */
+    }
   }
+
+  
 
   .itemLower-right {
     grid-area: itemLower-right;
@@ -245,7 +264,23 @@ const Modal = styled.div`
     align-items: center;
     justify-content: flex-end;
     margin-right: 20px;
+
+    .close-button {
+      background: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px; /* 곡면을 만들어주는 속성 */
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+      transition: transform 0.2s; /* 마우스 호버 시 애니메이션 */
+    }
+
+    .close-button:hover {
+      transform: scale(1.1); /* 마우스 호버 시 버튼 확대 효과 */
+    }
   }
+
+  
 
   h4 {
     text-align: center;
