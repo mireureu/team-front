@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { addUser, duplicate } from "../api/connection";
 import { useNavigate } from 'react-router-dom';
+import FindPassword from "../components/FindPassword";
 import DaumPostcode from '../components/DaumPostcode';
 
 const Register = () => {
@@ -17,7 +18,6 @@ const Register = () => {
     const [detailaddr, setDetailAddr] = useState("");
     const [password, setPassword] = useState("");
     const [id, setId] = useState("");
-    const [securityNumber, setSecurityNumber] = useState("");
     const [email, setEmail] = useState("");
     const successRegi = useNavigate(); // onClick시 성공하면 홈으로 이동 실패하면 다시 회원가입창으로
     const handleAddressSelected = (selectedAddress) => {
@@ -34,7 +34,7 @@ const Register = () => {
             throw error;
         }
     };
-   
+
     const duplicateIdClick = async () => {
         try {
             const isDuplicate = await duplicationCheckAPI(id);
@@ -56,7 +56,7 @@ const Register = () => {
             password: password,
             nick: nickName,
             name: name,
-            birthday: securityNumber,
+            birthday: registrationNumberFront+registrationNumberBack,
             email: email,
             phone: phone,
             sphone: sphone,
@@ -224,7 +224,6 @@ const Register = () => {
                                     placeholder="앞자리"
                                     value={registrationNumberFront}
                                     onChange={(e) => {
-
                                         handleFrontChange(e);
                                     }}
 
@@ -250,6 +249,8 @@ const Register = () => {
                         )}
                     </Col>
                 </Form.Group>
+
+
                 <Form.Group as={Row} className="mb-3" controlId="formBasicEmail">
                     <Col sm>
                         <Form.Control
@@ -269,7 +270,7 @@ const Register = () => {
                 </Form.Group>
 
 
-                
+
                 <Button
                     onClick={() => {
                         DaumPostcode({ onAddressSelected: handleAddressSelected });
@@ -278,9 +279,10 @@ const Register = () => {
                 >
                     우편 번호 검색
                 </Button>
+
                 <Form.Group as={Row} className="mb-3">
                     <Col sm>
-                        <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}style={{ width: inputWidth }} />
+                        <Form.Control type="text" placeholder="기본 주소" value={addr} onChange={(e) => setAddr(e.target.value)} style={{ width: inputWidth }} />
                     </Col>
                 </Form.Group>
                 <Form.Group as={Row} className="mb-3">

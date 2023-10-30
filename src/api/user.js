@@ -16,6 +16,7 @@ export const userInfo = async(token) =>{
     },
   });
 }
+
 const getUserInfo = () => {
   const storedToken = localStorage.getItem("token");
   const storedUser = localStorage.getItem("user");
@@ -27,5 +28,14 @@ const getUserInfo = () => {
 
   return { storedToken, userObject };
 };
+
+export const updatePassword = async (data) => {
+  return await instance.put("/public/updatePassword",data);
+}
+
+
+
+
+
 
 export default getUserInfo;

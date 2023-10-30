@@ -9,7 +9,6 @@ import Container from "react-bootstrap/Container";
 import Pagination from "react-bootstrap/Pagination";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { getCategories, getItem } from "../api/auctionBoard";
-
 const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
@@ -20,9 +19,14 @@ const StyledHeader = styled.header`
     width: 100%;
     height: 100%;
   }
+  .image-container {
+  width: 250px; /* 원하는 가로 너비 설정 */
+  height: 250px; /* 원하는 세로 높이 설정 */
+  object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
+}
   .Pagination.Item.active {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #007BFF;
+    border-color: #007BFF;
     color: #fff;
   }
   .cards-container {
@@ -73,7 +77,6 @@ const StyledHeader = styled.header`
     font-weight: bold;
   }
 `;
-
 const App = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
@@ -81,16 +84,14 @@ const App = () => {
   const [category, setCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
-
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
   };
-
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
       const result = await getItem(selectedPage, selectedCategory, sortOption);
-      console.log(result);
+      console.log("dddasdasdsadsa"+result.data.content);
       setTotalPages(result.data.totalPages);
       setItems(result.data.content);
     } catch (error) {
@@ -105,15 +106,12 @@ const App = () => {
     setItems([]);
     itemAPI(category, page, newSortOption);
   };
-
   useEffect(() => {
-    categoryAPI();
+    categoryAPI();   
   }, []);
-
   useEffect(() => {
     itemAPI(category, page, sortOption);
   }, [category, page, sortOption]);
-
   const handleCategoryChange = (selectedCategory) => {
     if (selectedCategory !== category) {
       setCategory(selectedCategory);
@@ -121,7 +119,6 @@ const App = () => {
       setItems([]);
     }
   };
-
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
       return {
@@ -131,7 +128,6 @@ const App = () => {
         seconds: 0,
       };
     }
-
     const endDate = new Date(auctionEndDate);
     const currentDate = new Date();
     const timeDifference = endDate - currentDate;
@@ -139,7 +135,6 @@ const App = () => {
     const minutesDifference = Math.floor(secondsDifference / 60);
     const hoursDifference = Math.floor(minutesDifference / 60);
     const daysDifference = Math.floor(hoursDifference / 24);
-
     return {
       days: daysDifference,
       hours: hoursDifference % 24,
@@ -147,7 +142,6 @@ const App = () => {
       seconds: secondsDifference % 60,
     };
   };
-
   const handlePageChange = (newPage) => {
     if (newPage > 0) {
       setPage(newPage);
@@ -155,7 +149,6 @@ const App = () => {
       setPage(1);
     }
   };
-
   return (
     <StyledHeader>
       <Container>
@@ -207,7 +200,11 @@ const App = () => {
                 <Link to={`/auctionpost/${item.auctionNo}`}>
                   {" "}
                   {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
-                  <Card.Img variant="top" src={"/upload/" + item.auctionImg.split(",", 1)} />
+                  <Card.Img
+                    variant="top"
+                    src={"/upload/" + item.auctionImg.split(",", 1)}
+                    className="image-container"
+                  />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
@@ -227,7 +224,6 @@ const App = () => {
                       <div
                         className="hidden-hover"
                         onMouseEnter={() => {
-                          // ...
                         }}
                       >
                         현재가 : {item.currentPrice}원
@@ -289,5 +285,4 @@ const App = () => {
     </StyledHeader>
   );
 };
-
 export default App;

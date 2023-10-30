@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { getPost, updateCurrentPrice } from "../api/addpost"; // 추가: updateCurrentPrice 함수 import
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
+import Cookies from 'js-cookie'; 
 
 function convertToSeoulTime(utcDateString) {
   // 시간 설정
@@ -20,8 +21,10 @@ const Auctionpost = () => {
   useEffect(() => {
     const fetchAuctionPost = async () => {
       try {
-        const response = await getPost(auctionNo);
-        setAuctionPost(response.data);
+        const response = await getPost(auctionNo);                        
+        setAuctionPost(response.data);                                
+        Cookies.set("auctionPost", JSON.stringify(response.data));
+               
       } catch (error) {
         console.error("게시글 정보를 불러오는 중 오류 발생:", error);
       }

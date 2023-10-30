@@ -12,12 +12,16 @@ export const getCategories = async () => {
   return await instance.get("/public/category");
 };
 
+// 최근 본 게시물
+export const recentView = async (auctionNo) =>{
+  return await instance.get(`/user/recentView/${auctionNo}`);
+}
 export const addPost = async (data) => {
   return await instance.post("/user/post", data);
 };
 
 export const getPost = async (auctionNo) => {
-  return await instance.get(`/public/auction/${auctionNo}`);
+  return await instance.get(`/user/auction/${auctionNo}`);
 };
 
 export const updateCurrentPrice = async (auctionNo, newPrice) => {
