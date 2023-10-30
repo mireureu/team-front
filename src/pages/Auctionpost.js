@@ -1,6 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { getPost, updateCurrentPrice, getCountAuction } from "../api/addpost";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  getPost,
+  updateCurrentPrice,
+  getCountAuction,
+  deletePost,
+} from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { Modal } from "react-bootstrap";
 
@@ -19,6 +24,7 @@ const Auctionpost = () => {
   const { auctionNo } = useParams();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 데이터 가져오는 함수
@@ -31,7 +37,9 @@ const Auctionpost = () => {
         const sellerId = response.data?.memberId?.id;
         if (sellerId) {
           const sellerCountResponse = await getCountAuction(sellerId);
-          setSellerAuctionCount(sellerCountResponse.data[0]?.AUCTION_COUNT);
+          console.log(sellerCountResponse);
+          console.log(sellerId);
+          setSellerAuctionCount(sellerCountResponse.data);
         }
       } catch (error) {
         console.error("게시글 정보를 불러오는 중 오류 발생:", error);
@@ -115,6 +123,25 @@ const Auctionpost = () => {
     }
   };
 
+  const handleDeletePost = async () => {
+    if (window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
+      try {
+        // 게시물 삭제 API를 호출
+        const deletedAuction = await deletePost(auctionNo);
+        if (deletedAuction) {
+          // 게시물 삭제에 성공하면 메시지를 표시하고 페이지를 리로드합니다.
+          alert("게시물이 삭제되었습니다.");
+          navigate("/Auctiondetail");
+        } else {
+          alert("게시물 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("게시물 삭제 중 오류 발생:", error);
+        alert("게시물 삭제에 실패했습니다.");
+      }
+    }
+  };
+
   return (
     <Container>
       {auctionPost ? (
@@ -174,7 +201,7 @@ const Auctionpost = () => {
                 <Row className="border-top justify-content-center">
                   <p>판매자 정보: {auctionPost.memberId.id}</p>
                   <p>등록건수: {sellerAuctionCount}</p>
-                  <p>회원 등급: </p>
+                  <p>회원 등급: {auctionPost.memberId.authority}</p>
                 </Row>
               </Col>
             </Row>
@@ -191,7 +218,7 @@ const Auctionpost = () => {
                 <Form.Group>
                   <Form.Control
                     type="number"
-                    style={{ width: "300px" }} // 원하는 폭(가로 크기)으로 설정
+                    style={{ width: "300px" }}
                     value={
                       auctionPost.currentNum === 0
                         ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
@@ -214,6 +241,9 @@ const Auctionpost = () => {
                       <Button
                         variant="primary"
                         onClick={handleImmediatePurchase}
+                        disabled={
+                          auctionPost.currentPrice >= auctionPost.auctionGMoney
+                        }
                       >
                         즉시구매
                       </Button>
@@ -240,6 +270,10 @@ const Auctionpost = () => {
           )}
         </Col>
       </Row>
+      <Button variant="danger" onClick={handleDeletePost}>
+        게시글 삭제
+      </Button>
+      <Button variant="primary">게시글 수정</Button>
       <style>
         {`
           .item-desc {

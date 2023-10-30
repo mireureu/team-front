@@ -164,7 +164,7 @@ const Post = () => {
             type="number"
             value={Math.floor(eMoney)}
             placeholder="최소입찰가 (자동 설정)"
-            disabled // 입력 필드 비활성화
+            disabled
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -240,7 +240,7 @@ const Post = () => {
             variant="secondary"
             onClick={() => {
               setIsModalOpen(false);
-              navigate("/AuctionDetail"); // 이 부분에서 페이지 이동
+              navigate("/AuctionDetail");
             }}
           >
             확인

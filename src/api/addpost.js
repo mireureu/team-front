@@ -29,3 +29,13 @@ export const updateCurrentPrice = async (auctionNo, currentPrice) => {
 export const getCountAuction = async (memberId) => {
   return await instance.get(`/public/auction/count?memberId=${memberId}`);
 };
+
+export const deletePost = async (auctionNo) => {
+  try {
+    const response = await instance.delete(`/user/auction/${auctionNo}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
+};
