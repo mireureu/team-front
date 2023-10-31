@@ -1,10 +1,13 @@
 import { Outlet } from "react-router-dom";
 import Header from "./Header";
-const Layout = () => {
+import Sidebar from "./Sidebar";
+const Layout = () => {  
   return (
     <>
-      <Header />
+     <Header />
+     <Sidebar />
       <Outlet />
+      
     </>
   );
 };

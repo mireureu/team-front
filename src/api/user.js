@@ -18,7 +18,7 @@ export const pwdChack = async (data) => {
 
 export const userInfo = async(token) =>{
   console.log(token);
-  return await instance.get("/user",{
+  return await instance.get("/user/show",{
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -82,5 +82,14 @@ const getUserInfo = () => {
 
   return { storedToken, userObject };
 };
+
+export const updatePassword = async (data) => {
+  return await instance.put("/public/updatePassword",data);
+}
+
+
+
+
+
 
 export default getUserInfo;

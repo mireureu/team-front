@@ -13,6 +13,7 @@ import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
 
 // import imgTest1 from "../img/가로tast.png";
 import hot from "../components/hot.png";
+import { recentView } from "../api/addpost";
 
 const Main = styled.div`
   position: relative;
@@ -298,7 +299,8 @@ const Home = () => {
   const [recentList, setRecentList] = useState([]);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
-
+  
+  
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
@@ -356,8 +358,7 @@ const Home = () => {
     } else if (clicks === "b") {
       result = await getNewList();
     }
-
-    console.log(result.data);
+    
     setAndList(result.data);
   };
 

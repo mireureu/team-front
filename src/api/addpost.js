@@ -8,24 +8,35 @@ const instance = axios.create({
   },
 });
 
+// 카테고리 불러오기
 export const getCategories = async () => {
   return await instance.get("/public/category");
 };
 
+// 최근 본 게시물
+export const recentView = async () =>{
+  return await instance.get("/user/recentView");
+}
+
+// 게시글 추가
 export const addPost = async (data) => {
   return await instance.post("/user/post", data);
 };
 
+// 게시글 조회
 export const getPost = async (auctionNo) => {
   return await instance.get(`/user/auction/${auctionNo}`);
 };
 
-export const updateCurrentPrice = async (auctionNo, currentPrice) => {
-  console.log(currentPrice);
-  console.log(auctionNo);
-  return await instance.put(`/user/auction/${auctionNo}`, currentPrice);
-};
-
-export const getCountAuction = async (memberId) => {
-  return await instance.get(`/public/auction/count?memberId=${memberId}`);
+// 현재 가격 수정
+export const updateCurrentPrice = async (auctionNo, newPrice) => {
+  try {
+    const response = await instance.put(`/public/auction/${auctionNo}`, {
+      currentPrice: newPrice,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("현재 가격을 업데이트하는 중 오류 발생:", error);
+    throw error;
+  }
 };

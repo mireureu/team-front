@@ -2,12 +2,8 @@
 import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import { getSearchResult } from "../api/search";
 
-const asyncSearch = createAsyncThunk("searchSlice/asyncSearch", async(keyword) =>{   
-    // const key = keyword.get("keyword");
-    // console.log("searchSlice에 넘어온값:: " + key);
-
-    const result = await getSearchResult(keyword);
-            
+const asyncSearch = createAsyncThunk("searchSlice/asyncSearch", async(keyword) =>{           
+    const result = await getSearchResult(keyword);            
     console.log(result.data);
     return result.data;
 });
@@ -17,8 +13,7 @@ const searchSlice = createSlice({
     initialState: [],
     reducers: {},
     extraReducers: (builder) =>{
-        builder.addCase(asyncSearch.fulfilled, (state, action) =>{            
-            console.log(action.payload);        
+        builder.addCase(asyncSearch.fulfilled, (state, action) =>{                              
             return action.payload;
         });
         builder.addCase(asyncSearch.rejected , (state, action)=>{

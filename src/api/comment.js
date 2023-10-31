@@ -10,12 +10,12 @@ const instance = axios.create({
 });
 
 export const postComment = async (data) => {
-  console.log(data);
+  console.log(data+"댓글추가테스트");
   return await instance.post(`user/comment/${data.auctionNo}`, data);
 };
 
 export const putComment = async (data) => {
-  return await instance.put("video/comment", data);
+  return await instance.put("/comments", data);
 };
 
 export const delComment = async (id) => {

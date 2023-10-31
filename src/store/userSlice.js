@@ -15,7 +15,7 @@ const userSlice = createSlice({
         },
         userLogout: (state, action)=>{
             return {};
-        },        
+        },           
     },
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{

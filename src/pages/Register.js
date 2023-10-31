@@ -114,7 +114,6 @@ const Register = () => {
     const [detailaddr, setDetailAddr] = useState("");
     const [password, setPassword] = useState("");
     const [id, setId] = useState("");
-    const [securityNumber, setSecurityNumber] = useState("");
     const [email, setEmail] = useState("");
     const successRegi = useNavigate(); // onClick시 성공하면 홈으로 이동 실패하면 다시 회원가입창으로
     const handleAddressSelected = (selectedAddress) => {
@@ -131,7 +130,7 @@ const Register = () => {
             throw error;
         }
     };
-   
+
     const duplicateIdClick = async () => {
         try {
             const isDuplicate = await duplicationCheckAPI(id);
@@ -153,7 +152,7 @@ const Register = () => {
             password: password,
             nick: nickName,
             name: name,
-            birthday: securityNumber,
+            birthday: registrationNumberFront+registrationNumberBack,
             email: email,
             phone: phone,
             sphone: sphone,
@@ -176,6 +175,7 @@ const Register = () => {
 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(true);
+    
     const [emailValid, setEmailValid] = useState(true);
     const [isTyping, setIsTyping] = useState(false);
     const [registrationNumberFront, setRegistrationNumberFront] = useState('');
@@ -190,7 +190,6 @@ const Register = () => {
         // 비밀번호 형식 유효성 검사
         const passwordRegExp = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])([0-9a-zA-Z@#$%^&+=!]){12,20}$/;
         const isValidPassword = passwordRegExp.test(newPassword);
-
         // 비밀번호 확인과 비교
         const isMatch = newPassword === confirmPassword;
         setPasswordMatch(isValidPassword && isMatch);
@@ -208,6 +207,12 @@ const Register = () => {
         const isMatch = password === newConfirmPassword;
         setPasswordMatch(isTyping && isMatch);
     }
+
+
+
+
+
+
 
     // 이메일 체크 부분
     const checkEmail = (e) => {

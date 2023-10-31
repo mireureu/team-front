@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -16,14 +15,46 @@ import { AiFillLock } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import "../css/modal.css";
+import FindPassword from "../components/FindPassword";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 
 const defaultTheme = createTheme();
-
 const Login = () => {
 
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  const [registrationNumberBack, setRegistrationNumberBack] = useState('');
+  const [registrationNumberValid, setRegistrationNumberValid] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [registrationNumberFront, setRegistrationNumberFront] = useState('');
+  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
+  const inputWidth = "750px";
+  const handleFrontChange = (e) => {
+    const newRegistrationNumberFront = e.target.value.slice(0, 7); // 최대 6글자로 제한
+    setRegistrationNumberFront(newRegistrationNumberFront);
+
+    if (newRegistrationNumberFront.length === 6) {
+      // 앞자리가 6글자일 때 뒷자리로 이동
+      document.getElementById('registrationNumberBack').focus();
+    }
+  };
+
+  const handleBackChange = (e) => {
+    const newRegistrationNumberBack = e.target.value.slice(0, 7); // 최대 7글자로 제한
+    setRegistrationNumberBack(newRegistrationNumberBack);
+    if (newRegistrationNumberBack.length === 7 && registrationNumberFront.length === 6) {
+      setRegistrationNumberValid(true);
+    } else {
+      setRegistrationNumberValid(false);
+    }
+  };
   const StyledTextField = styled(TextField)({
     "& label.MuiInputLabel-asterisk": {
       display: "none",
@@ -31,18 +62,14 @@ const Login = () => {
   });
 
   const onSubmit = (e) => {
-    
     e.preventDefault();
     const id = e.target.id.value;
     const password = e.target.password.value;
     dispatch(asyncLogin({ id, password })).then((response) => {
       if (response.payload) {
-        console.log(response.payload);
-        localStorage.setItem("token",response.payload.token);  
-        localStorage.setItem("user",JSON.stringify(response.payload));
-        navigate('/'); 
+        navigate('/');
       } else {
-        alert('아이디 또는 비밀번호가 틀렸습니다.');        
+        alert('아이디 또는 비밀번호가 틀렸습니다.');
       }
     });
 
@@ -50,6 +77,17 @@ const Login = () => {
             // localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장     
 
   };
+
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
+
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -85,6 +123,7 @@ const Login = () => {
             <Typography component="h1" variant="h5">
               로그인
             </Typography>
+
             <Box
               component="form"
               noValidate
@@ -133,26 +172,84 @@ const Login = () => {
               >
                 로그인
               </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link
-                    href="#"
-                    variant="body2"
-                    style={{ textDecoration: "none" }}
-                  >
-                    비밀번호를 잊어버렸나요?
-                  </Link>
-                </Grid>
-                <Grid item>
-                  <Link
-                    href="#"
-                    variant="body2"
-                    style={{ textDecoration: "none" }}
-                  >
-                    {"회원가입"}
-                  </Link>
-                </Grid>
+
+              <Grid item>
+                <Link
+                  href="/register"
+                  style={{ textDecoration: "none", margin: "20px" }}
+                >
+                  {"회원가입"}
+                </Link>
+
+                {isModalOpen && (
+                  <div className="Modal">
+                    <p>모든 값을 입력하시면 버튼이 화면에 보입니다~</p>
+                    <div className="top">
+                      <h2>이메일을 입력해주세요</h2>
+                      <button className='close' onClick={closeModal}>X</button>
+                    </div>
+                    <div className="bottom">
+                      <input
+                        type="text"
+                        placeholder="이메일을 입력해주세요"
+                        onBlur={(e) => setEmail(e.target.value)}
+                      />
+                      
+                      {email && registrationNumberFront.length === 6 && registrationNumberBack.length === 7 && id && (
+                        <FindPassword email={email} birthday={`${registrationNumberFront}${registrationNumberBack}`} id={id} />
+                      )}
+
+                    </div>
+                    <div>
+                      <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                          <Form.Label>주민번호</Form.Label>
+                          <Row>
+                            <Col sm={5}>
+                              <Form.Control
+                                type="text"
+                                placeholder="앞자리"
+                                onBlur={(e) => {
+                                  handleFrontChange(e);
+                                }}
+                                style={{ width: "500px" }}
+                                maxLength={6}
+                              />
+                            </Col>
+
+                            <Col sm={5}>
+                              <Form.Control
+                                id="registrationNumberBack"
+                                type="password"
+                                placeholder="뒷자리"
+                                onBlur={(e) => {
+                                  handleBackChange(e);
+                                }}
+                                style={{ width: "500px" }}
+                                maxLength={7}
+                              />
+                            </Col>
+                          </Row>
+                          {!registrationNumberValid && (
+                            <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>
+                          )}
+                        </Col>
+                      </Form.Group>
+                    </div>
+                    <div>
+                      <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                          <Form.Control type="text" placeholder="아이디" onBlur={(e) => setId(e.target.value)} style={{ width: inputWidth }} />
+                          
+                        </Col>
+
+                      </Form.Group>
+                    </div>
+                  </div>
+                )}
+                <Link style={{ textDecoration: "none" }} onClick={openModal} >비밀번호를 잊어버리셨나요?</Link>
               </Grid>
+
             </Box>
           </Box>
         </Grid>

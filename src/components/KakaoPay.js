@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { updatePoint } from '../api/pay';
 import { userInfo } from '../api/user';
 import { useDispatch } from 'react-redux';
-import { updateUser } from '../store/userSlice';
 const Modal = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr 2fr;
@@ -94,7 +93,7 @@ const Kakaopay = () => {
   const dispatch = useDispatch();
   const userData = JSON.parse(localStorage.getItem("user"));
   const [name, setName] = useState(userData ? userData.name : "");
-  const [point, setPoint] = useState(userData ? userData.point : 0);
+  const [point, setPoint] = useState(userData ? userData.point : 0);  
   const [id, setId] = useState(userData ? userData.id : "");
   const userCode = "imp55224240";
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -126,37 +125,38 @@ const Kakaopay = () => {
       console.log(point);
       console.log(amount);
       setPoint(updatedPoint);
-      const updateUserData = {
-        point: updatedPoint, // 업데이트된 포인트를 사용합니다.
+      
+      const data = {
+        point: amount,
         id: id,
-      };
-      const data = { ...updateUserData, point: amount };
-      await updatePoint(data);
-      console.log(data);
-      window.location.replace("/");
+      };      
+
+      updatePoint(data);      
+      window.location.replace("/"); // 새로고침 
     } else {
       alert("결제를 실패했습니다. 다시 시도해주세요");
     }
   }
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
-  // const updateUserInfo = async (user) => {
-  //   if (user) {
-  //     const response = await userInfo(user.token);
-  //     const newPoint = response.data.point;
-  //     // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
-  //     const newName = response.data.name;
-  //     const newId = response.data.id;
-  //     setPoint(newPoint);
-  //     setName(newName);
-  //     setId(newId);
-  //   }
-  // };
-  // useEffect(() => {
-  //   const savedUser = JSON.parse(localStorage.getItem("user"));
-  //   if (savedUser) {
-  //     updateUserInfo(savedUser);
-  //   }
-  // }, []);
+  const updateUserInfo = async (user) => {
+    if (user) {
+      
+      const response = await userInfo(user.token);      
+      const newPoint = response.data.point;      
+      // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+      const newName = response.data.name;
+      const newId = response.data.id;
+      setPoint(newPoint);
+      setName(newName);
+      setId(newId);
+    }
+  };
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
