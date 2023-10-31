@@ -6,7 +6,6 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import { addUser, duplicate } from "../api/connection";
 import { useNavigate } from 'react-router-dom';
-import FindPassword from "../components/FindPassword";
 import DaumPostcode from '../components/DaumPostcode';
 
 const Register = () => {
@@ -79,6 +78,7 @@ const Register = () => {
 
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(true);
+    
     const [emailValid, setEmailValid] = useState(true);
     const [isTyping, setIsTyping] = useState(false);
     const [registrationNumberFront, setRegistrationNumberFront] = useState('');
@@ -93,7 +93,6 @@ const Register = () => {
         // 비밀번호 형식 유효성 검사
         const passwordRegExp = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[@#$%^&+=!])([0-9a-zA-Z@#$%^&+=!]){12,20}$/;
         const isValidPassword = passwordRegExp.test(newPassword);
-
         // 비밀번호 확인과 비교
         const isMatch = newPassword === confirmPassword;
         setPasswordMatch(isValidPassword && isMatch);
@@ -111,6 +110,12 @@ const Register = () => {
         const isMatch = password === newConfirmPassword;
         setPasswordMatch(isTyping && isMatch);
     }
+
+
+
+
+
+
 
     // 이메일 체크 부분
     const checkEmail = (e) => {

@@ -8,22 +8,27 @@ const instance = axios.create({
   },
 });
 
+// 카테고리 불러오기
 export const getCategories = async () => {
   return await instance.get("/public/category");
 };
 
 // 최근 본 게시물
-export const recentView = async (auctionNo) =>{
-  return await instance.get(`/user/recentView/${auctionNo}`);
+export const recentView = async () =>{
+  return await instance.get("/user/recentView");
 }
+
+// 게시글 추가
 export const addPost = async (data) => {
   return await instance.post("/user/post", data);
 };
 
+// 게시글 조회
 export const getPost = async (auctionNo) => {
   return await instance.get(`/user/auction/${auctionNo}`);
 };
 
+// 현재 가격 수정
 export const updateCurrentPrice = async (auctionNo, newPrice) => {
   try {
     const response = await instance.put(`/public/auction/${auctionNo}`, {

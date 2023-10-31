@@ -15,8 +15,6 @@ import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
 import { userInfo } from "../api/user";
-import { recentView } from "../api/addpost";
-import Cookies from 'js-cookie'; // js-cookie 라이브러리 import
 
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -37,7 +35,7 @@ const CategoryColor = styled.div`
   margin: 0 auto;
 `;
 
-const Header = ({ auctionNo }) => {
+const Header = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
   const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
@@ -46,20 +44,6 @@ const Header = ({ auctionNo }) => {
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
-
-  const auctionPostInfo = Cookies.get("auctionPost");
-  const auctionPost = auctionPostInfo ? JSON.parse(auctionPostInfo) : null;
-  useEffect(() => {
-    console.log(auctionNo);
-    recentView(1)
-      .then((response) => {
-        console.log(response);
-      })
-      .catch((error) => {
-        console.error("최근 본 게시물 조회 오류:", error);
-      });
-  }, [auctionNo]);
-
 
 
   const Search = () => {
@@ -157,30 +141,7 @@ const Header = ({ auctionNo }) => {
                 <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>
               )}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>{console.log(auctionPost)}고객센터</Nav.Link>
-              <Nav.Link href={`/auctionpost`}>
-                {auctionPost && (
-                  <div>
-                    <h4>경매 상품명: {auctionPost.auctionTitle}</h4>
-                    {auctionPost.auctionImg.split(",", 1).map((image, index) => (
-                      <a
-                        key={index}
-                        href={`/auctionpost/${auctionPost.auctionNo}`}
-                        style={{ display: "block" }}
-                      >
-                        <img
-                          src={`/upload/${image}`}
-                          style={{
-                            maxWidth: "100%",
-                            marginTop: "10px",
-                          }}
-                        />
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </Nav.Link>
-
+              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>      
             </Nav>
           </Navbar.Collapse>
         </Navbar>

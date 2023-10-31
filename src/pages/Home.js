@@ -12,6 +12,7 @@ import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 
 // import imgTest1 from "../img/가로tast.png";
 import hot from "../components/hot.png";
+import { recentView } from "../api/addpost";
 
 const Main = styled.div`
   /* display: grid; */
@@ -249,7 +250,8 @@ const Home = () => {
   const [andList, setAndList] = useState([]);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
-
+  
+  
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
@@ -307,8 +309,7 @@ const Home = () => {
     } else if (clicks === "b") {
       result = await getNewList();
     }
-
-    console.log(result.data);
+    
     setAndList(result.data);
   };
 
@@ -337,11 +338,11 @@ const Home = () => {
 
   return (
     <Main className="div-container">
-      
+
 
       <Banner>
         {/* <h1>[ 주간 HOT 경매! ]</h1> */}
-        <img src={hot}/>
+        <img src={hot} />
         {/* <h1>[ 주간 New 경매! ]</h1> */}
       </Banner>
 
@@ -373,7 +374,7 @@ const Home = () => {
         </News>
       </NewItem>
 
-      
+
 
       {isModalOpen && selectedItem && (
         <Modal>
@@ -407,8 +408,8 @@ const Home = () => {
           <div className="itemLower-right">
             <button className="close-button" onClick={closeModal}>닫기</button>
           </div>
-          
-          
+
+
         </Modal>
       )}
     </Main>
