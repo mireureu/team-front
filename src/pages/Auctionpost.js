@@ -43,8 +43,6 @@ const Auctionpost = () => {
     setEditingComment(comment.content);  
     setSelectedComment(comment); 
     console.log(editingComment);
-    const editfocus = document.getElementById('focus2');
-    editfocus.focus();
   };
   
 
@@ -88,7 +86,7 @@ const Auctionpost = () => {
         commentNo: commentNo,
         content: editingComment,        
         auctionNo: auctionNo,
-        commentParent: parrentNo
+        parrentNo: parrentNo
       })
       );
       console.log(parrentNo+"부모번호체크");
@@ -319,7 +317,7 @@ const Auctionpost = () => {
         </Button>
       )}
       {comment.member.id === savedUser.id && (
-        <Button id="focus2" variant="outline-primary" size="sm" 
+        <Button variant="outline-primary" size="sm" 
         onClick={() => handleEditComment(comment)}>
           수정
         </Button>
@@ -375,7 +373,7 @@ const Auctionpost = () => {
       {isEditing ? (
         <div className="mt-3">
           <Form.Group>
-            <Form.Label><h1>댓글 내용 수정</h1></Form.Label>
+            <Form.Label>댓글 내용 수정</Form.Label>
             <Form.Control
               as="textarea"
               rows={3}
@@ -386,12 +384,8 @@ const Auctionpost = () => {
                 setEditingComment(e.target.value);
               }}
               style={{ resize: "none" }}
-              id ="커서테스트"
             />
-          </Form.Group>
-
-              
-
+          </Form.Group>              
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
             <Button variant="outline-danger" onClick={handleCancelEdit} size="sm">
               수정 취소
@@ -402,36 +396,11 @@ const Auctionpost = () => {
             type="submit"
             size="sm"
             onClick={() => {
-                onUpdate(selectedComment.commentNo, editingComment, selectedComment.auctionNo, selectedComment.parent)
-                console.log(selectedComment.commentNo, editingComment, selectedComment.member.id, selectedComment.parent + "★★★★★★★★★★")
-            }}
-            // disabled={editingComment.trim() === ""}
+                onUpdate(selectedComment.commentNo, editingComment, selectedComment.auctionNo, selectedComment.parent)                
+            }}            
           >
             수정 완료
-          </Button>
-{/* 
-          <Form.Group>
-            <Form.Label>온업데이트체크</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="댓글을 수정하세요"
-              value={editingComment}
-              onChange={(e) => {
-                if (selectedComment) {
-                  console.log(selectedComment.commentNo, e.target.value, selectedComment.member.id);
-                } else {
-                  console.log("selectedComment is null");
-                  console.log(e.target.value);
-                  console.log(selectedComment.commentNo);
-                }
-              }}
-              style={{ resize: "none" }}
-            />
-          </Form.Group> */}
-
-
-          
+          </Button>          
           </div>
         </div>
       ) : selectedComment ? (

@@ -330,6 +330,7 @@ const App = () => {
     </div>
         <div className="current-page">
           {/* 현재 페이지: {page}/{totalPages} */}
+          
         </div>
       </Container>
     </StyledHeader>
