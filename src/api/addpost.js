@@ -40,3 +40,17 @@ export const updateCurrentPrice = async (auctionNo, newPrice) => {
     throw error;
   }
 };
+
+export const deletePost = async (auctionNo) => {
+  try {
+    const response = await instance.delete(`/user/auction/${auctionNo}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    throw error;
+  }
+};
+
+export const updatePost = async (auctionNo, data) => {
+  return await instance.put(`/user/auction/update/${auctionNo}`, data);
+};
