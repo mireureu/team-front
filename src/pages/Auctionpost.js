@@ -94,7 +94,7 @@ const Auctionpost = () => {
     return seoulDate.toLocaleDateString("ko-KR", options);
   }
 
-  // 즉시구매 관련 (미구현)
+  // 즉시구매 관련(미구현)
   const handleImmediatePurchase = () => {
     alert("즉시구매가 완료되었습니다.");
   };
