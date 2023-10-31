@@ -54,3 +54,7 @@ export const deletePost = async (auctionNo) => {
 export const updatePost = async (auctionNo, data) => {
   return await instance.put(`/user/auction/update/${auctionNo}`, data);
 };
+
+export const getCountAuction = async (memberId) => {
+  return await instance.get(`/public/auction/count?memberId=${memberId}`);
+};
