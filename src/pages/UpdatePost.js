@@ -1,22 +1,19 @@
-import "bootstrap/dist/css/bootstrap.min.css";
+import React, { useState, useEffect } from "react";
 import { Container, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { getCategories, addPost } from "../api/addpost";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { getCategories, getPost, updatePost } from "../api/addpost"; // 수정된 API 함수 사용
+import { useNavigate, useParams } from "react-router-dom";
 
-import getUserInfo from "../api/user";
-
-const { userObject } = getUserInfo();
-
+// 서울시간 설정
 function convertToSeoulTime(date) {
   const seoulOffset = 9 * 60; // 서울은 UTC+9
   const seoulTime = new Date(date.getTime() + seoulOffset * 60000);
   return seoulTime;
 }
 
-const Post = () => {
+const UpdatePost = () => {
+  const { auctionNo } = useParams();
   const [categories, setCategories] = useState([]);
   const [title, setTitle] = useState("");
   const [itemName, setItemName] = useState("");
@@ -26,20 +23,52 @@ const Post = () => {
   const [gMoney, setGmoney] = useState(0);
   const [select, setSelect] = useState(1);
   const [isBuyNowChecked, setIsBuyNowChecked] = useState(false);
-  const [images, setImages] = useState([]);
-  const [checkNo, setCheckNo] = useState(0);
-  const [attendNo, setAttendNo] = useState(0);
   const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 배열
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [eMoneyError, setEMoneyError] = useState("");
   const [auctionDate, setAuctionDate] = useState(new Date());
   const [auctionEndDate, setAuctionEndDate] = useState(new Date());
+  const [images, setImages] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
-  // 정보 업데이트
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getPost(auctionNo);
+        if (response.status === 200) {
+          const post = response.data;
+          setTitle(post.auctionTitle);
+          setItemName(post.itemName);
+          setDesc(post.itemDesc);
+          setSmoney(post.auctionSMoney);
+          setEmoney(post.auctionEMoney);
+          setGmoney(post.auctionGMoney);
+          setSelect(post.category.categoryNo);
+          setIsBuyNowChecked(post.auctionNowbuy === "Y");
+          setImagePreviews(
+            post.auctionImg
+              .split(",")
+              .map((imagePath) => `/images/${imagePath}`)
+          );
+          setAuctionDate(new Date(post.auctionDate));
+          setAuctionEndDate(new Date(post.auctionEndDate));
+          setLoaded(true);
+        } else {
+          console.error("게시물 정보 불러오기 실패.");
+        }
+      } catch (error) {
+        console.error("게시물 정보 불러오기 중 오류발생:", error);
+      }
+    };
+
+    if (!loaded) {
+      fetchData();
+    }
+  }, [auctionNo, loaded]);
+
   const onClick = async () => {
     const formData = new FormData();
-
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("desc", desc);
@@ -47,35 +76,29 @@ const Post = () => {
     formData.append("eMoney", eMoney);
     formData.append("gMoney", gMoney);
     formData.append("categoryNo", select);
-    formData.append("checkNo", checkNo);
-    formData.append("attendNo", attendNo);
-    formData.append("nowBuy", isBuyNowChecked ? "Y" : "N"); // 즉시 구매 여부를 "Y" 또는 "N"으로 설정
+    formData.append("nowBuy", isBuyNowChecked ? "Y" : "N");
 
     const seoulAuctionDate = convertToSeoulTime(auctionDate);
     const seoulAuctionEndDate = convertToSeoulTime(auctionEndDate);
     formData.append("auctionDate", seoulAuctionDate.toISOString());
     formData.append("auctionEndDate", seoulAuctionEndDate.toISOString());
 
-    // 이미지를 FormData에 추가
     for (let i = 0; i < images.length; i++) {
       formData.append("image", images[i]);
     }
 
     try {
-      const response = await addPost(formData);
+      const response = await updatePost(auctionNo, formData); // 업데이트 API 함수 호출
       if (response.status === 200) {
-        // 업로드 성공 시 모달 열기
         setIsModalOpen(true);
       } else {
-        // 업로드 실패 처리
-        console.error("게시물 업로드 중 오류발생.");
+        console.error("게시물 업데이트 중 오류발생.");
       }
     } catch (error) {
-      console.error("게시물 업로드 중 오류가 발생했습니다.", error);
+      console.error("게시물 업데이트 중 오류가 발생했습니다.", error);
     }
   };
 
-  // 이미지 업로드
   const onUploadImage = (e) => {
     const selectedImages = e.target.files;
     const newImages = [...images];
@@ -83,7 +106,6 @@ const Post = () => {
       newImages.push(selectedImages[i]);
     }
 
-    // 이미지 미리보기 배열 업데이트
     const imagePreviewsArray = Array.from(selectedImages).map((image) =>
       URL.createObjectURL(image)
     );
@@ -92,31 +114,26 @@ const Post = () => {
     setImagePreviews([...imagePreviews, ...imagePreviewsArray]);
   };
 
-  // 이미지 삭제
   const removeImage = (index) => {
     const newImagePreviews = [...imagePreviews];
-    newImagePreviews.splice(index, 1); // 선택한 이미지 미리보기 제거
+    newImagePreviews.splice(index, 1);
 
     const newImages = [...images];
-    newImages.splice(index, 1); // 선택한 이미지 배열에서 제거
+    newImages.splice(index, 1);
 
     setImagePreviews(newImagePreviews);
     setImages(newImages);
   };
 
-  // 카테고리 불러오기
   const categoryAPI = async () => {
     const result = await getCategories();
-    console.log(result);
     setCategories(result.data);
   };
 
-  // 카테고리 호출
   const onChangeCategory = (e) => {
     setSelect(e.currentTarget.value);
   };
 
-  // 최소입찰가 설정
   useEffect(() => {
     categoryAPI();
     const minBidLimit = sMoney * 0.1;
@@ -125,7 +142,7 @@ const Post = () => {
 
   return (
     <Container>
-      <h1>경매글 작성</h1>
+      <h1>경매글 수정</h1>
       <Form>
         <Form.Group className="mb-3">
           <Form.Control
@@ -228,7 +245,7 @@ const Post = () => {
             images.length === 0
           }
         >
-          저장
+          수정
         </Button>
       </Form>
       <Modal show={isModalOpen} onHide={() => setIsModalOpen(false)}>
@@ -252,4 +269,4 @@ const Post = () => {
   );
 };
 
-export default Post;
+export default UpdatePost;

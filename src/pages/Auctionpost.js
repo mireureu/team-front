@@ -26,19 +26,18 @@ const Auctionpost = () => {
   const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
   const navigate = useNavigate();
 
+  // 데이터 가져오기
   useEffect(() => {
-    // 데이터 가져오는 함수
     const fetchAuctionPost = async () => {
       try {
         const response = await getPost(auctionNo);
         setAuctionPost(response.data);
 
-        // 추가: 판매자의 등록 게시물 수 가져오기
+        // 판매자의 등록 게시물 수 가져오기
         const sellerId = response.data?.memberId?.id;
         if (sellerId) {
           const sellerCountResponse = await getCountAuction(sellerId);
-          console.log(sellerCountResponse);
-          console.log(sellerId);
+
           setSellerAuctionCount(sellerCountResponse.data);
         }
       } catch (error) {
@@ -51,8 +50,8 @@ const Auctionpost = () => {
     }
   }, [auctionNo]);
 
+  // 이미지 보여주기
   useEffect(() => {
-    // 이미지 보여주기
     if (auctionPost && auctionPost.auctionImg) {
       const imageUrls = auctionPost.auctionImg.split(",");
       const interval = setInterval(() => {
@@ -65,8 +64,8 @@ const Auctionpost = () => {
     }
   }, [auctionPost]);
 
+  // 이미지 이전버튼
   const handlePrevImage = () => {
-    // 이미지 이전버튼
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0
         ? auctionPost.auctionImg.split(",").length - 1
@@ -74,13 +73,14 @@ const Auctionpost = () => {
     );
   };
 
+  // 이미지 다음버튼
   const handleNextImage = () => {
-    // 이미지 다음버튼
     setCurrentImageIndex(
       (prevIndex) => (prevIndex + 1) % auctionPost.auctionImg.split(",").length
     );
   };
 
+  // 서울시간 설정
   function formatSeoulTime(dateString) {
     const seoulDate = convertToSeoulTime(dateString);
     const options = {
@@ -94,18 +94,18 @@ const Auctionpost = () => {
     return seoulDate.toLocaleDateString("ko-KR", options);
   }
 
+  // 즉시구매 관련 (미구현)
   const handleImmediatePurchase = () => {
-    // 즉시구매 관련 (미구현)
     alert("즉시구매가 완료되었습니다.");
   };
 
+  // 입찰 성공 시 팝업
   const handlePriceChangeSuccess = () => {
-    // 입찰 성공 시 팝업
     setShowSuccessModal(true);
   };
 
+  // 입찰가격 변경
   const handlePriceChange = async (e) => {
-    // 입찰가격 변경
     try {
       const newPrice =
         auctionPost.currentNum === 0
@@ -123,13 +123,12 @@ const Auctionpost = () => {
     }
   };
 
+  // 게시물 삭제
   const handleDeletePost = async () => {
     if (window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
       try {
-        // 게시물 삭제 API를 호출
         const deletedAuction = await deletePost(auctionNo);
         if (deletedAuction) {
-          // 게시물 삭제에 성공하면 메시지를 표시하고 페이지를 리로드합니다.
           alert("게시물이 삭제되었습니다.");
           navigate("/Auctiondetail");
         } else {
@@ -273,7 +272,9 @@ const Auctionpost = () => {
       <Button variant="danger" onClick={handleDeletePost}>
         게시글 삭제
       </Button>
-      <Button variant="primary">게시글 수정</Button>
+      <Button variant="primary" onClick={() => navigate("/update")}>
+        게시글 수정
+      </Button>
       <style>
         {`
           .item-desc {

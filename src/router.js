@@ -10,6 +10,7 @@ import AskPage from "./pages/Askpage";
 import Post from "./pages/Post";
 import Register from "./pages/Register";
 import SearchResult from "./pages/SearchResult";
+import UpdatePost from "./pages/UpdatePost";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,6 +39,10 @@ const router = createBrowserRouter([
       {
         path: "/Post",
         element: <Post />,
+      },
+      {
+        path: "/update",
+        element: <UpdatePost />,
       },
       {
         path: "/SearchResult",

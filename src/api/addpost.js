@@ -39,3 +39,7 @@ export const deletePost = async (auctionNo) => {
     throw error;
   }
 };
+
+export const updatePost = async (auctionNo, data) => {
+  return await instance.put(`/user/auction/update/${auctionNo}`, data);
+};
