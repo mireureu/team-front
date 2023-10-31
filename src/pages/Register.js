@@ -397,7 +397,7 @@ const Register = () => {
                                 <div>
                                     <input className='inputs addr' type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}/>
                                 </div>
-                                <button
+                                <Button
                                     className='searchButton'
                                     onClick={() => {
                                         DaumPostcode({ onAddressSelected: handleAddressSelected });
@@ -405,7 +405,7 @@ const Register = () => {
                                     style={{marginLeft: "20px", border: "1px solid red", backgroundColor: "white", color: "red" }}
                                 >
                                     우편 번호 검색
-                                </button>
+                                </Button>
                             </div>
                         </div>
                         <div className="divs detailAddrDiv">
@@ -420,9 +420,9 @@ const Register = () => {
 
 
                     <div className="divs registerButtonDiv">
-                        <button className='registerButton' onClick=     {onClick} disabled={!passwordMatch ||   !emailValid || !registrationNumberValid}>
+                        <Button className='registerButton' onClick=     {onClick} disabled={!passwordMatch ||   !emailValid || !registrationNumberValid}>
                             회원 가입
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </Container>

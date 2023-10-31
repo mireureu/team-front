@@ -8,6 +8,14 @@ export const login = async (data) => {
   return await instance.post("/public/signin", data);
 };
 
+export const pwdChack = async (data) => {
+
+  if(data != null) {
+
+  }
+  return await instance.post("/user/pwdUp", data);
+};
+
 export const userInfo = async(token) =>{
   console.log(token);
   return await instance.get("/user",{
@@ -15,11 +23,12 @@ export const userInfo = async(token) =>{
       Authorization: `Bearer ${token}`,
     },
   });
-}
+};
 
 
 export const updateUser = async (data) => {
   const token = localStorage.getItem("token");
+  console.log(token);
   console.log(data);
   try {
     return await instance.put("/user/updateuser", data, {headers: {

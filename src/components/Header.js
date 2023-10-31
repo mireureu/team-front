@@ -110,6 +110,11 @@ const Header = () => {
     movePage("/register");
   }
 
+  const userPage = () => {
+    movePage("/userPage");
+  }
+
+
   const handleTabSelect = (eventKey) => {
     if (eventKey === 'home') {
       handleShow();
@@ -129,8 +134,10 @@ const Header = () => {
             <Nav className="mr-auto">
 
                {name &&
-                <Nav.Link style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR'):0} point</Nav.Link>
+                <Nav.Link onClick={userPage} style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR'):0} point</Nav.Link>
                }
+
+              
               <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
               <Kakaopay />
 

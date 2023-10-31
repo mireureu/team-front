@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaMapLocationDot } from "react-icons/fa6";
-import { updateUser, userInfo } from "../api/user";
+import { updateUser, userInfo, pwdChack } from "../api/user";
 import DaumPostcode from '../components/DaumPostcode';
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
@@ -25,7 +25,7 @@ const MyPage = styled.div`
     width: 80%;
   }
 
-  .my-names, .my-set {
+  .my-names, .my-set, .my-list {
     margin: 0 auto;
     margin-top: 30px;
     margin-bottom: 30px;
@@ -71,6 +71,30 @@ const MyPage = styled.div`
   }
 `;
 
+const AddrSetModal = styled.div`
+  display: grid;
+  grid-template-rows: 1fr 2fr 1fr;
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 800px;
+  height: 400px;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  z-index: 4;
+  border: 3px solid blue;
+  border-radius: 20px;
+
+  
+
+  .inputAddr {
+    width: 500px;
+  }
+`;
+
+
 const PasswordCheckModal = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr 2fr;
@@ -108,6 +132,7 @@ const PasswordChangeModal = styled.div`
 const UserPage = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
 
+  const [isModalAddrOpen, setModalAddrOpen] = useState(false);
   const [isModal1Open, setModal1Open] = useState(false);
   const [isModal2Open, setModal2Open] = useState(false);
 
@@ -116,6 +141,7 @@ const UserPage = () => {
   const [isValidPasswordFormat, setIsValidPasswordFormat] = useState(true);
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
+
 
   const handleAddressSelected = (selectedAddress) => {
     const selectedAddr = selectedAddress;
@@ -159,7 +185,7 @@ const UserPage = () => {
   // 기본 주소
   const [baseAddr, setBaseAddr] = useState("");
   // 상세 주소
-  // const [detailAddr, setDetailAddr] = useState("");
+  const [detailAddr, setDetailAddr] = useState("");
 
   const toggleEditable = (field) => {
     // 편집 모드 전환 함수
@@ -252,6 +278,15 @@ const UserPage = () => {
       // updateUser 함수를 호출하여 업데이트된 데이터를 전송
       try {
         const response = await updateUser(updatedData);
+ 
+        userData.nick = response.data.nick;
+        userData.phone = response.data.phone;
+        userData.email = response.data.email;
+        userData.addr = response.data.addr;
+
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        // localStorage.setItem(response);
         window.location.replace("/UserPage");
         // 성공적으로 업데이트됐을 때의 처리
       } catch (error) {
@@ -260,6 +295,7 @@ const UserPage = () => {
     }
   };
   
+  // 데이터를 불러와 초기 필드값에 보냄.
   const updateUserInfo = async (user) => {
     if (user) {
       const response = await userInfo(user.token);
@@ -349,12 +385,22 @@ const UserPage = () => {
     });
   };
 
+
+  // 주소 검색창
+  const openAddrModal = () => {
+    setModalAddrOpen(true);
+  };
+
+  const passwordChack = () => {
+    
+  };
+
   // 비밀번호 변경 전 확인 창
-  const openPasswordChackModal = (item) => {
-    // setSelectedItem(item);
+  const openPasswordChackModal = () => {
     setModal1Open(true);
   };
 
+  // 비밀번호 변경 창
   const openPasswordChangeModal = () => {
     setModal2Open(true);
   };
@@ -363,12 +409,15 @@ const UserPage = () => {
   const closeModal = () => {
     setModal1Open(false);
     setModal2Open(false);
+    setModalAddrOpen(false);
   };
 
   return (
     <Main>
       <MyPage>
         <div className="myPages">
+
+          {/* 수정 메뉴 */}
           <h2 style={{ marginLeft: "40px" }}>내 정보</h2>
           <div className="my-names">
             {/* 닉네임 */}
@@ -452,21 +501,43 @@ const UserPage = () => {
                 value={baseAddr || initialFieldValues.addr}
                 onChange={(e) => handleInputChange("addr", e)}
               />
-              <button className="buttons" onClick={() => DaumPostcode({ onAddressSelected: handleAddressSelected })}>
-                <FaMapLocationDot style={{ fontSize: "30px" }} />
-                검색
+              <button className="buttons" onClick={openAddrModal}>
+                <BsPencilSquare style={{ fontSize: "30px" }} />
+                변경
+              </button>
+            </div>
+            <div style={{ display: "flex", justifyContent: "flex-end", margin: "20px" }}>
+              <input
+                type="button"
+                value={"저장"}
+                onClick={handleSave}
+                style={{ fontSize: "20px" }}
+                disabled={isAllFieldsEmpty()}
+              />
+            </div>
+          </div>
+
+          {/* 리스트 메뉴 */}
+          <h2 style={{ marginLeft: "40px" }}>리스트</h2>
+          <div className="my-list">
+            <div className="my-column">
+              <p className="title">관심목록</p>
+              <p className="title"></p>
+              <button className="buttons">
+                <BsPencilSquare style={{ fontSize: "30px" }} /> 보러가기
+              </button>
+            </div>
+            <div className="my-column">
+              <p className="title">포인트 결제 내역</p>
+              <p className="title"></p>
+              <button className="buttons">
+                <BsPencilSquare style={{ fontSize: "30px" }} /> 보러가기
               </button>
             </div>
           </div>
-          <div style={{ display: "flex", justifyContent: "flex-end", margin: "20px" }}>
-            <input
-              type="button"
-              value={"저장"}
-              onClick={handleSave}
-              style={{ fontSize: "20px" }}
-              disabled={isAllFieldsEmpty()}
-            />
-          </div>
+          
+          {/* 관리 메뉴 */}
+          <h2 style={{ marginLeft: "40px" }}>관리</h2>
           <div className="my-set">
             <div className="my-column">
               <p className="title">비밀번호 변경</p>
@@ -479,6 +550,59 @@ const UserPage = () => {
         </div>
       </MyPage>
       
+
+      {isModalAddrOpen && (
+        <AddrSetModal>
+          <div>
+            <h1>주소 변경</h1>
+          </div>
+          <div>
+            <div>
+              <label>기본 주소</label>
+              <div>
+                <input 
+                  className="inputAddr"
+                  type="text" 
+                  value={baseAddr}
+                  onChange={(e) => setBaseAddr(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label>상세 주소</label>
+              <div>
+                <input 
+                  className="inputAddr"
+                  type="text" 
+                  value={detailAddr} 
+                  onChange={(e) => setDetailAddr(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <button className="buttons" onClick={() => DaumPostcode({ onAddressSelected: handleAddressSelected })}>
+                <FaMapLocationDot style={{ fontSize: "30px" }} />
+                검색
+              </button>
+            </div>
+          </div>
+          <div className="div-buttons">
+            <button
+              className="buttons"
+              onClick={() => {
+                const combinedAddress = `${baseAddr}${
+                  detailAddr ? '/' + detailAddr : ''
+                }`;
+                handleAddressSelected(combinedAddress);
+                closeModal();
+              }}
+            >
+            변경
+            </button>
+            <button onClick={closeModal}>취소</button>
+          </div>
+        </AddrSetModal>
+      )}
       
 
       {isModal1Open && (
@@ -494,7 +618,7 @@ const UserPage = () => {
               <input required type="password"/>
             </div>
             <div>
-              <button type="submit" onClick={openPasswordChangeModal}>변경</button>
+              <button type="submit" onClick={pwdChack ? openPasswordChangeModal : alert("비밀번호가 다릅니다.")}>변경</button>
               <button onClick={closeModal}>취소</button>
             </div>
           </form>
