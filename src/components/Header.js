@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-import { userInfo } from "../api/user";
+// import { userInfo } from "../api/user";
 
 
 const StyledHeader = styled.header`
@@ -73,24 +73,24 @@ const Header = () => {
     window.location.replace("/");
   }
 
-  const updateUserInfo = async (user) => {
-    console.log(user);
-    if (user) {
-      const response = await userInfo(user.token);
-      const newPoint = response.data.point;
-      const newName = response.data.name;
-      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
-      setPoint(formatPoint);
-      setName(newName);
-    }
-  };
+  // const updateUserInfo = async (user) => {
+  //   console.log(user);
+  //   if (user) {
+  //     const response = await userInfo(user.token);
+  //     const newPoint = response.data.point;
+  //     const newName = response.data.name;
+  //     const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+  //     setPoint(formatPoint);
+  //     setName(newName);
+  //   }
+  // };
 
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) {
-      updateUserInfo(savedUser);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedUser = JSON.parse(localStorage.getItem("user"));
+  //   if (savedUser) {
+  //     updateUserInfo(savedUser);
+  //   }
+  // }, []);
 
   const [categories, setCategories] = useState([]);
 
@@ -136,7 +136,7 @@ const Header = () => {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
               {name &&
-                <Nav.Link style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
+                <Nav.Link href="/UserPage" style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
               }
               <Nav.Link onClick={register} style={{ color: "black" }}>
                 회원가입</Nav.Link>

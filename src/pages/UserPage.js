@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaMapLocationDot } from "react-icons/fa6";
-import { updateUser, userInfo, pwdChack } from "../api/user";
+import { updateUser,  pwdChack } from "../api/user";
 import DaumPostcode from '../components/DaumPostcode';
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
@@ -296,29 +296,29 @@ const UserPage = () => {
   };
   
   // 데이터를 불러와 초기 필드값에 보냄.
-  const updateUserInfo = async (user) => {
-    if (user) {
-      const response = await userInfo(user.token);
-      const newNick = response.data.nick;
-      const newPhone = response.data.phone;
-      const newEmail = response.data.email;
-      const newAddr = response.data.addr;
+  // const updateUserInfo = async (user) => {
+  //   if (user) {
+  //     const response = await userInfo(user.token);
+  //     const newNick = response.data.nick;
+  //     const newPhone = response.data.phone;
+  //     const newEmail = response.data.email;
+  //     const newAddr = response.data.addr;
 
-      setInitialFieldValues({
-        nick: newNick,
-        phone: newPhone,
-        email: newEmail,
-        addr: newAddr,
-      });
-    }
-  };
+  //     setInitialFieldValues({
+  //       nick: newNick,
+  //       phone: newPhone,
+  //       email: newEmail,
+  //       addr: newAddr,
+  //     });
+  //   }
+  // };
 
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) {
-      updateUserInfo(savedUser);
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedUser = JSON.parse(localStorage.getItem("user"));
+  //   if (savedUser) {
+  //     updateUserInfo(savedUser);
+  //   }
+  // }, []);
 
 
   const isAllFieldsEmpty = () => {

@@ -16,14 +16,14 @@ export const pwdChack = async (data) => {
   return await instance.post("/user/pwdUp", data);
 };
 
-export const userInfo = async(token) =>{
-  console.log(token);
-  return await instance.get("/user/show",{
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-};
+// export const userInfo = async(token) =>{
+//   console.log(token);
+//   return await instance.get("/user/show",{
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+// };
 
 
 export const updateUser = async (data) => {
