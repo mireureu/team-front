@@ -26,6 +26,9 @@ const updateComment = createAsyncThunk(
   "commentSlice/updateComment",
   async (data) => {
     const result = await putComment(data);
+    console.log("★");
+    console.log(result);
+    console.log("★");
     return result.data;
   }
 );

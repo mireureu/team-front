@@ -17,7 +17,7 @@ export const addPost = async (data) => {
 };
 
 export const getPost = async (auctionNo) => {
-  return await instance.get(`/public/auction/${auctionNo}`);
+  return await instance.get(`/user/auction/${auctionNo}`);
 };
 
 export const updateCurrentPrice = async (auctionNo, newPrice) => {

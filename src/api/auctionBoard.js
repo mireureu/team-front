@@ -37,6 +37,11 @@ export const getComments = async (auctionNo) =>{
   return await instance.get(`public/${auctionNo}/comment`);
 }
 
+export const getreComments = async (commentNo, auctionNo) =>{
+  console.log("12345"+auctionNo+ "ddd" + commentNo);
+  return await instance.get(`public/${commentNo}/${auctionNo}/recomment`);
+}
+
 export const getItem = async (page, category, sortOption) => {
   let url = `public/auction?page=${page}`;
   if (category !== null) {

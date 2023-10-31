@@ -16,6 +16,7 @@ import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
 import { userInfo } from "../api/user";
 
+
 const StyledHeader = styled.header`
   #basic-navbar-nav {
     display: flex;
@@ -214,9 +215,12 @@ const Header = () => {
         <Offcanvas.Body>
           {categories.map((Category) => (
             <a href="#" key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }}>
-              <p>{Category.categoryName}</p>
+              <p>{Category.categoryName}
+              {console.log(Category.categoryNo)}</p>
             </a>
+            
           ))}
+          
         </Offcanvas.Body>
       </Offcanvas>
     </>
