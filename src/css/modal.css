@@ -1,0 +1,78 @@
+.Modal {
+    display: grid;
+    grid-template-rows: 1fr 2fr 2fr;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 800px;
+    height: 400px;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    z-index: 4;
+    border: 1px solid black;
+    border-radius: 20px;
+  }
+  
+  .Modal .top h2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .Modal .close {
+    position: absolute;
+    border-radius: 5px;
+    top: 15px;
+    right: 15px;
+  }
+  
+  .Modal .mid {
+    display: flex;
+    justify-content: center;
+    margin: 20px;
+  }
+  
+  .Modal .mid .myPoint {
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 300px;
+    background-color: skyblue;
+  }
+  
+  .Modal .mid .myPoint h4 {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .Modal .mid .myPoint p {
+    font-size: 20px;
+    border: 1px solid black;
+    border-radius: 5px;
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    text-align: right;
+    white-space: pre;
+    background-color: white;
+  }
+  
+  .Modal .bottom {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px;
+  }
+  
+  .Modal .bottom input {
+    width: 320px;
+  }
+  
+  .Modal .bottom input, .Modal .bottom button {
+    font-size: 25px;
+    text-align: right;
+    border-radius: 10px;
+    margin: 5px;
+  }
+  

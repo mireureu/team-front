@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Nav } from 'react-bootstrap';
 import styled from 'styled-components';
 import { updatePoint } from '../api/pay';
-import { userInfo } from '../api/user';
+// import { userInfo } from '../api/user';
+import { useDispatch } from 'react-redux';
 const Modal = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr 2fr;
@@ -89,9 +90,11 @@ const Modal = styled.div`
 
 
 const Kakaopay = () => {
-  const [name, setName] = useState("");
-  const [point, setPoint] = useState(0);
-  const [id, setId] = useState("");
+  const dispatch = useDispatch();
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const [name, setName] = useState(userData ? userData.name : "");
+  const [point, setPoint] = useState(userData ? userData.point : 0);  
+  const [id, setId] = useState(userData ? userData.id : "");
   const userCode = "imp55224240";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [amount, setAmount] = useState(0);
@@ -108,50 +111,52 @@ const Kakaopay = () => {
       pay_method: "card",
       merchant_uid: 'merchant_' + new Date().getTime(),
       name: name,
-      amount: amount,      
+      amount: amount,
     }, callback);
   };
 
   async function callback (response)  {
     const {
-      success,      
+      success,
     } = response;
 
     if (success) {
       const updatedPoint = parseInt(point) + parseInt(amount);
-      setPoint(updatedPoint);      
-      const updateUserData = {
-        point: point,
+      console.log(point);
+      console.log(amount);
+      setPoint(updatedPoint);
+      
+      const data = {
+        point: amount,
         id: id,
-      };
-      const data = { ...updateUserData, point: amount };
-      await updatePoint(data);
-      console.log(data);
-      window.location.replace("/");
+      };      
+
+      updatePoint(data);      
+      window.location.replace("/"); // 새로고침 
     } else {
       alert("결제를 실패했습니다. 다시 시도해주세요");
     }
   }
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
-  const updateUserInfo = async (user) => {
-    if (user) {
-      const response = await userInfo(user.token);
-      const newPoint = response.data.point;
-      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
-      const newName = response.data.name;
-      const newId = response.data.id;
-
-      setPoint(formatPoint);
-      setName(newName);
-      setId(newId);
-    }
-  };
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) {
-      updateUserInfo(savedUser);
-    }
-  }, []);
+  // const updateUserInfo = async (user) => {
+  //   if (user) {
+      
+  //     const response = await userInfo(user.token);      
+  //     const newPoint = response.data.point;      
+  //     // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+  //     const newName = response.data.name;
+  //     const newId = response.data.id;
+  //     setPoint(newPoint);
+  //     setName(newName);
+  //     setId(newId);
+  //   }
+  // };
+  // useEffect(() => {
+  //   const savedUser = JSON.parse(localStorage.getItem("user"));
+  //   if (savedUser) {
+  //     updateUserInfo(savedUser);
+  //   }
+  // }, []);
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -165,9 +170,9 @@ const Kakaopay = () => {
 
   return (
     <div>
-      {name && (
-        <Nav.Link onClick={openModal} style={{ color: "black" }}>카카오페이로 결제</Nav.Link>
-      )}
+     
+        <Nav.Link onClick={openModal} style={{ color: "black" }}> 카카오페이로 결제</Nav.Link>
+    
       {isModalOpen && (
         <Modal>
           <div className='top'>
@@ -178,7 +183,7 @@ const Kakaopay = () => {
             <div className='myPoint'>
               <h4>내 포인트 잔액</h4>
               <p>
-                <span>{point} 포인트 </span>
+                <span> {point ? point.toLocaleString('ko-KR'):0} 포인트 </span>
               </p>
             </div>
           </div>

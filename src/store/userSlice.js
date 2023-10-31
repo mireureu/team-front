@@ -15,13 +15,12 @@ const userSlice = createSlice({
         },
         userLogout: (state, action)=>{
             return {};
-        },        
+        },           
     },
-
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{
-            // localStorage.setItem("token",action.payload.token);  
-            // localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장            
+            localStorage.setItem("token",action.payload.token);  
+            localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장            
             return action.payload;
         });
     }

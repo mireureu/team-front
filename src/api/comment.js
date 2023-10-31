@@ -15,7 +15,6 @@ export const postComment = async (data) => {
 };
 
 export const putComment = async (data) => {
-  console.log(data+"데이타테스트")
   return await instance.put("/user/comments", data);
 };
 

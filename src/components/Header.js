@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-import { userInfo } from "../api/user";
+// import { userInfo } from "../api/user";
 
 
 const StyledHeader = styled.header`
@@ -31,20 +31,21 @@ const Divider = styled.div`
 `;
 
 const CategoryColor = styled.div`
-    background-color: whitesmoke;
-    max-width: 1295px;
-    margin: 0 auto;
-
-  `;
+  background-color: whitesmoke;
+  max-width: 1295px;
+  margin: 0 auto;
+`;
 
 const Header = () => {
+  const userData = JSON.parse(localStorage.getItem("user"));
+  const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
-  const [name, setName] = useState("");
-  const [point, setPoint] = useState(0);
+  const [name, setName] = useState(userData ? userData.name : "");
+
 
   const Search = () => {
     console.log(keyword);
@@ -61,7 +62,6 @@ const Header = () => {
     if (Object.keys(user).length === 0 && save != null) {
       const savedUser = JSON.parse(save);
       dispatch(userSave(savedUser));
-      setPoint(savedUser.point); // 포인트 상태 업데이트
     }
   }, [user]);
 
@@ -70,26 +70,28 @@ const Header = () => {
     localStorage.removeItem("user");
     dispatch(userLogout());
     movePage("/");
-    window.location.replace("/"); // 새로고침
+    window.location.replace("/");
   }
 
-  // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
-  const updateUserInfo = async (user) => {
-    if (user) {
-      const response = await userInfo(user.token);
-      const newPoint = response.data.point;
-      const newName = response.data.name;
-      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR'): 0;
-      setPoint(formatPoint);
-      setName(newName);
-    }
-  };
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) {
-      updateUserInfo(savedUser);
-    }
-  }, []);
+  // const updateUserInfo = async (user) => {
+  //   console.log(user);
+  //   if (user) {
+  //     const response = await userInfo(user.token);
+  //     const newPoint = response.data.point;
+  //     const newName = response.data.name;
+  //     const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+  //     setPoint(formatPoint);
+  //     setName(newName);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   const savedUser = JSON.parse(localStorage.getItem("user"));
+  //   if (savedUser) {
+  //     updateUserInfo(savedUser);
+  //   }
+  // }, []);
+
   const [categories, setCategories] = useState([]);
 
   const categoryAPI = async () => {
@@ -111,6 +113,11 @@ const Header = () => {
     movePage("/register");
   }
 
+  const userPage = () => {
+    movePage("/userPage");
+  }
+
+
   const handleTabSelect = (eventKey) => {
     if (eventKey === 'home') {
       handleShow();
@@ -128,22 +135,21 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-
-              {name && 
-                <Nav.Link style={{ color: "black" }}> {name} 님 {point} point</Nav.Link>
+              {name &&
+                <Nav.Link href="/UserPage" style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
               }
-              <Nav.Link onClick={register} style={{ color: "black" }}>회원가입</Nav.Link>
+              <Nav.Link onClick={register} style={{ color: "black" }}>
+                회원가입</Nav.Link>
               <Kakaopay />
-
               {Object.keys(user).length === 0 ? (
                 <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
               ) : (
                 <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>
               )}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
+              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>      
             </Nav>
-          </Navbar.Collapse>  
+          </Navbar.Collapse>
         </Navbar>
         <Divider />
         <Form onSubmit={(e) => {
@@ -184,11 +190,6 @@ const Header = () => {
           </InputGroup>
         </Form>
 
-
-
-
-
-
         <CategoryColor>
           <Tabs
             defaultActiveKey="home"
@@ -214,13 +215,11 @@ const Header = () => {
         </Offcanvas.Header>
         <Offcanvas.Body>
           {categories.map((Category) => (
-            <a href="#" key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }}>
-              <p>{Category.categoryName}
-              {console.log(Category.categoryNo)}</p>
-            </a>
-            
+            <Link to={`/auctionDetail/${Category.categoryNo}`} key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }} value={Category.categoryNo}>
+              <p>{Category.categoryName}</p>
+            </Link>
           ))}
-          
+
         </Offcanvas.Body>
       </Offcanvas>
     </>
