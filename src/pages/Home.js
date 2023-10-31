@@ -6,6 +6,7 @@ import styled from "styled-components";
 import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
+import { setListType } from "../api/auctionBoard"; // 메인 카테고리
 
 // import { getAuctionBoard } from "./api/auctionBoard";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -87,7 +88,7 @@ const News = styled.div`
   justify-content: center;
   gap: 20px;
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 1200px;
 
   /* section { */
   .new-box {
@@ -350,12 +351,12 @@ const Home = () => {
   };
 
   const andListAPI = async () => {
-    let clicks = "a";
-    let result = null;
+    let clicks = setListType(1);
+    let result = await getHotList();
 
-    if (clicks === "a") {
+    if (clicks === 1) {
       result = await getHotList();
-    } else if (clicks === "b") {
+    } else if (clicks === 2) {
       result = await getNewList();
     }
     

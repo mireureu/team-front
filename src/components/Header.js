@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
+import { setListType } from "../api/auctionBoard";
 // import { userInfo } from "../api/user";
 
 
@@ -45,7 +46,6 @@ const Header = () => {
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
-
 
   const Search = () => {
     console.log(keyword);
@@ -125,6 +125,11 @@ const Header = () => {
     }
   };
 
+  const handleTabClick = (num) => {
+    setListType(num);
+    console.log("메인 카테고리 = " + num);
+  };
+
   return (
     <>
       <StyledHeader id="fill-tab-style">
@@ -200,8 +205,8 @@ const Header = () => {
             style={{ marginTop: "40px", fontSize: "20px" }}
           >
             <Tab eventKey="home" title="전체카테고리" />
-            <Tab eventKey="profile" title={<Link to="/newItems" style={{ textDecoration: "none", color: "black", fontWeight: "bold" }}>신상품</Link>} />
-            <Tab eventKey="longer-tab" title={<Link to="/bestItems" style={{ textDecoration: "none", color: "black", fontWeight: "bold" }}>베스트상품</Link>} />
+            <Tab eventKey="longer-tab" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(1)}>베스트상품</Link>} />
+            <Tab eventKey="profile" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(2)}>신상품</Link>} />
             <Tab eventKey="contact" title={<Link to="/contact" style={{ textDecoration: "none", color: "black", fontWeight: "bold", border: "none", outline: "none" }}>QnA</Link>} className="no-hover-animation" />
           </Tabs>
         </CategoryColor>
