@@ -15,9 +15,9 @@ export const postComment = async (data) => {
 };
 
 export const putComment = async (data) => {
-  return await instance.put("/comments", data);
+  return await instance.put("/user/comments", data);
 };
 
 export const delComment = async (id) => {
-  return await instance.delete("video/comment/" + id);
+  return await instance.delete("user/comment/" + id);
 };

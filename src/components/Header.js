@@ -16,6 +16,7 @@ import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
 import { userInfo } from "../api/user";
 
+
 const StyledHeader = styled.header`
   #basic-navbar-nav {
     display: flex;
