@@ -331,24 +331,23 @@ const Home = () => {
 
   const startTimer = () => {
     const timerId = setInterval(() => {
-      // 1초마다 시간을 갱신
-      setAndList((prevAndList) => {
-        return prevAndList.map((ands) => {
-          const timeDifference = calculateTimeDifference(ands.auctionEndDate);
-          const newAnds = {
-            ...ands,
-            timeDifference,
-          };
-          return newAnds;
+        // 남은 시간만 업데이트
+        setAndList((prevAndList) => {
+            return prevAndList.map((ands) => {
+                const timeDifference = calculateTimeDifference(ands.auctionEndDate);
+                return {
+                    ...ands,
+                    timeDifference,
+                };
+            });
         });
-      });
     }, 1000);
 
     // 컴포넌트 언마운트 시 타이머 해제
     return () => {
-      clearInterval(timerId);
+        clearInterval(timerId);
     };
-  };
+};
 
   const andListAPI = async () => {
     let clicks = setListType(1);
@@ -359,13 +358,12 @@ const Home = () => {
     } else if (clicks === 2) {
       result = await getNewList();
     }
-    
+    console.log(result);
     setAndList(result.data);
   };
 
   useEffect(() => {
     andListAPI();
-    // categoryAPI();
     startTimer();
   }, []);
 
@@ -385,13 +383,6 @@ const Home = () => {
     // 페이지 이동을 위해 window.location.href를 사용
     window.location.href = `/auctionpost/${auctionNo}`;
   };
-
-  // 쿠키로 최근 본 게시물 목록
-  function addToRecentPosts(postId) {
-    const recentPosts = JSON.parse(sessionStorage.getItem("recentPosts")) || [];
-    recentPosts.push(postId);
-    sessionStorage.setItem("recentPosts", JSON.stringify(recentPosts));
-  }
 
   return (
     <Main className="div-container">
@@ -437,7 +428,7 @@ const Home = () => {
               <h2>{selectedItem.auctionTitle}</h2>
             </div>
             <div className="itemImg">
-              <img src={"/upload/" + selectedItem.auctionImg.split(",", 1)} alt={selectedItem.auctionTitle} />
+              <img src={"/upload/" + selectedItem.auctionImg.split(",", 1)} alt={selectedItem.auctionTitle}/>
             </div>
             <div className="itemBoard">
               <h4>남은 시간</h4>

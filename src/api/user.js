@@ -16,14 +16,14 @@ export const pwdChack = async (data) => {
   return await instance.post("/user/pwdUp", data);
 };
 
-// export const userInfo = async(token) =>{
-//   console.log(token);
-//   return await instance.get("/user/show",{
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-// };
+export const userInfo = async(token) =>{
+  console.log(token);
+  return await instance.get("/user/show",{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 
 export const updateUser = async (data) => {
@@ -71,6 +71,28 @@ export const addUser = async (id) => {
   }
 }
 
+// 관심 등록한 게시글 List 가져오기
+export const getMyInterestList = async () => {
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await instance.get(`/user/myInterestList`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log( response);
+    return response.data;
+  } catch (error) {
+    // 에러 처리
+    console.error('에러 발생:', error);
+    throw error;
+  }
+
+}
+
+
 const getUserInfo = () => {
   const storedToken = localStorage.getItem("token");
   const storedUser = localStorage.getItem("user");
@@ -86,10 +108,5 @@ const getUserInfo = () => {
 export const updatePassword = async (data) => {
   return await instance.put("/public/updatePassword",data);
 }
-
-
-
-
-
 
 export default getUserInfo;

@@ -10,7 +10,7 @@ export const getAuctionBoard = async () => {
     return null;
 };
 
-
+// Hot 게시글로 정렬
 export const getHotList = async () => {
     return await instance.get("public/auction/hot");
 };
@@ -19,6 +19,7 @@ export const getList = async () => {
   return await instance.get("public/auction/sortedt");
 };
 
+// New 게시글로 정렬
 export const getNewList = async () => {
     return await instance.get("public/auction/new");
 };

@@ -99,6 +99,11 @@ const Container = styled.div `
             &.regiNumberBack {
                 margin-left: 20px;
             }
+
+            &.addr, &.detailAddr, &.email {
+                width: 300px;
+            }
+
         }
     }
 `;
@@ -130,6 +135,8 @@ const Register = () => {
             throw error;
         }
     };
+
+    
 
     const duplicateIdClick = async () => {
         try {
@@ -223,9 +230,10 @@ const Register = () => {
     }
 
     const handleFrontChange = (e) => {
-        const newRegistrationNumberFront = e.target.value.slice(0, 7); // 최대 6글자로 제한
+        const inputValue = e.target.value;
+        const newRegistrationNumberFront = inputValue.replace(/[^0-9]/g, '').slice(0, 6); // 숫자만 남기고 최대 6글자로 제한
         setRegistrationNumberFront(newRegistrationNumberFront);
-
+    
         if (newRegistrationNumberFront.length === 6) {
             // 앞자리가 6글자일 때 뒷자리로 이동
             document.getElementById('registrationNumberBack').focus();
@@ -233,9 +241,10 @@ const Register = () => {
     };
 
     const handleBackChange = (e) => {
-        const newRegistrationNumberBack = e.target.value.slice(0, 7); // 최대 7글자로 제한
+        const inputValue = e.target.value;
+        const newRegistrationNumberBack = inputValue.replace(/[^0-9]/g, '').slice(0, 7); // 숫자만 남기고 최대 7글자로 제한
         setRegistrationNumberBack(newRegistrationNumberBack);
-
+    
         if (newRegistrationNumberBack.length === 7 && registrationNumberFront.length === 6) {
             setRegistrationNumberValid(true);
         } else {

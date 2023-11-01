@@ -11,6 +11,7 @@ import Register from "./pages/Register";
 import SearchResult from "./pages/SearchResult";
 import UserPage from "./pages/UserPage";
 import UpdatePost from "./pages/UpdatePost";
+import InterestList from "./pages/InterestList";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -55,6 +56,10 @@ const router = createBrowserRouter([
       {
         path: "/UserPage",
         element: <UserPage />,
+      },
+      {
+        path: "/InterestList",
+        element: <InterestList />,
       },
     ],
   },
