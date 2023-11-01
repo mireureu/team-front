@@ -14,8 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-// import { userInfo } from "../api/user";
-
+import { userInfo } from "../api/user";
+import { getItem } from "../api/auctionBoard"
 
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -73,24 +73,24 @@ const Header = () => {
     window.location.replace("/");
   }
 
-  // const updateUserInfo = async (user) => {
-  //   console.log(user);
-  //   if (user) {
-  //     const response = await userInfo(user.token);
-  //     const newPoint = response.data.point;
-  //     const newName = response.data.name;
-  //     const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
-  //     setPoint(formatPoint);
-  //     setName(newName);
-  //   }
-  // };
+  const updateUserInfo = async (user) => {
+    console.log(user);
+    if (user) {
+      const response = await userInfo(user.token);
+      const newPoint = response.data.point;
+      const newName = response.data.name;                        
+      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+      setPoint(formatPoint);
+      setName(newName);
+    }
+  };
 
-  // useEffect(() => {
-  //   const savedUser = JSON.parse(localStorage.getItem("user"));
-  //   if (savedUser) {
-  //     updateUserInfo(savedUser);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
+  }, []);
 
   const [categories, setCategories] = useState([]);
 
@@ -215,8 +215,8 @@ const Header = () => {
         </Offcanvas.Header>
         <Offcanvas.Body>
           {categories.map((Category) => (
-            <Link to={`/auctionDetail/${Category.categoryNo}`} key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }} value={Category.categoryNo}>
-              <p>{Category.categoryName}</p>
+            <Link to={`/auctionDetail?categoryNo=${Category.categoryNo}`} key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }} value={Category.categoryNo}>
+              <p>{Category.categoryName}</p>              
             </Link>
           ))}
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import styled from "styled-components";
@@ -10,6 +10,7 @@ import Pagination from "react-bootstrap/Pagination";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { getCategories, getItem } from "../api/auctionBoard";
 import { Nav } from "react-bootstrap";
+
 
 const StyledHeader = styled.header`
   display: flex;
@@ -22,10 +23,10 @@ const StyledHeader = styled.header`
     height: 100%;
   }
   .image-container {
-  width: 250px; /* 원하는 가로 너비 설정 */
-  height: 250px; /* 원하는 세로 높이 설정 */
-  object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
-}
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+  }
   .Pagination.Item.active {
     background-color: #007BFF;
     border-color: #007BFF;
@@ -79,26 +80,30 @@ const StyledHeader = styled.header`
     font-weight: bold;
   }
 `;
-const App = () => {
+
+const AuctionDetail = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
-  const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
+  const [sortOption, setSortOption] = useState("0");
   const save = localStorage.getItem("user");
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const categoryFromQuery = searchParams.get("categoryNo");
+  
   const categoryAPI = async () => {
+    console.log(categoryFromQuery);
     const result = await getCategories();
     setCategories(result.data);
   };
 
   const handlePostClick = () => {
-
     if (save === null) {
       alert('로그인 후 이용하세요');
-      navigate("/login"); 
+      navigate("/login");
     } else {
       navigate("/post");
     }
@@ -106,19 +111,16 @@ const App = () => {
 
   const handlePostitemClick = (auctionNo) => {
     if (save === null) {
-      console.log(auctionNo)
       alert('로그인 후 이용하세요');
-      navigate("/login"); 
+      navigate("/login");
     } else {
       navigate(`/auctionpost/${auctionNo}`);
-      // console.log("초-비-상")
     }
   };
 
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
       const result = await getItem(selectedPage, selectedCategory, sortOption);
-      console.log(result.data.content);
       setTotalPages(result.data.totalPages);
       setItems(result.data.content);
     } catch (error) {
@@ -126,28 +128,23 @@ const App = () => {
     }
   };
 
-
-
   const handleSortOptionChange = (event) => {
     const newSortOption = event.target.value;
     setSortOption(newSortOption);
     setPage(1);
     setItems([]);
-    itemAPI(category, page, newSortOption);
+    itemAPI(categoryFromQuery, page, newSortOption);
   };
+
   useEffect(() => {
     categoryAPI();
-  }, []);
+    setCategory(categoryFromQuery);
+  }, [categoryFromQuery]);
+
   useEffect(() => {
-    itemAPI(category, page, sortOption);
-  }, [category, page, sortOption]);
-  const handleCategoryChange = (selectedCategory) => {
-    if (selectedCategory !== category) {
-      setCategory(selectedCategory);
-      setPage(1);
-      setItems([]);
-    }
-  };
+    itemAPI(categoryFromQuery, page, sortOption);
+  }, [categoryFromQuery, page, sortOption]);
+
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
       return {
@@ -171,6 +168,7 @@ const App = () => {
       seconds: secondsDifference % 60,
     };
   };
+
   const handlePageChange = (newPage) => {
     if (newPage > 0) {
       setPage(newPage);
@@ -178,6 +176,14 @@ const App = () => {
       setPage(1);
     }
   };
+
+  const handleCategoryChange = (selectedCategory) => {
+    setCategory(selectedCategory);
+    setPage(1);
+    setItems([]);
+    itemAPI(selectedCategory, 1, sortOption);
+  };
+
   return (
     <StyledHeader>
       <Container>
@@ -225,11 +231,8 @@ const App = () => {
                 key={index}
                 style={{ width: "18rem", marginTop: "30px" }}
                 className="hover"
-              > 
-                
+              >
                 <Nav.Link onClick={() => handlePostitemClick(item.auctionNo)}>
-                  {" "}
-                  {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
                   <Card.Img
                     variant="top"
                     src={"/upload/" + item.auctionImg.split(",", 1)}
@@ -251,24 +254,12 @@ const App = () => {
                     )}
                     <div className="hover-button">
                       <div>현재가 : {item.currentPrice}원</div>
-                      <div
-                        className="hidden-hover"
-                        onMouseEnter={() => {
-                        }}
-                      >
-                        현재가 : {item.currentPrice}원
-          
-                      </div>
+                      <div className="hidden-hover"></div>
                       <div
                         className="show-hover"
                         id={`show-hover-${index}`}
                         style={{ display: "none" }}
-                        onMouseLeave={() => {
-                          // ...
-                        }}
-                      >
-                        현재가 : {item.currentPrice}원
-                      </div>
+                      ></div>
                       <div className="small-text">클릭 시 경매 참가</div>
                     </div>
                   </Card.Body>
@@ -310,19 +301,18 @@ const App = () => {
           />
         </Pagination>
         <div>
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={handlePostClick}
-      >
-        게시글 등록
-      </Button>
-    </div>
-        <div className="current-page">
-          {/* 현재 페이지: {page}/{totalPages} */}
+          <Button
+            variant="outline-primary"
+            size="sm"
+            onClick={handlePostClick}
+          >
+            게시글 등록
+          </Button>
         </div>
+        <div className="current-page"></div>
       </Container>
     </StyledHeader>
   );
 };
-export default App;
+
+export default AuctionDetail;

@@ -1,8 +1,6 @@
 import emailjs from 'emailjs-com';
 import { useState } from 'react';
 import { updatePassword } from '../api/user';
-//https://www.emailjs.com/ 사용.
-// 임시 비밀번호
 const temporaryPassword = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
@@ -41,8 +39,6 @@ const FindPassword = ({ email, birthday, id  }) => {
     const handleVerification = (e) => {
         e.preventDefault(); 
         updatePassword( {id,birthday,password} );
-        console.log(birthday);
-        console.log(password);
         sendVerificationEmail();
     };
 
@@ -51,9 +47,7 @@ const FindPassword = ({ email, birthday, id  }) => {
             {isEmailSent ? (
                 <p>
                     인증 이메일이 성공적으로 발송되었습니다. 이메일을
-                    확인해주세요!
-                    {console.log(email)}
-                    {console.log(birthday)}
+                    확인해주세요!                    
                 </p>
             ) : (
                 <button onClick={handleVerification}>인증</button>
@@ -61,6 +55,4 @@ const FindPassword = ({ email, birthday, id  }) => {
         </div>
     );
 }
-
 export default FindPassword;
-

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Nav } from 'react-bootstrap';
 import styled from 'styled-components';
 import { updatePoint } from '../api/pay';
-// import { userInfo } from '../api/user';
+import { userInfo } from '../api/user';
 import { useDispatch } from 'react-redux';
 const Modal = styled.div`
   display: grid;
@@ -138,25 +138,25 @@ const Kakaopay = () => {
     }
   }
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
-  // const updateUserInfo = async (user) => {
-  //   if (user) {
+  const updateUserInfo = async (user) => {
+    if (user) {
       
-  //     const response = await userInfo(user.token);      
-  //     const newPoint = response.data.point;      
-  //     // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
-  //     const newName = response.data.name;
-  //     const newId = response.data.id;
-  //     setPoint(newPoint);
-  //     setName(newName);
-  //     setId(newId);
-  //   }
-  // };
-  // useEffect(() => {
-  //   const savedUser = JSON.parse(localStorage.getItem("user"));
-  //   if (savedUser) {
-  //     updateUserInfo(savedUser);
-  //   }
-  // }, []);
+      const response = await userInfo(user.token);      
+      const newPoint = response.data.point;      
+      // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+      const newName = response.data.name;
+      const newId = response.data.id;
+      setPoint(newPoint);
+      setName(newName);
+      setId(newId);
+    }
+  };
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
+  }, []);
 
   useEffect(() => {
     const script = document.createElement('script');

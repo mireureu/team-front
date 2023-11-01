@@ -425,7 +425,7 @@ const Register = () => {
 
 
                     <div className="divs registerButtonDiv">
-                        <Button className='registerButton' onClick=     {onClick} disabled={!passwordMatch ||   !emailValid || !registrationNumberValid}>
+                        <Button className='registerButton' onClick= {onClick} disabled={!passwordMatch ||   !emailValid || !registrationNumberValid}>
                             회원 가입
                         </Button>
                     </div>

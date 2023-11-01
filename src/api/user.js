@@ -7,33 +7,25 @@ const instance = axios.create({
 export const login = async (data) => {
   return await instance.post("/public/signin", data);
 };
-
-export const pwdChack = async (data) => {
-
-  if(data != null) {
-
-  }
-  return await instance.post("/user/pwdUp", data);
+export const userInfo = async(token) =>{
+  console.log(token);
+  return await instance.get("/user/show",{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
-
-// export const userInfo = async(token) =>{
-//   console.log(token);
-//   return await instance.get("/user/show",{
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-// };
-
 
 export const updateUser = async (data) => {
   const token = localStorage.getItem("token");
   console.log(token);
   console.log(data);
   try {
-    return await instance.put("/user/updateuser", data, {headers: {
-      Authorization: `Bearer ${token}`,
-  },});
+    return await instance.put("/user/updateuser", data, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
   } catch (error) {
     console.error('API 에러 발생:', error);
     throw error;
@@ -50,6 +42,16 @@ export const getUserData = async (id) => {
   }
 };
 
+
+export const passwordCheck = async (password) => {
+  const token = localStorage.getItem("token");
+  console.log(password);
+  return await instance.post("/user/pwdCheck", password, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
 
 export const addUser = async (id) => {
   try {
@@ -84,10 +86,17 @@ const getUserInfo = () => {
 };
 
 export const updatePassword = async (data) => {
-  return await instance.put("/public/updatePassword",data);
+  return await instance.put("/public/updatePassword", data);
 }
 
-
+export const changePassowrd = async (password) =>{
+  const token = localStorage.getItem("token");
+  return await instance.put("/user/pwdUpdate",password,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
 
 
 
