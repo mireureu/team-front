@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Nav } from 'react-bootstrap';
-import styled from 'styled-components';
-import { updatePoint } from '../api/pay';
-// import { userInfo } from '../api/user';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useState } from "react";
+import { Nav } from "react-bootstrap";
+import styled from "styled-components";
+import { updatePoint } from "../api/pay";
+import { userInfo } from "../api/user";
+import { useDispatch } from "react-redux";
 const Modal = styled.div`
   display: grid;
   grid-template-rows: 1fr 2fr 2fr;
-  
+
   position: fixed;
   top: 50%;
   left: 50%;
@@ -21,7 +21,6 @@ const Modal = styled.div`
   border-radius: 20px;
 
   .top {
-
     h2 {
       display: flex;
       justify-content: center;
@@ -65,7 +64,6 @@ const Modal = styled.div`
         background-color: white; // 포인트 출력칸 배경색
       }
     }
-    
   }
 
   .bottom {
@@ -78,22 +76,21 @@ const Modal = styled.div`
       width: 320px;
     }
 
-    input, button {
+    input,
+    button {
       font-size: 25px;
       text-align: right;
       border-radius: 10px;
       margin: 5px;
     }
-    
   }
 `;
-
 
 const Kakaopay = () => {
   const dispatch = useDispatch();
   const userData = JSON.parse(localStorage.getItem("user"));
   const [name, setName] = useState(userData ? userData.name : "");
-  const [point, setPoint] = useState(userData ? userData.point : 0);  
+  const [point, setPoint] = useState(userData ? userData.point : 0);
   const [id, setId] = useState(userData ? userData.id : "");
   const userCode = "imp55224240";
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -106,61 +103,61 @@ const Kakaopay = () => {
     setIsModalOpen(false);
   };
   const handlePayment = () => {
-    window.IMP.request_pay({
-      pg: "kakaopay",
-      pay_method: "card",
-      merchant_uid: 'merchant_' + new Date().getTime(),
-      name: name,
-      amount: amount,
-    }, callback);
+    window.IMP.request_pay(
+      {
+        pg: "kakaopay",
+        pay_method: "card",
+        merchant_uid: "merchant_" + new Date().getTime(),
+        name: name,
+        amount: amount,
+      },
+      callback
+    );
   };
 
-  async function callback (response)  {
-    const {
-      success,
-    } = response;
+  async function callback(response) {
+    const { success } = response;
 
     if (success) {
       const updatedPoint = parseInt(point) + parseInt(amount);
       console.log(point);
       console.log(amount);
       setPoint(updatedPoint);
-      
+
       const data = {
         point: amount,
         id: id,
-      };      
+      };
 
-      updatePoint(data);      
-      window.location.replace("/"); // 새로고침 
+      updatePoint(data);
+      window.location.replace("/"); // 새로고침
     } else {
       alert("결제를 실패했습니다. 다시 시도해주세요");
     }
   }
   // 로그인 직후 새로고침을 안하면 토큰값이 안넘어가서 직접 넣어줬음.
-  // const updateUserInfo = async (user) => {
-  //   if (user) {
-      
-  //     const response = await userInfo(user.token);      
-  //     const newPoint = response.data.point;      
-  //     // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
-  //     const newName = response.data.name;
-  //     const newId = response.data.id;
-  //     setPoint(newPoint);
-  //     setName(newName);
-  //     setId(newId);
-  //   }
-  // };
-  // useEffect(() => {
-  //   const savedUser = JSON.parse(localStorage.getItem("user"));
-  //   if (savedUser) {
-  //     updateUserInfo(savedUser);
-  //   }
-  // }, []);
+  const updateUserInfo = async (user) => {
+    if (user) {
+      const response = await userInfo(user.token);
+      const newPoint = response.data.point;
+      // const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+      const newName = response.data.name;
+      const newId = response.data.id;
+      setPoint(newPoint);
+      setName(newName);
+      setId(newId);
+    }
+  };
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
+  }, []);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://cdn.iamport.kr/v1/iamport.js';
+    const script = document.createElement("script");
+    script.src = "https://cdn.iamport.kr/v1/iamport.js";
     script.async = true;
     document.body.appendChild(script);
     script.onload = () => {
@@ -170,24 +167,31 @@ const Kakaopay = () => {
 
   return (
     <div>
-     
-        <Nav.Link onClick={openModal} style={{ color: "black" }}> 카카오페이로 결제</Nav.Link>
-    
+      <Nav.Link onClick={openModal} style={{ color: "black" }}>
+        {" "}
+        카카오페이로 결제
+      </Nav.Link>
+
       {isModalOpen && (
         <Modal>
-          <div className='top'>
+          <div className="top">
             <h2>포인트 충전</h2>
-            <button className='close' onClick={closeModal}>X</button>
+            <button className="close" onClick={closeModal}>
+              X
+            </button>
           </div>
-          <div className='mid'>
-            <div className='myPoint'>
+          <div className="mid">
+            <div className="myPoint">
               <h4>내 포인트 잔액</h4>
               <p>
-                <span> {point ? point.toLocaleString('ko-KR'):0} 포인트 </span>
+                <span>
+                  {" "}
+                  {point ? point.toLocaleString("ko-KR") : 0} 포인트{" "}
+                </span>
               </p>
             </div>
           </div>
-          <div className='bottom'>
+          <div className="bottom">
             <input
               type="number"
               placeholder="충전할 금액을 입력하세요"
@@ -198,7 +202,6 @@ const Kakaopay = () => {
         </Modal>
       )}
     </div>
-
   );
 };
 

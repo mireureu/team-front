@@ -22,13 +22,13 @@ const StyledHeader = styled.header`
     height: 100%;
   }
   .image-container {
-  width: 250px; /* 원하는 가로 너비 설정 */
-  height: 250px; /* 원하는 세로 높이 설정 */
-  object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
-}
+    width: 250px; /* 원하는 가로 너비 설정 */
+    height: 250px; /* 원하는 세로 높이 설정 */
+    object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
+  }
   .Pagination.Item.active {
-    background-color: #007BFF;
-    border-color: #007BFF;
+    background-color: #007bff;
+    border-color: #007bff;
     color: #fff;
   }
   .cards-container {
@@ -95,10 +95,9 @@ const App = () => {
   };
 
   const handlePostClick = () => {
-
     if (save === null) {
-      alert('로그인 후 이용하세요');
-      navigate("/login"); 
+      alert("로그인 후 이용하세요");
+      navigate("/login");
     } else {
       navigate("/post");
     }
@@ -106,9 +105,9 @@ const App = () => {
 
   const handlePostitemClick = (auctionNo) => {
     if (save === null) {
-      console.log(auctionNo)
-      alert('로그인 후 이용하세요');
-      navigate("/login"); 
+      console.log(auctionNo);
+      alert("로그인 후 이용하세요");
+      navigate("/login");
     } else {
       navigate(`/auctionpost/${auctionNo}`);
       // console.log("초-비-상")
@@ -125,8 +124,6 @@ const App = () => {
       console.error("데이터 불러오기 오류:", error);
     }
   };
-
-
 
   const handleSortOptionChange = (event) => {
     const newSortOption = event.target.value;
@@ -225,8 +222,7 @@ const App = () => {
                 key={index}
                 style={{ width: "18rem", marginTop: "30px" }}
                 className="hover"
-              > 
-                
+              >
                 <Nav.Link onClick={() => handlePostitemClick(item.auctionNo)}>
                   {" "}
                   {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
@@ -251,13 +247,8 @@ const App = () => {
                     )}
                     <div className="hover-button">
                       <div>현재가 : {item.currentPrice}원</div>
-                      <div
-                        className="hidden-hover"
-                        onMouseEnter={() => {
-                        }}
-                      >
+                      <div className="hidden-hover" onMouseEnter={() => {}}>
                         현재가 : {item.currentPrice}원
-          
                       </div>
                       <div
                         className="show-hover"
@@ -310,14 +301,10 @@ const App = () => {
           />
         </Pagination>
         <div>
-      <Button
-        variant="outline-primary"
-        size="sm"
-        onClick={handlePostClick}
-      >
-        게시글 등록
-      </Button>
-    </div>
+          <Button variant="outline-primary" size="sm" onClick={handlePostClick}>
+            게시글 등록
+          </Button>
+        </div>
         <div className="current-page">
           {/* 현재 페이지: {page}/{totalPages} */}
         </div>

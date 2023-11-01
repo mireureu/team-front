@@ -1,81 +1,75 @@
-import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Container, Modal } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { getCategories, getPost, updatePost } from "../api/addpost"; // 수정된 API 함수 사용
-import { useNavigate, useParams } from "react-router-dom";
+import { getCategories, updatePost } from "../api/addpost";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// 서울시간 설정
+// 서울시간으로 변환
 function convertToSeoulTime(date) {
-  const seoulOffset = 9 * 60; // 서울은 UTC+9
+  const seoulOffset = 9 * 60;
   const seoulTime = new Date(date.getTime() + seoulOffset * 60000);
   return seoulTime;
 }
 
+// 게시물 데이터를 담는 상태
 const UpdatePost = () => {
-  const { auctionNo } = useParams();
+  const auctionData = JSON.parse(localStorage.getItem("auction")); // 옥션 정보 불러오는거
+  // console.log(auctionData.category.categoryNo); // 이게시글의 카테고리 넘버가 3번이라는거
+  // auctionData.auctionTitle
+
   const [categories, setCategories] = useState([]);
-  const [title, setTitle] = useState("");
-  const [itemName, setItemName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [sMoney, setSmoney] = useState("");
-  const [eMoney, setEmoney] = useState("");
-  const [gMoney, setGmoney] = useState(0);
-  const [select, setSelect] = useState(1);
-  const [isBuyNowChecked, setIsBuyNowChecked] = useState(false);
-  const [imagePreviews, setImagePreviews] = useState([]); // 이미지 미리보기 배열
+  const [post, setPost] = useState({
+    title: auctionData.auctionTitle,
+    itemName: auctionData.itemName,
+    desc: auctionData.desc,
+    sMoney: auctionData.sMoney,
+    eMoney: auctionData.eMoney,
+    gMoney: auctionData.gMoney,
+    select: auctionData.category.categoryNo,
+    isBuyNowChecked: auctionData.nowBuy === "Y",
+    images: [], // 이미지는 따로 처리해야 합니다.
+    checkNo: auctionData.checkNo,
+    attendNo: auctionData.attendNo,
+    auctionDate: new Date(auctionData.auctionDate),
+    auctionEndDate: new Date(auctionData.auctionEndDate),
+  });
+
+  const {
+    title,
+    itemName,
+    desc,
+    sMoney,
+    eMoney,
+    gMoney,
+    select,
+    isBuyNowChecked,
+    images,
+    checkNo,
+    attendNo,
+    auctionDate,
+    auctionEndDate,
+  } = post;
+
+  const [imagePreviews, setImagePreviews] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const [eMoneyError, setEMoneyError] = useState("");
-  const [auctionDate, setAuctionDate] = useState(new Date());
-  const [auctionEndDate, setAuctionEndDate] = useState(new Date());
-  const [images, setImages] = useState([]);
-  const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await getPost(auctionNo);
-        if (response.status === 200) {
-          const post = response.data;
-          setTitle(post.auctionTitle);
-          setItemName(post.itemName);
-          setDesc(post.itemDesc);
-          setSmoney(post.auctionSMoney);
-          setEmoney(post.auctionEMoney);
-          setGmoney(post.auctionGMoney);
-          setSelect(post.category.categoryNo);
-          setIsBuyNowChecked(post.auctionNowbuy === "Y");
-          setImagePreviews(
-            post.auctionImg
-              .split(",")
-              .map((imagePath) => `/images/${imagePath}`)
-          );
-          setAuctionDate(new Date(post.auctionDate));
-          setAuctionEndDate(new Date(post.auctionEndDate));
-          setLoaded(true);
-        } else {
-          console.error("게시물 정보 불러오기 실패.");
-        }
-      } catch (error) {
-        console.error("게시물 정보 불러오기 중 오류발생:", error);
-      }
-    };
-
-    if (!loaded) {
-      fetchData();
-    }
-  }, [auctionNo, loaded]);
-
+  // 게시물 수정 버튼 클릭 시 호출되는 함수
   const onClick = async () => {
     const formData = new FormData();
+    console.log(auctionData);
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("desc", desc);
     formData.append("sMoney", sMoney);
-    formData.append("eMoney", eMoney);
+    formData.append("eMoney", Math.floor(eMoney));
     formData.append("gMoney", gMoney);
     formData.append("categoryNo", select);
+    formData.append("checkNo", checkNo);
+    formData.append("attendNo", attendNo);
     formData.append("nowBuy", isBuyNowChecked ? "Y" : "N");
 
     const seoulAuctionDate = convertToSeoulTime(auctionDate);
@@ -88,17 +82,19 @@ const UpdatePost = () => {
     }
 
     try {
-      const response = await updatePost(auctionNo, formData); // 업데이트 API 함수 호출
+      console.log(auctionData.auctionNo);
+      const response = await updatePost(auctionData.auctionNo, formData);
       if (response.status === 200) {
         setIsModalOpen(true);
       } else {
-        console.error("게시물 업데이트 중 오류발생.");
+        console.error("게시물 업로드 중 오류발생.");
       }
     } catch (error) {
-      console.error("게시물 업데이트 중 오류가 발생했습니다.", error);
+      console.error("게시물 업로드 중 오류가 발생했습니다.", error);
     }
   };
 
+  // 이미지 업로드 시 호출되는 함수
   const onUploadImage = (e) => {
     const selectedImages = e.target.files;
     const newImages = [...images];
@@ -110,10 +106,14 @@ const UpdatePost = () => {
       URL.createObjectURL(image)
     );
 
-    setImages(newImages);
+    setPost({
+      ...post,
+      images: newImages,
+    });
     setImagePreviews([...imagePreviews, ...imagePreviewsArray]);
   };
 
+  // 이미지 삭제 시 호출되는 함수
   const removeImage = (index) => {
     const newImagePreviews = [...imagePreviews];
     newImagePreviews.splice(index, 1);
@@ -121,35 +121,47 @@ const UpdatePost = () => {
     const newImages = [...images];
     newImages.splice(index, 1);
 
+    setPost({
+      ...post,
+      images: newImages,
+    });
     setImagePreviews(newImagePreviews);
-    setImages(newImages);
   };
 
+  // 카테고리 정보를 가져오는 함수
   const categoryAPI = async () => {
     const result = await getCategories();
     setCategories(result.data);
   };
 
+  // 카테고리 선택 시 호출되는 함수
   const onChangeCategory = (e) => {
-    setSelect(e.currentTarget.value);
+    setPost({
+      ...post,
+      select: e.currentTarget.value,
+    });
   };
 
+  // 페이지 로드 시 실행되는 효과
   useEffect(() => {
     categoryAPI();
     const minBidLimit = sMoney * 0.1;
-    setEmoney(minBidLimit);
+    setPost({
+      ...post,
+      eMoney: minBidLimit,
+    });
   }, [sMoney]);
 
   return (
     <Container>
-      <h1>경매글 수정</h1>
+      <h1>게시물 수정</h1>
       <Form>
         <Form.Group className="mb-3">
           <Form.Control
             type="text"
             value={title}
             placeholder="제목"
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e) => setPost({ ...post, title: e.target.value })}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -157,7 +169,7 @@ const UpdatePost = () => {
             type="text"
             value={itemName}
             placeholder="상품명"
-            onChange={(e) => setItemName(e.target.value)}
+            onChange={(e) => setPost({ ...post, itemName: e.target.value })}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -166,7 +178,7 @@ const UpdatePost = () => {
             rows={3}
             value={desc}
             placeholder="게시글 내용"
-            onChange={(e) => setDesc(e.target.value)}
+            onChange={(e) => setPost({ ...post, desc: e.target.value })}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -174,7 +186,7 @@ const UpdatePost = () => {
             type="number"
             value={sMoney}
             placeholder="경매시작가격(최대 입력값 1억원)"
-            onChange={(e) => setSmoney(e.target.value)}
+            onChange={(e) => setPost({ ...post, sMoney: e.target.value })}
           />
         </Form.Group>
         <Form.Group className="mb-3">
@@ -190,7 +202,9 @@ const UpdatePost = () => {
             type="checkbox"
             label="즉시구매 사용여부"
             checked={isBuyNowChecked}
-            onChange={() => setIsBuyNowChecked(!isBuyNowChecked)}
+            onChange={() =>
+              setPost({ ...post, isBuyNowChecked: !isBuyNowChecked })
+            }
           />
         </Form.Group>
         {isBuyNowChecked && (
@@ -199,7 +213,7 @@ const UpdatePost = () => {
               type="number"
               value={gMoney}
               placeholder="즉시구매가"
-              onChange={(e) => setGmoney(e.target.value)}
+              onChange={(e) => setPost({ ...post, gMoney: e.target.value })}
             />
           </Form.Group>
         )}
