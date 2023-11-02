@@ -69,7 +69,7 @@ export const addUser = async (id) => {
     console.error('에러 발생:', error);
     throw error;
   }
-}
+};
 
 // 관심 등록한 게시글 List 가져오기
 export const getMyInterestList = async () => {
@@ -90,7 +90,51 @@ export const getMyInterestList = async () => {
     throw error;
   }
 
-}
+};
+
+// 관심 등록한 게시글 삭제
+export const deleteCheck = async (auctionNos) => {
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await instance.delete(`/user/checkDelete`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: auctionNos, // 선택된 auctionNo 값을 전달
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    // 에러 처리
+    console.error('에러 발생:', error);
+    throw error;
+  }
+};
+
+// 관심 등록한 게시글 List 삭제
+export const deleteCheckList = async (auctionNos) => {
+  const formData = new FormData();
+  formData.append("list", auctionNos);
+
+  console.log(auctionNos);
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await instance.delete(`/user/checkDeleteList`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      data: {"list" : auctionNos}, // 선택된 auctionNo 값을 전달
+    });
+    console.log(response);
+    return response.data;
+  } catch (error) {
+    // 에러 처리
+    console.error('에러 발생:', error);
+    throw error;
+  }
+};
 
 
 const getUserInfo = () => {

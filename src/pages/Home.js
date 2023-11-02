@@ -25,6 +25,7 @@ const Centers = styled.div`
   max-width: 1295px;
   margin: 0 auto;
   height: 1200px;
+  
   /* grid-template-columns: auto auto auto;
   grid-template-rows: auto auto auto;
   grid-template-areas:
@@ -93,7 +94,7 @@ const News = styled.div`
   /* section { */
   .new-box {
     width: 200px;
-    height: 250px;
+    height: 280px;
     background-color: rgba(234, 234, 234);
     border: 1px solid black;
     justify-self: center;
