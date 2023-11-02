@@ -14,6 +14,28 @@ import { addComment, updateComment, deleteComment } from "../store/commentSlice"
 import { asyncAuctionInfo } from "../store/auctionSlice";
 import Cookies from "js-cookie";
 import { Modal } from "react-bootstrap"; // 모달 컴포넌트 import 추가
+import { getInterest, addMyInterest, deleteCheck } from "../api/user"; // 관심등록 & 해제
+
+
+const Main = styled.div`
+
+  .checkButton {
+    width: 150px;
+    height: 40px;
+  }
+
+  .checkOn {
+    background-color: red;
+    color: wheat;
+
+  }
+  .checkOff {
+
+  }
+`;
+
+
+
 
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
@@ -28,7 +50,7 @@ const Auctionpost = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newCurrentPrice, setNewCurrentPrice] = useState(0);
   const [addComments, setAddComments] = useState("");
-  const { auctionNo } = useParams();
+  const { auctionNo, interestNo } = useParams();
   const [comments, setComments] = useState([]);
   const [recomments, setRecomments] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
@@ -45,11 +67,21 @@ const Auctionpost = () => {
   const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
   const navigate = useNavigate();
 
+  const [interestData, setInterestData] = useState(null);
+  const [isInterest, setInterestToggle] = useState(false);
+
   // 데이터 가져오기
   useEffect(() => {
     const fetchAuctionPost = async () => {
       try {
+
+        const storedInterest = localStorage.getItem('isInterest');
+        if (storedInterest !== null) {
+          setInterestToggle(storedInterest === 'true');
+        }
+
         const response = await getPost(auctionNo);
+
         setAuctionPost(response.data);
 
         if (response.data) {
@@ -247,11 +279,63 @@ const Auctionpost = () => {
     }
   };
 
+
+  // interest 정보 가져오기
+  const getInterestData = async (interestNo) => {
+    try {
+      const response = await getInterest(interestNo);
+      setInterestData(response.data);
+    } catch (error) {
+      // 에러 처리
+      console.error('에러 발생:', error);
+    }
+  }
+
+  // 관심등록 토글 버튼
+  const interestToggle = () => {
+    setInterestToggle(isInterest => {
+      const updatedInterest = !isInterest;
+  
+      // 로컬 스토리지에 관심 등록 정보 저장
+      localStorage.setItem('isInterest', updatedInterest.toString());
+  
+      return updatedInterest;
+    });
+  }
+
+  // 관심등록 on/off 데이터 전송
+  const interestSet = async (auctionNo) => {
+    
+    const num = await auctionNo;
+
+    if(isInterest) {
+      deleteCheck(num);
+    } else {
+      addMyInterest(num);
+    }
+  }
+
+  
+  useEffect(() => {
+    const storedInterest = localStorage.getItem('isInterest');
+    if (storedInterest !== null) {
+      setInterestToggle(storedInterest === 'true');
+    }
+  }, []);
+
+
   return (
-    <Container>
+    <Main>
+      <Container>
       {auctionPost ? (
         <Card>
           <Card.Body>
+            <button 
+              className={ `checkButton ${isInterest ? 'checkOn' : 'checkOff'}`} 
+              onClick={() => { interestToggle(); interestSet(auctionPost.auctionNo);
+            }}>
+            {isInterest ? '관심등록해제' : '관심등록'}
+            </button>
             <h2 className="text-center border-bottom pb-3">
               {auctionPost.auctionTitle}
             </h2>
@@ -525,6 +609,8 @@ const Auctionpost = () => {
   `}
 </style>
   </Container>
+    </Main>
+    
 );
 };
 

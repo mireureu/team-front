@@ -13,7 +13,7 @@ import { setListType } from "../api/auctionBoard"; // 메인 카테고리
 // import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
 // import imgTest1 from "../img/가로tast.png";
-import hot from "../components/hot.png";
+import hot from "../components/imgs/hot.png";
 import { recentView } from "../api/addpost";
 
 const Main = styled.div`

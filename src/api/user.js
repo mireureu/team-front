@@ -71,6 +71,37 @@ export const addUser = async (id) => {
   }
 };
 
+
+// interest 가져오기
+export const getInterest = async () => {
+  return await instance.get(`/interest`);
+}
+
+// 게시글 관심 등록
+export const addMyInterest = async (num) => {
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const requestData = {
+      auctionNo: num,
+    };
+
+    const response = await instance.post(`/user/addList`, requestData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    // 에러 처리
+    console.error('에러 발생:', error);
+    throw error;
+  }
+};
+
 // 관심 등록한 게시글 List 가져오기
 export const getMyInterestList = async () => {
 
@@ -82,7 +113,6 @@ export const getMyInterestList = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log( response);
     return response.data;
   } catch (error) {
     // 에러 처리
@@ -93,15 +123,17 @@ export const getMyInterestList = async () => {
 };
 
 // 관심 등록한 게시글 삭제
-export const deleteCheck = async (auctionNos) => {
+export const deleteCheck = async (auctionNo) => {
+
+  console.log(auctionNo);
   try {
     const token = localStorage.getItem("token");
 
-    const response = await instance.delete(`/user/checkDelete`, {
+    const response = await instance.delete(`/user/checkDelete`, auctionNo, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      data: auctionNos, // 선택된 auctionNo 값을 전달
     });
     console.log(response);
     return response.data;
@@ -124,6 +156,7 @@ export const deleteCheckList = async (auctionNos) => {
     const response = await instance.delete(`/user/checkDeleteList`, {
       headers: {
         Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
       data: {"list" : auctionNos}, // 선택된 auctionNo 값을 전달
     });
