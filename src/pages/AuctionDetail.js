@@ -47,7 +47,7 @@ const StyledHeader = styled.header`
   }
   .hover:hover {
     background-color: whitesmoke;
-    color: white;
+    color: black;
     transform: scale(1.05);
   }
   .hidden-hover {
@@ -238,15 +238,15 @@ const App = () => {
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
-                    <p>입찰 : {item.auctionAttendNo}회</p>
+                    <p>입찰 : {item.currentNum}명</p>
                     <p>조회 : {item.auctionCheckNo}</p>
                     {item.auctionEndDate && (
                       <p>
-                        남은 시간:{" "}
+                        {" "}
                         {calculateTimeDifference(item.auctionEndDate).days}일{" "}
                         {calculateTimeDifference(item.auctionEndDate).hours}시간{" "}
-                        {calculateTimeDifference(item.auctionEndDate).minutes}분{" "}
-                        {calculateTimeDifference(item.auctionEndDate).seconds}초
+                        {calculateTimeDifference(item.auctionEndDate).minutes}분전
+                        {/* {calculateTimeDifference(item.auctionEndDate).seconds}초 */}
                       </p>
                     )}
                     <div className="hover-button">
@@ -256,20 +256,8 @@ const App = () => {
                         onMouseEnter={() => {
                         }}
                       >
-                        현재가 : {item.currentPrice}원
-          
-                      </div>
-                      <div
-                        className="show-hover"
-                        id={`show-hover-${index}`}
-                        style={{ display: "none" }}
-                        onMouseLeave={() => {
-                          // ...
-                        }}
-                      >
-                        현재가 : {item.currentPrice}원
-                      </div>
-                      <div className="small-text">클릭 시 경매 참가</div>
+                        </div>
+
                     </div>
                   </Card.Body>
                 </Nav.Link>

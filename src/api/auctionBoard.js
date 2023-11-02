@@ -28,6 +28,10 @@ export const getCategories = async () => {
     return await instance.get("public/category");
 };
 
+export const gettest = async () => {
+  return await instance.get("public/auction/1");
+};
+
 export const getPostitem = async (id) => {
   return await instance.get(`public/auction/${id}`);
 };
@@ -52,3 +56,5 @@ export const getItem = async (page, category, sortOption) => {
   }
   return await instance.get(url);
 };
+
+ 

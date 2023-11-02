@@ -16,14 +16,14 @@ export const pwdChack = async (data) => {
   return await instance.post("/user/pwdUp", data);
 };
 
-// export const userInfo = async(token) =>{
-//   console.log(token);
-//   return await instance.get("/user/show",{
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   });
-// };
+export const userInfo = async(token) =>{
+  console.log(token);
+  return await instance.get("/user/show",{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+};
 
 
 export const updateUser = async (data) => {
@@ -71,25 +71,29 @@ export const addUser = async (id) => {
   }
 }
 
-const getUserInfo = () => {
-  const storedToken = localStorage.getItem("token");
-  const storedUser = localStorage.getItem("user");
-  let userObject = null;
-
-  if (storedToken && storedUser) {
-    userObject = JSON.parse(storedUser);
-  }
-
-  return { storedToken, userObject };
-};
 
 export const updatePassword = async (data) => {
   return await instance.put("/public/updatePassword",data);
 }
 
+export const updatePoint = async (data) =>{
+  const token = localStorage.getItem("token");
+  console.log(token);
+  console.log(data);    
+  return await instance.put("/user/point",data,{
+      headers: {
+          Authorization: `Bearer ${token}`,
+      },
+  });
+}
+
+  export const updatebuyerPoint = async (data) =>{
+    const token = localStorage.getItem("token");
+    return await instance.put("/user/buyerPoint",data,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
 
 
-
-
-
-export default getUserInfo;
