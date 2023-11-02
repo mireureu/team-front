@@ -55,3 +55,8 @@ export const updatePost = async (auctionNo, data) => {
 export const getCountAuction = async (memberId) => {
   return await instance.get(`/public/auction/count?memberId=${memberId}`);
 };
+
+// 게시글 카테고리 번호 바꾸기
+export const updatecategoryNo = async (no) =>{
+  return await instance.put(`/public/updateCategory?no=${no}`); 
+}

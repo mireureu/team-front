@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getPost, updateCurrentPrice, getCountAuction,
-  deletePost, } from "../api/addpost";
+  deletePost, updatecategoryNo} from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getComments, getreComments } from "../api/auctionBoard";
 import styled from "styled-components";
@@ -61,15 +61,14 @@ const Auctionpost = () => {
     const formData = new FormData();
     formData.append("point", buyerPoint);
     await updatebuyerPoint(formData);
+    window.location.reload();
   };
 
   const teststart = () => {
     test();
-    window.location.reload();
   };
 
   const updateUserInfo = async (user) => {
-    console.log(user);
     if (user) {
       const response = await userInfo(user.token);
       
@@ -117,7 +116,6 @@ const Auctionpost = () => {
 
   const startTimer = () => {
     const timerId = setInterval(() => {
-        // 남은 시간만 업데이트
         setAndList((prevAndList) => {
             return prevAndList.map((ands) => {
                 const timeDifference = calculateTimeDifference(ands.auctionEndDate);
@@ -129,7 +127,6 @@ const Auctionpost = () => {
         });
     }, 1000);
 
-    // 컴포넌트 언마운트 시 타이머 해제
     return () => {
         clearInterval(timerId);
     };
@@ -141,11 +138,9 @@ const Auctionpost = () => {
   }, []);
 
   const handleEditComment = (comment) => {
-    console.log(comment);
     setIsEditing(true);
     setEditingComment(comment.content);  
     setSelectedComment(comment); 
-    console.log(editingComment);
   };
   
 
@@ -161,9 +156,6 @@ const Auctionpost = () => {
     try {
       const response = await getreComments(commentNo, auctionNo);
       setRecomments(response.data);
-      console.log("★");
-      console.log(response.data);
-      console.log("★");
     } catch (error) {
       console.error("대댓글 데이터를 불러오는 중 오류 발생:", error);
     } 
@@ -171,7 +163,6 @@ const Auctionpost = () => {
 
   const onUpdate = (e) => {
     if (!selectedComment) {
-      console.log("온업데이트작동확인");
       return;
     }
   
@@ -192,7 +183,6 @@ const Auctionpost = () => {
         parrentNo: parrentNo
       })
       );
-      console.log(parrentNo+"부모번호체크");
       
       
   
@@ -207,7 +197,6 @@ const Auctionpost = () => {
   const handleLoadRecomments = (comment) => {
     setSelectedComment(comment);
     loadRecomments(comment.commentNo, comment.auctionNo);
-    console.log(comment);
   };
   
 
@@ -312,9 +301,22 @@ const Auctionpost = () => {
     return seoulDate.toLocaleDateString("ko-KR", options);
   }
 
-  const handleImmediatePurchase = () => {
-    alert("즉시구매가 완료되었습니다.");
+  const handleImmediatePurchase = async () => {
+    const gPoint = point - auctionPost.auctionGMoney;
+    if (gPoint >= 0){
+      alert("즉시구매가 완료되었습니다.");
+      const formData = new FormData();
+      formData.append("point", gPoint);
+      await updatebuyerPoint(formData);
+      
+    } else {
+      updatecategoryNo(auctionPost.auctionNo);
+      
+      alert("돈없잖아")
+    }
   };
+
+
 
 
   // 입찰 성공 시 팝업
@@ -337,8 +339,6 @@ const Auctionpost = () => {
         id : savedUser.id
         
       });
-      console.log(savedUser.id);
-      // 입찰 변경이 성공하면 성공 모달을 표시합니다.
       handlePriceChangeSuccess();
     } catch (error) {
       console.error("입찰 변경 실패:", error);
@@ -534,7 +534,7 @@ const Auctionpost = () => {
             variant="primary"
             onClick={() => {
               setShowSuccessModal(false);
-              window.location.reload(); // 팝업 닫기 후 페이지 새로고침
+              window.location.reload();
             }}
           >
             닫기
@@ -619,7 +619,6 @@ const Auctionpost = () => {
               placeholder="댓글을 수정하세요"
               value={editingComment}
               onChange={(e) => {
-                console.log(e.target.value); // 이 부분에 console.log를 추가
                 setEditingComment(e.target.value);
               }}
               style={{ resize: "none" }}
@@ -698,14 +697,6 @@ const Auctionpost = () => {
         </div>
       )}
     </Form>
-    <style>
-      {`
-        .item-desc {
-          border: 1px solid #ccc;
-          padding: 10px;
-        }
-      `}
-    </style>
   </div>
   </Main>
 );
