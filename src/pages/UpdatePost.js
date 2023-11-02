@@ -15,23 +15,21 @@ function convertToSeoulTime(date) {
 
 // 게시물 데이터를 담는 상태
 const UpdatePost = () => {
-  const auctionData = JSON.parse(localStorage.getItem("auction")); // 옥션 정보 불러오는거
-  // console.log(auctionData.category.categoryNo); // 이게시글의 카테고리 넘버가 3번이라는거
-  // auctionData.auctionTitle
-
+  const auctionData = JSON.parse(localStorage.getItem("auction"));
   const [categories, setCategories] = useState([]);
   const [post, setPost] = useState({
     title: auctionData.auctionTitle,
     itemName: auctionData.itemName,
-    desc: auctionData.desc,
-    sMoney: auctionData.sMoney,
-    eMoney: auctionData.eMoney,
-    gMoney: auctionData.gMoney,
+    desc: auctionData.itemDesc,
+    sMoney: auctionData.auctionSMoney,
+    eMoney: auctionData.auctionEMoney,
+    gMoney: auctionData.auctionGMoney,
     select: auctionData.category.categoryNo,
-    isBuyNowChecked: auctionData.nowBuy === "Y",
-    images: [], // 이미지는 따로 처리해야 합니다.
-    checkNo: auctionData.checkNo,
-    attendNo: auctionData.attendNo,
+    isBuyNowChecked: auctionData.auctionNowbuy === "Y",
+    images: auctionData.auctionImg.split(",").map((imagePath) => {
+      const fileName = imagePath.substring(imagePath.lastIndexOf("/") + 1);
+      return new File([imagePath], fileName);
+    }),
     auctionDate: new Date(auctionData.auctionDate),
     auctionEndDate: new Date(auctionData.auctionEndDate),
   });
@@ -59,8 +57,8 @@ const UpdatePost = () => {
 
   // 게시물 수정 버튼 클릭 시 호출되는 함수
   const onClick = async () => {
+    console.log(images);
     const formData = new FormData();
-    console.log(auctionData);
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("desc", desc);
@@ -82,7 +80,6 @@ const UpdatePost = () => {
     }
 
     try {
-      console.log(auctionData.auctionNo);
       const response = await updatePost(auctionData.auctionNo, formData);
       if (response.status === 200) {
         setIsModalOpen(true);
@@ -98,27 +95,28 @@ const UpdatePost = () => {
   const onUploadImage = (e) => {
     const selectedImages = e.target.files;
     const newImages = [...images];
-    for (let i = 0; i < selectedImages.length; i++) {
-      newImages.push(selectedImages[i]);
-    }
+    const imagePreviewsArray = [...imagePreviews];
 
-    const imagePreviewsArray = Array.from(selectedImages).map((image) =>
-      URL.createObjectURL(image)
-    );
+    for (let i = 0; i < selectedImages.length; i++) {
+      const fileName = selectedImages[i].name;
+      newImages.push(new File([selectedImages[i]], fileName));
+      imagePreviewsArray.push(URL.createObjectURL(selectedImages[i]));
+    }
 
     setPost({
       ...post,
       images: newImages,
     });
-    setImagePreviews([...imagePreviews, ...imagePreviewsArray]);
+
+    setImagePreviews(imagePreviewsArray);
   };
 
   // 이미지 삭제 시 호출되는 함수
   const removeImage = (index) => {
-    const newImagePreviews = [...imagePreviews];
+    const newImagePreviews = imagePreviews.slice();
     newImagePreviews.splice(index, 1);
 
-    const newImages = [...images];
+    const newImages = images.slice();
     newImages.splice(index, 1);
 
     setPost({
@@ -151,6 +149,18 @@ const UpdatePost = () => {
       eMoney: minBidLimit,
     });
   }, [sMoney]);
+
+  // 게시물 데이터를 로컬 스토리지에서 불러오고 설정
+  useEffect(() => {
+    const auctionData = JSON.parse(localStorage.getItem("auction"));
+
+    // 이미지 미리보기 초기화 (기존 이미지 정보를 가져와서 이미지 미리보기 생성)
+    const imagePreviewsArray = auctionData.auctionImg
+      .split(",")
+      .map((image) => image);
+
+    setImagePreviews(imagePreviewsArray);
+  }, []);
 
   return (
     <Container>
@@ -236,8 +246,11 @@ const UpdatePost = () => {
         {imagePreviews.map((imagePreview, index) => (
           <div key={index}>
             <img
-              src={imagePreview}
-              alt={`Image ${index}`}
+              src={
+                imagePreview.includes("blob")
+                  ? imagePreview
+                  : "/upload/" + imagePreview
+              }
               style={{ maxWidth: "100px", maxHeight: "100px" }}
             />
             <button onClick={() => removeImage(index)} type="button">
@@ -256,7 +269,7 @@ const UpdatePost = () => {
             sMoney === "" ||
             eMoney === "" ||
             (isBuyNowChecked && gMoney === "") ||
-            images.length === 0
+            (images.length === 0 && imagePreviews.length === 0) // 이미지가 없을 때도 수정 가능
           }
         >
           수정

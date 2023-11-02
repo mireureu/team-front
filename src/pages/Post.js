@@ -38,7 +38,7 @@ const Post = () => {
   // 정보 업데이트
   const onClick = async () => {
     const formData = new FormData();
-
+    console.log(images);
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("desc", desc);
@@ -58,6 +58,7 @@ const Post = () => {
     // 이미지를 FormData에 추가
     for (let i = 0; i < images.length; i++) {
       formData.append("image", images[i]);
+      console.log(images[i]);
     }
 
     try {
