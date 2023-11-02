@@ -54,13 +54,19 @@ const Auctionpost = () => {
     dispatch(deleteComment(comment.commentNo));
     window.location.reload();
   };  
+  
 
-  const test = async ()  => {
-    const buyerPoint = point-auctionPost.buyerPoint; 
+  const test = async () => {
+    const buyerPoint = point - auctionPost.buyerPoint;
     const formData = new FormData();
-    formData.append("point",buyerPoint);   
+    formData.append("point", buyerPoint);
     await updatebuyerPoint(formData);
-  }
+  };
+
+  const teststart = () => {
+    test();
+    window.location.reload();
+  };
 
   const updateUserInfo = async (user) => {
     console.log(user);
@@ -412,24 +418,21 @@ const Auctionpost = () => {
                 
                 <p>상품명: {auctionPost.itemName}</p>
                 <p>경매 시작일: {formatSeoulTime(auctionPost.auctionDate)}</p>
-                <p>
-                              {calculateTimeDifference(auctionPost.auctionEndDate).hours >= 0 ? (
-              <p className={((calculateTimeDifference(auctionPost.auctionEndDate).hours < 8) && (calculateTimeDifference(auctionPost.auctionEndDate).days === 0)) || (calculateTimeDifference(auctionPost.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
-                {calculateTimeDifference(auctionPost.auctionEndDate).days > 0 ? (
-                  `남은 시간: ${calculateTimeDifference(auctionPost.auctionEndDate).days}일`
-                ) : (
-                  (calculateTimeDifference(auctionPost.auctionEndDate).seconds <= 0) ? (
-                    "경매 마감"
+                            <div>
+              {calculateTimeDifference(auctionPost.auctionEndDate).hours >= 0 ? (
+                <p className={((calculateTimeDifference(auctionPost.auctionEndDate).hours < 8) && (calculateTimeDifference(auctionPost.auctionEndDate).days === 0)) || (calculateTimeDifference(auctionPost.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
+                  {calculateTimeDifference(auctionPost.auctionEndDate).days > 0 ? (
+                    `남은 시간: ${calculateTimeDifference(auctionPost.auctionEndDate).days}일`
                   ) : (
-                    `경매 종료일: ${(calculateTimeDifference(auctionPost.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(auctionPost.auctionEndDate).hours}:${(calculateTimeDifference(auctionPost.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(auctionPost.auctionEndDate).minutes}:${(calculateTimeDifference(auctionPost.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(auctionPost.auctionEndDate).seconds}`
-                  )
-                )}
-                {calculateTimeDifference(auctionPost.auctionEndDate).seconds <= 0 && test()}
-              </p>
-            ) : null}
-            //테스트
-            <button onClick={()=> test(auctionPost.buyerId)}></button>
+                    (calculateTimeDifference(auctionPost.auctionEndDate).hours === 0 && calculateTimeDifference(auctionPost.auctionEndDate).minutes === 0 && calculateTimeDifference(auctionPost.auctionEndDate).seconds === 0) ? (
+                      teststart()
+                    ) : (
+                      `경매 종료일: ${(calculateTimeDifference(auctionPost.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(auctionPost.auctionEndDate).hours}:${(calculateTimeDifference(auctionPost.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(auctionPost.auctionEndDate).minutes}:${(calculateTimeDifference(auctionPost.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(auctionPost.auctionEndDate).seconds}`
+                    )
+                  )}
                 </p>
+              ) : null}
+            </div>
                 <Row className="border-top justify-content-center">
                   <p>판매자 정보: {auctionPost.memberId.id}</p>
                   <p>등록건수: {sellerAuctionCount}</p>

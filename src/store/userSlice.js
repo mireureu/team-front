@@ -3,7 +3,7 @@ import { login } from "../api/user";
 
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
     const result = await login(data);
-    console.log(result.data);
+    
     return result.data;
 });
 
