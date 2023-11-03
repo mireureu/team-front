@@ -38,9 +38,6 @@ const Main = styled.div`
   }
 `;
 
-
-
-
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
   const seoulOffset = 9 * 60;
@@ -48,9 +45,7 @@ function convertToSeoulTime(utcDateString) {
   return seoulTime;
 }
 
-
-
-const Auctionpost = () => {
+const Auctionpost = () => {  
   const dispatch = useDispatch();
   const [auctionPost, setAuctionPost] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -162,8 +157,7 @@ const Auctionpost = () => {
     setIsEditing(true);
     setEditingComment(comment.content);  
     setSelectedComment(comment); 
-  };
-  
+
 
   const handleCancelEdit = () => {
     setIsEditing(false);
@@ -224,7 +218,6 @@ const Auctionpost = () => {
   const [interestData, setInterestData] = useState(null);
   const [isInterest, setInterestToggle] = useState(false);
 
-  // 데이터 가져오기
   useEffect(() => {
     const fetchAuctionPost = async () => {
       try {
@@ -349,8 +342,6 @@ const Auctionpost = () => {
   };
 
 
-
-
   // 입찰 성공 시 팝업
   const handlePriceChangeSuccess = () => {
     setShowSuccessModal(true);
@@ -359,18 +350,15 @@ const Auctionpost = () => {
   const handlePriceChange = async (e) => {
     try {
       const newPrice =
-      auctionPost.currentNum === 0
-      ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
-      : auctionPost.currentNum < 5
-      ? auctionPost.currentPrice + auctionPost.auctionEMoney
-      : auctionPost.currentPrice + 2 * auctionPost.auctionEMoney
+        auctionPost.currentNum === 0
+          ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
+          : auctionPost.currentPrice + auctionPost.auctionEMoney;
 
       await updateCurrentPrice(auctionPost.auctionNo, {
-        
         currentPrice: newPrice,
-        id : savedUser.id
-        
       });
+
+      // 입찰 변경이 성공하면 성공 모달을 표시합니다.
       handlePriceChangeSuccess();
     } catch (error) {
       console.error("입찰 변경 실패:", error);
@@ -476,6 +464,7 @@ const Auctionpost = () => {
                     position: "relative",
                   }}
                 >
+                  
                   <img
                     src={
                       "/upload/" +
@@ -492,6 +481,20 @@ const Auctionpost = () => {
                       transform: "translate(-50%, -50%)",
                     }}
                   />
+                </div>
+                <div className="text-center">
+                  <p>
+                    이미지 {currentImageIndex + 1} /{" "}
+                    {auctionPost.auctionImg.split(",").length}
+                  </p>
+                  <div>
+                    <Button variant="primary" onClick={handlePrevImage}>
+                      이전
+                    </Button>
+                    <Button variant="primary" onClick={handleNextImage}>
+                      다음
+                    </Button>
+                  </div>
                 </div>
                 <div className="text-center">
                   <p>
@@ -628,7 +631,7 @@ const Auctionpost = () => {
             variant="primary"
             onClick={() => {
               setShowSuccessModal(false);
-              window.location.reload();
+              window.location.reload(); // 팝업 닫기 후 페이지 새로고침
             }}
           >
             닫기
@@ -655,16 +658,19 @@ const Auctionpost = () => {
             <Button variant="outline-danger" size="sm" onClick={() => handleDeleteComment(comment)}>
               삭제
             </Button>
+            
           )}
-      <Button
-        variant="outline-danger"
-        size="sm"
-        onClick={() => handleLoadRecomments(comment)}
+          <Button
+          variant="outline-danger"
+          size="sm"
+          onClick={() => handleLoadRecomments(comment)}
+          style={{ marginLeft : '70%'
+          }}
       >
-        답글
+        답글 불러오기
       </Button>
+      <hr></hr>
     </div>
-    <hr></hr>
     {selectedComment?.commentNo === comment.commentNo && (
       <div style={{ marginLeft: '5%' }}>
               {recomments
@@ -713,6 +719,7 @@ const Auctionpost = () => {
               placeholder="댓글을 수정하세요"
               value={editingComment}
               onChange={(e) => {
+                console.log(e.target.value); // 이 부분에 console.log를 추가
                 setEditingComment(e.target.value);
               }}
               style={{ resize: "none" }}
@@ -783,7 +790,6 @@ const Auctionpost = () => {
               type="submit"
               size="sm"
               disabled={addComments.trim() === ""}
-              style={{ marginTop : '10px'}}
             >
               댓글 작성
             </Button>
@@ -795,5 +801,5 @@ const Auctionpost = () => {
   </Main>
 );
 };
-
+}
 export default Auctionpost;

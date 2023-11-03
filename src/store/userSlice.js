@@ -1,12 +1,10 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login } from "../api/user";
-
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
     const result = await login(data);
     
     return result.data;
 });
-
 const userSlice = createSlice({
     name:"loginSlice",
     initialState: {},
@@ -26,15 +24,6 @@ const userSlice = createSlice({
         });
     }
 });
-
 export default userSlice;
 export {asyncLogin};
 export const {userSave, userLogout} = userSlice.actions;
-
-
-// //  데이터 저장
-// localStorage.setItem("myKey", "This is a value");
-
-// //  데이터 검색
-// const myValue = localStorage.getItem("user");
-// console.log(myValue+"로그인");  // "This is a value"

@@ -1,5 +1,3 @@
-// import Carousel from 'react-bootstrap/Carousel';
-// import images from '../src/components/1.png';
 import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
@@ -7,12 +5,6 @@ import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
 import { setListType } from "../api/auctionBoard"; // 메인 카테고리
-
-// import { getAuctionBoard } from "./api/auctionBoard";
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-// import { faWrench } from "@fortawesome/free-solid-svg-icons";
-
-// import imgTest1 from "../img/가로tast.png";
 import hot from "../components/imgs/hot.png";
 import { recentView } from "../api/addpost";
 
@@ -20,31 +12,21 @@ const Main = styled.div`
   position: relative;
 `;
 
-const Centers = styled.div`
-  /* display: grid; */
+const Centers = styled.div`  
   max-width: 1295px;
   margin: 0 auto;
   height: 1200px;
-  
-  /* grid-template-columns: auto auto auto;
-  grid-template-rows: auto auto auto;
-  grid-template-areas:
-    "g-left g-banner g-right"
-    "g-left g-newitem g-right"
-    "g-lower g-lower g-lower"; */
   gap: 20px;
 `;
 
 const Banner = styled.div`
-  grid-area: g-banner;
-  /* border: 1px solid black; */
+  grid-area: g-banner;  
   display: flex;
   align-items: center;
   justify-content: center;
   background-color: rgba(255, 184, 90);
   width: 100%;
-  margin-bottom: 20px;
-  /* margin: 0 auto; */
+  margin-bottom: 20px;  
   img {
     width: auto;
     height: 180px;
@@ -56,34 +38,16 @@ const Left = styled.div`
   border: 1px solid black;
 `;
 
-const NewItem = styled.div`
-  /* grid-area: g-newitem; */
+const NewItem = styled.div`  
   width: 100%;
   height: auto;
   display: flex;
   align-items: center;
 `;
 
-// const Right = styled.div`
-//   /* grid-area: g-right; */
-//   position: absolute;
-//   top: 0;
-//   right: 0;
-//   width: 240px;
-//   height: 700px;
-//   border: 1px solid black;
-//   margin-right: 25px;
-// `;
-
-const Lower = styled.div`
-  grid-area: g-lower;
-  height: 150px;
-  border: 1px solid black;
-`;
-
 const News = styled.div`
   grid-area: g-newitem;
-  /* border: 1px solid black; */
+  
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   justify-content: center;
@@ -91,7 +55,7 @@ const News = styled.div`
   margin: 0 auto;
   max-width: 1200px;
 
-  /* section { */
+  
   .new-box {
     width: 200px;
     height: 280px;
@@ -102,9 +66,9 @@ const News = styled.div`
     transition: 0.5s;
     position: relative;
     z-index: 1;
-    cursor: pointer; /* 커서를 포인터로 변경 */
-    /* background-image: none; */
+    cursor: pointer; 
     
+
     .new-image {
       margin-top: 10px;
       margin-left: 10px;

@@ -1,15 +1,11 @@
 import { useState } from 'react';
-import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-// import Container from 'react-bootstrap/Container';
-import { addUser, duplicate } from "../api/connection";
+import { addUser, nickDuplicate, idDuplicate } from '../api/user';
 import { useNavigate } from 'react-router-dom';
 import DaumPostcode from '../components/DaumPostcode';
 import styled from "styled-components";
 
-const MemberRegister = styled.div `
+const MemberRegister = styled.div`
     max-width: 1295px;
     min-width: 800px;
     margin: 0 auto;
@@ -18,7 +14,7 @@ const MemberRegister = styled.div `
 
 `;
 
-const Container = styled.div `
+const Container = styled.div`
     width: 100%;
     width: 100%;
     border: 5px solid skyblue;
@@ -107,9 +103,6 @@ const Container = styled.div `
         }
     }
 `;
-
-
-
 const Register = () => {
     const [name, setName] = useState("");
     const [nickName, setNickName] = useState("");
@@ -120,76 +113,78 @@ const Register = () => {
     const [password, setPassword] = useState("");
     const [id, setId] = useState("");
     const [email, setEmail] = useState("");
-    const successRegi = useNavigate(); // onClick시 성공하면 홈으로 이동 실패하면 다시 회원가입창으로
+    const [registrationNumberFront, setRegistrationNumberFront] = useState('');
+
+    const [checkId, setCheckId] = useState(false);
+    const [checkNick, setCheckNick] = useState(false);
+
+    const successRegister = useNavigate();
     const handleAddressSelected = (selectedAddress) => {
         setAddr(selectedAddress);
     };
 
-    const duplicationCheckAPI = async (id) => {
+    const idDuplicationAPI = async () => {
         const formData = new FormData();
         formData.append("id", id);
-        try {
-            const response = await duplicate(formData);
-            return response.data.isDuplicate;
-        } catch (error) {
-            throw error;
+
+        const response = await idDuplicate(formData);
+        if (response.data.isDuplicate) {
+            alert("사용가능한 아이디 입니다");
+            setCheckId(true);
+        } else {
+            alert("가입된 사용자가 있습니다 ")
+            setCheckId(false);
+        }
+    };
+    const nickDuplicateAPI = async () => {
+        const formData = new FormData();
+        formData.append("nick", nickName);        
+        const response = await nickDuplicate(formData);                                        
+        if (response.data.isDuplicate) {
+            alert("사용가능한 닉네임 입니다");
+            setCheckNick(true);
+        } else {
+            alert("가입된 사용자가 있습니다 ")
+            setCheckNick(false);
         }
     };
 
-    
 
-    const duplicateIdClick = async () => {
-        try {
-            const isDuplicate = await duplicationCheckAPI(id);
-            if (isDuplicate) {
-                alert("이 ID로 이미 가입된 사용자가 있습니다");
-                console.log("이 ID로 이미 가입된 사용자가 있습니다");
-            } else {
-                console.log("사용 가능한 아이디입니다.");
-                alert("사용 가능한 아이디입니다.");
-            }
-        } catch (error) {
-            console.error("중복 확인 중 오류가 발생했습니다:", error);
-        }
-    };
-
-    const onClick = () => {
+    const onClick = async () => {
         const userData = {
             id: id,
             password: password,
             nick: nickName,
             name: name,
-            birthday: registrationNumberFront+registrationNumberBack,
+            birthday: registrationNumberFront + registrationNumberBack,
             email: email,
             phone: phone,
             sphone: sphone,
             addr: addr + "/" + detailaddr,
         };
-
-        // addUser 함수를 호출하여 사용자 데이터를 서버로 전송
-        addUser(userData)
+        await addUser(userData)
             .then(response => {
-                // 성공적으로 서버에 데이터를 보낸 경우의 처리
                 if (response.data) {
-                    console.log("사용자가 성공적으로 등록되었습니다.");
-                    successRegi('/'); // 홈페이지로 이동
+                    successRegister('/');
                 }
-            })
-            .catch(error => {
-                console.error('회원 가입 중 오류가 발생했습니다:', error);
             });
     }
 
+
+   
+   
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(true);
-    
+
     const [emailValid, setEmailValid] = useState(true);
     const [isTyping, setIsTyping] = useState(false);
-    const [registrationNumberFront, setRegistrationNumberFront] = useState('');
+
     const [registrationNumberBack, setRegistrationNumberBack] = useState('');
     const [registrationNumberValid, setRegistrationNumberValid] = useState(true);
     const [isValidPasswordFormat, setIsValidPasswordFormat] = useState(true);
 
+    // 데이터의 값이 있는지 확인
+    const exisitData = name && nickName && phone && sphone && addr && detailaddr && password && id && email && registrationNumberFront && registrationNumberBack;
 
     const checkPassword = (e) => {
         const newPassword = e.target.value;
@@ -214,11 +209,6 @@ const Register = () => {
         const isMatch = password === newConfirmPassword;
         setPasswordMatch(isTyping && isMatch);
     }
-
-
-
-
-
 
 
     // 이메일 체크 부분
@@ -251,9 +241,6 @@ const Register = () => {
             setRegistrationNumberValid(false);
         }
     };
-
-    const inputWidth = "750px";
-
     return (
         <MemberRegister className="main">
             <Container className="panel">
@@ -263,7 +250,7 @@ const Register = () => {
                         <div>
                             <label className='lables'>이름</label>
                             <div className="divs nameDiv">
-                                <input className='inputs name' type="text" placeholder="이름" value={name} onChange={(e) => setName(e.target.value)}/>
+                                <input className='inputs name' type="text" placeholder="이름" onChange={(e) => setName(e.target.value)} />
                             </div>
                         </div>
                     </div>
@@ -272,9 +259,9 @@ const Register = () => {
                         <div>
                             <label className='lables'>아이디</label>
                             <div className="divs idDiv">
-                                <input className='inputs id' type="text" placeholder="아이디" value={id} onChange={(e) => setId(e.target.value)}/>
+                                <input className='inputs id' type="text" placeholder="아이디" onChange={(e) => setId(e.target.value)} />
                                 <div className='idChackButton'>
-                                    <Button disabled={!id} onClick={duplicateIdClick}>아이디 중복확인</Button>
+                                    <Button disabled={!id} onClick={idDuplicationAPI}>아이디 중복확인</Button>
                                 </div>
                             </div>
                         </div>
@@ -284,12 +271,7 @@ const Register = () => {
                         <div>
                             <label className='lables'>비밀번호</label>
                             <div className="divs passwordDiv">
-                                <input className='inputs password' type="password" placeholder="비밀번호"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                    checkPassword(e);
-                                }}/>
+                                <input className='inputs password' type="password" placeholder="비밀번호" onChange={(e) => { setPassword(e.target.value); checkPassword(e); }} />
                                 {!isValidPasswordFormat && (
                                     <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 12~20글자 / 영문, 특수문자, 숫자 필수</p>
                                 )}
@@ -301,26 +283,26 @@ const Register = () => {
                         <div>
                             <label className='lables'>비밀번호 확인</label>
                             <div className="divs passwordChackDiv">
-                               <input
-                                className='inputs passwordChack'
-                                type="password"
-                                placeholder="비밀번호 확인"
-                                onChange={checkConfirmPassword}
-                            />
+                                <input
+                                    className='inputs passwordChack'
+                                    type="password"
+                                    placeholder="비밀번호 확인"
+                                    onChange={checkConfirmPassword}
+                                />
                                 {isTyping && !passwordMatch && (
                                     <p className="text-danger">비밀번호가 일치하지 않습니다.</p>
-                                )} 
+                                )}
                             </div>
                         </div>
                     </div>
-
 
 
                     <div className="divs v1">
                         <div>
                             <label className='lables'>닉네임</label>
                             <div className="divs nickDiv">
-                                <input className='inputs nick' type="text" placeholder="닉네임" value={nickName} onChange={(e) => setNickName(e.target.value)} />
+                                <input className='inputs nick' type="text" placeholder="닉네임" onChange={(e) => setNickName(e.target.value)} />
+                                <Button disabled={!nickName} onClick={nickDuplicateAPI}>닉네임 중복확인</Button>
                             </div>
                         </div>
                     </div>
@@ -332,9 +314,9 @@ const Register = () => {
                     <div className="divs v1">
                         <label className='lables'>전화번호</label>
                         <div className="divs phoneDiv">
-                           <div>
-                                <input className='inputs phone' type="text" placeholder="번호" value={phone} onChange={(e) => setPhone(e.target.value)} />
-                            </div> 
+                            <div>
+                                <input className='inputs phone' type="text" placeholder="번호" onChange={(e) => setPhone(e.target.value)} />
+                            </div>
                         </div>
                     </div>
 
@@ -342,10 +324,9 @@ const Register = () => {
                         <label className='lables'>안심번호</label>
                         <div className="divs sucretPhoneDiv">
                             <div>
-                                <input className='inputs sicretPhone' type="text" placeholder="번호" value={sphone} onChange={(e) => setsPhone(e.target.value)} />
+                                <input className='inputs sicretPhone' type="text" placeholder="번호" onChange={(e) => setsPhone(e.target.value)} />
                             </div>
                         </div>
-                        
                     </div>
 
                     <div className="divs v1">
@@ -389,7 +370,6 @@ const Register = () => {
                                 className='inputs email'
                                 type="email"
                                 placeholder="이메일"
-                                value={email}
                                 onChange={(e) => {
                                     setEmail(e.target.value);
                                     checkEmail(e);
@@ -402,47 +382,45 @@ const Register = () => {
                     </div>
 
 
-                    
-                    
+
+
                     <div className="divs v1">
                         <div>
                             <label className='lables'>주소</label>
                             <div className="divs addrDiv">
                                 <div>
-                                    <input className='inputs addr' type="text" placeholder="기본 주소" value={addr} onChange={(e)=> setAddr(e.target.value)}/>
+                                    <input className='inputs addr' type="text" placeholder="기본 주소" value={addr} onChange={(e) => setAddr(e.target.value)} />
                                 </div>
                                 <Button
                                     className='searchButton'
                                     onClick={() => {
                                         DaumPostcode({ onAddressSelected: handleAddressSelected });
                                     }}
-                                    style={{marginLeft: "20px", border: "1px solid red", backgroundColor: "white", color: "red" }}
+                                    style={{ marginLeft: "20px", border: "1px solid red", backgroundColor: "white", color: "red" }}
                                 >
                                     우편 번호 검색
                                 </Button>
                             </div>
                         </div>
+
                         <div className="divs detailAddrDiv">
                             <div>
-                                <input className='inputs detailAddr' type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)}/>
+                                <input className='inputs detailAddr' type="text" placeholder="상세 주소" value={detailaddr} onChange={(e) => setDetailAddr(e.target.value)} />
                             </div>
                         </div>
                     </div>
-                    
-                    
+
                     <br />
-
-
                     <div className="divs registerButtonDiv">
-                        <Button className='registerButton' onClick=     {onClick} disabled={!passwordMatch ||   !emailValid || !registrationNumberValid}>
+                        <Button className='registerButton' onClick={onClick} disabled={!exisitData || !passwordMatch || !emailValid || !registrationNumberValid || !checkId}>
                             회원 가입
                         </Button>
                     </div>
                 </form>
             </Container>
         </MemberRegister>
-        
-        
+
+
     );
 }
 

@@ -28,11 +28,18 @@ export const getPost = async (auctionNo) => {
   return await instance.get(`/user/auction/${auctionNo}`);
 };
 
+
 // 현재 가격 수정
-export const updateCurrentPrice = async (auctionNo, currentPrice, id) => {
-  console.log(currentPrice);
-  console.log(auctionNo);
-  return await instance.put(`/user/auction/${auctionNo}`, currentPrice, id);
+export const updateCurrentPrice = async (auctionNo, newPrice) => {
+  try {
+    console.log(auctionNo);
+    console.log(newPrice);
+    const response = await instance.put(`/user/auction/${auctionNo}`,newPrice);
+    return response.data;
+  } catch (error) {
+    console.error("현재 가격을 업데이트하는 중 오류 발생:", error);
+    throw error;
+  }
 };
 
 // 게시글 삭제

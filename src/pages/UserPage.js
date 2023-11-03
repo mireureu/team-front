@@ -1,17 +1,15 @@
-
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaMapLocationDot } from "react-icons/fa6";
-import { updateUser,  pwdChack, getMyInterestList } from "../api/user";
+import { updateUser } from "../api/user";
 import DaumPostcode from '../components/DaumPostcode';
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
-import { userInfo } from '../api/user';
+import { userInfo, passwordCheck, changePassowrd } from "../api/user";
 
 const Main = styled.div`
-
 `;
 
 const MyPage = styled.div`
@@ -136,7 +134,7 @@ const UserPage = () => {
   const [isModalAddrOpen, setModalAddrOpen] = useState(false);
   const [isModal1Open, setModal1Open] = useState(false);
   const [isModal2Open, setModal2Open] = useState(false);
-
+  const [newPassword, setNewPassword] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isValidPasswordFormat, setIsValidPasswordFormat] = useState(true);
@@ -285,9 +283,7 @@ const UserPage = () => {
         userData.phone = response.data.phone;
         userData.email = response.data.email;
         userData.addr = response.data.addr;
-
         localStorage.setItem("user", JSON.stringify(userData));
-
         // localStorage.setItem(response);
         window.location.replace("/UserPage");
         // 성공적으로 업데이트됐을 때의 처리
@@ -370,36 +366,32 @@ const UserPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onSubmit = (e) => {
-    
-    e.preventDefault();
-    const id = e.target.id.value;
-    const password = e.target.password.value;
-    dispatch(asyncLogin({ id, password })).then((response) => {
-      if (response.payload) {
-        console.log(response.payload);
-        localStorage.setItem("token",response.payload.token);  
-        localStorage.setItem("user",JSON.stringify(response.payload));
-        navigate('/'); 
-      } else {
-        alert('비밀번호가 틀렸습니다.');
-      }
-    });
-  };
+ 
 
   // 관심목록 페이지로 이동
   const goInterestPage = () => {
     window.location.href = '/InterestList';
   };
 
+  const onClick = async() =>{
+    await changePassowrd({password:password});
+     
+  }
+
+  const checkpassword =  async(e) =>{
+    e.preventDefault();
+    const isPasswordValid =  await passwordCheck({password:password});  
+    console.log(isPasswordValid);
+    if(isPasswordValid.data===true){
+      openPasswordChangeModal();
+    }else{
+      alert('비밀번호가 틀렸습니다!');
+    }
+  } 
 
   // 주소 검색창
   const openAddrModal = () => {
     setModalAddrOpen(true);
-  };
-
-  const passwordChack = () => {
-    
   };
 
   // 비밀번호 변경 전 확인 창
@@ -614,24 +606,24 @@ const UserPage = () => {
 
       {isModal1Open && (
         <PasswordCheckModal>
-          <form
-            noValidate
-            onSubmit={onSubmit}
-          >
+          <form>
             <div>
               <h1>현재 비밀번호 확인</h1>
             </div>
+
             <div>
-              <input required type="password"/>
+              <input required type="password" onChange={(e)=>{setPassword(e.target.value)}}/>              
             </div>
+
             <div>
-              <button type="submit" onClick={pwdChack ? openPasswordChangeModal : alert("비밀번호가 다릅니다.")}>변경</button>
-              <button onClick={closeModal}>취소</button>
+              <button onClick={checkpassword}>확인</button>                            
+              
+              <button onClick={closeModal}>취소</button>              
             </div>
           </form>
         </PasswordCheckModal>
       )}
-
+    
       {isModal2Open && (
         <PasswordChangeModal>
           <div>
@@ -639,10 +631,10 @@ const UserPage = () => {
           </div>
           <div>
             <h3>비밀번호</h3>
-            <input type="password" value={password}
+            <input type="password"
               onChange={(e) => {
-                setPassword(e.target.value)
-                checkPassword(e);}}/>
+                setPassword(e.target.value)                
+                checkPassword(e)}}/>
                 {!isValidPasswordFormat && (
                   <p className="text-danger">비밀번호 형식이 올바르지 않습니다. 12~20글자 / 영문, 특수문자, 숫자 필수</p>
               )}
@@ -657,7 +649,9 @@ const UserPage = () => {
           </div>
           <div>
             {/* <button onClick={}>변경</button> */}
+            <button onClick={onClick} >확인</button>
             <button onClick={closeModal}>취소</button>
+            
           </div>
         </PasswordChangeModal>
       )}

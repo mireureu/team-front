@@ -64,18 +64,11 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     const id = e.target.id.value;
-    const password = e.target.password.value;
+    const password = e.target.password.value;    
     dispatch(asyncLogin({ id, password })).then((response) => {
-      if (response.payload) {
-        navigate('/');
-      } else {
-        alert('아이디 또는 비밀번호가 틀렸습니다.');
-      }
+      if (response.payload) navigate('/');
+      else alert('아이디 또는 비밀번호가 틀렸습니다.');      
     });
-
-    // localStorage.setItem("token",action.payload.token);  
-            // localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장     
-
   };
 
 
