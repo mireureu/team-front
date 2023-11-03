@@ -14,7 +14,7 @@ import { addComment, updateComment, deleteComment } from "../store/commentSlice"
 import { asyncAuctionInfo } from "../store/auctionSlice";
 import Cookies from "js-cookie";
 import { Modal } from "react-bootstrap"; // 모달 컴포넌트 import 추가
-import { getInterest, addMyInterest, deleteCheck } from "../api/user"; // 관심등록 & 해제
+import { getInterest, addMyInterest, deleteCheck, interestDuplicate } from "../api/user"; // 관심등록 & 해제
 
 
 const Main = styled.div`
@@ -285,6 +285,7 @@ const Auctionpost = () => {
     try {
       const response = await getInterest(interestNo);
       setInterestData(response.data);
+      console.log(response.data);
     } catch (error) {
       // 에러 처리
       console.error('에러 발생:', error);
@@ -305,23 +306,35 @@ const Auctionpost = () => {
 
   // 관심등록 on/off 데이터 전송
   const interestSet = async (auctionNo) => {
-    
-    const num = await auctionNo;
+    const formData = new FormData();
+    formData.append("auctionNo", auctionNo); // 필드명이랑 같야아함
 
     if(isInterest) {
-      deleteCheck(num);
+      deleteCheck(auctionNo);
     } else {
-      addMyInterest(num);
+     await addMyInterest(formData);
     }
   }
 
   
   useEffect(() => {
-    const storedInterest = localStorage.getItem('isInterest');
+    const storedInterest = localStorage.getItem('isInterest');    
     if (storedInterest !== null) {
       setInterestToggle(storedInterest === 'true');
     }
   }, []);
+
+  // 중복 여부 확인
+  // useEffect(() => {
+  //   const duplicateCheck = async (no) => {
+  //     const formData = new FormData();
+  //     formData.append("no", no);
+  //     const response = await interestDuplicate(formData);
+  //     console.log(response);
+  //     setInterestToggle(response);
+  //   }            
+  //   duplicateCheck(no);
+  // }, []);
 
 
   return (
@@ -332,9 +345,9 @@ const Auctionpost = () => {
           <Card.Body>
             <button 
               className={ `checkButton ${isInterest ? 'checkOn' : 'checkOff'}`} 
-              onClick={() => { interestToggle(); interestSet(auctionPost.auctionNo);
+              onClick={() => {  interestToggle(); interestSet(auctionPost.auctionNo);
             }}>
-            {isInterest ? '관심등록해제' : '관심등록'}
+            {isInterest ? '관심등록해제' : '관심등록'}            
             </button>
             <h2 className="text-center border-bottom pb-3">
               {auctionPost.auctionTitle}
@@ -354,7 +367,7 @@ const Auctionpost = () => {
                     다음 이미지
                   </Button>
                 </div>
-              </Col>
+              </Col>              
               <Col xs={12} md={6}>
                 <p>상품명: {auctionPost.itemName}</p>
                 <p>경매 시작일: {formatSeoulTime(auctionPost.auctionDate)}</p>

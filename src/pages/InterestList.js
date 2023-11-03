@@ -259,7 +259,7 @@ const InterestList = () => {
 
     const allDeleteButton = async () => {
         console.log(checkedAuctionNos);
-        console.log(andList);
+        console.log(andList);        
         await deleteCheckList(checkedAuctionNos);
     }
 

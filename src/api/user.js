@@ -78,19 +78,13 @@ export const getInterest = async () => {
 }
 
 // 게시글 관심 등록
-export const addMyInterest = async (num) => {
-
+export const addMyInterest = async (auctionNo) => {
   try {
     const token = localStorage.getItem("token");
-
-    const requestData = {
-      auctionNo: num,
-    };
-
-    const response = await instance.post(`/user/addList`, requestData, {
+    console.log(auctionNo);    
+    const response = await instance.post(`/user/addList`, auctionNo, {      
       headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
+        Authorization: `Bearer ${token}`,        
       },
     });
 
@@ -101,6 +95,18 @@ export const addMyInterest = async (num) => {
     throw error;
   }
 };
+
+// 게시글 관심등록 중복확인
+export const interestDuplicate = async (no) =>{
+
+  const token = localStorage.getItem("token");
+  const response = await instance.post("/user/interestDuplicate", no,{
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+}
+
 
 // 관심 등록한 게시글 List 가져오기
 export const getMyInterestList = async () => {
