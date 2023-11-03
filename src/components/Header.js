@@ -36,7 +36,7 @@ const CategoryColor = styled.div`
 `;
 
 const Header = () => {
-  const userData = JSON.parse(localStorage.getItem("user"));  
+  const userData = JSON.parse(localStorage.getItem("user"));
   const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
   const handleClose = () => setShow(false);
@@ -56,14 +56,14 @@ const Header = () => {
     return state.user;
   });
 
-  useEffect(() => {    
+  useEffect(() => {
     const save = localStorage.getItem("user");
     if (Object.keys(user).length === 0 && save != null) {
       const savedUser = JSON.parse(save);
       dispatch(userSave(savedUser));
     }
   }, [user]);
-    
+
   const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -77,7 +77,7 @@ const Header = () => {
     if (user) {
       const response = await userInfo(user.token);
       const newPoint = response.data.point;
-      const newName = response.data.name;                        
+      const newName = response.data.name;
       const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
       setPoint(formatPoint);
       setName(newName);
@@ -137,21 +137,26 @@ const Header = () => {
               {name &&
                 <Nav.Link href="/UserPage" style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
               }
-              <Nav.Link onClick={register} style={{ color: "black" }}>
-                회원가입</Nav.Link>
               {
-                Object.keys(user).length === 0 ?(
-                   ("")
+                Object.keys(user).length === 0 ? (
+                  ("")
+                ) : <Nav.Link onClick={register} style={{ color: "black" }}>
+                  회원가입</Nav.Link>
+              }
+
+              {
+                Object.keys(user).length === 0 ? (
+                  ("")
                 ) : <Kakaopay />
-              }              
-              
+              }
+
               {Object.keys(user).length === 0 ? (
                 <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
               ) : (
                 <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>
               )}
               <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>      
+              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -220,10 +225,10 @@ const Header = () => {
         <Offcanvas.Body>
           {categories.map((Category) => (
             <Link to={`/auctionDetail?categoryNo=${Category.categoryNo}`} key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }} value={Category.categoryNo}>
-              <p>{Category.categoryName}</p>              
+              <p>{Category.categoryName}</p>
             </Link>
           ))}
-        
+
         </Offcanvas.Body>
       </Offcanvas>
     </>

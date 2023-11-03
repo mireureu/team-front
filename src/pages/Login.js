@@ -28,7 +28,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
   const [registrationNumberBack, setRegistrationNumberBack] = useState('');
   const [registrationNumberValid, setRegistrationNumberValid] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);

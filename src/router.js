@@ -66,9 +66,5 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  // {
-  //   path: "/logout",
-  //   element: <Logout />,
-  // },
 ]);
 export default router;

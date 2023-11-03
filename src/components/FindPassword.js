@@ -14,7 +14,6 @@ const FindPassword = ({ email, birthday, id }) => {
     const [isEmailSent, setIsEmailSent] = useState(false);
     const password = temporaryPassword();
 
-
     const handleVerification = async (e) => {
         e.preventDefault();
         const response = await updatePassword({ id, birthday, password });

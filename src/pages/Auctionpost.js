@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import { addComment, updateComment, deleteComment } from "../store/commentSlice";
 import { Modal } from "react-bootstrap";
 import { Margin } from "@mui/icons-material";
+import Cookies from "js-cookie";
 
 
 function convertToSeoulTime(utcDateString) {
@@ -115,9 +116,15 @@ const Auctionpost = () => {
 
   useEffect(() => {
     const fetchAuctionPost = async () => {
-      try {
+      try {       
+  
         const response = await getPost(auctionNo);
         setAuctionPost(response.data);        
+        const seoulOffset = 9 * 60;
+        const expiresDate = new Date(seoulOffset * 60000);
+        if (response.data) {
+          Cookies.set(`auctionPost${auctionNo}`, JSON.stringify(response.data),{expires: expiresDate.getDate()+ 5 * 60 * 1000});
+        }
         // 판매자의 등록 게시물 수 가져오기
         const sellerId = response.data?.memberId?.id;
         if (sellerId) {
