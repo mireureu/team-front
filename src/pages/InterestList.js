@@ -147,6 +147,7 @@ const InterestList = () => {
     const myListAPI = async () => {
         try {
             const result = await getMyInterestList();
+            console.log(result);
             setAndList(result);
             const initialCheckStates = new Array(result.length).fill(false);
             setCheckItems(initialCheckStates); // Set initial check states
@@ -217,7 +218,8 @@ const InterestList = () => {
 
         const newCheckItems = [...checkItems];
         newCheckItems[index] = !newCheckItems[index];
-
+        console.log(newCheckItems);
+        console.log(index);
         setCheckItems(newCheckItems);
 
         setCheckedAutionNos(andList.filter((_, i) => newCheckItems[i]).map((item) => item.interestNo));
@@ -231,7 +233,8 @@ const InterestList = () => {
     const allDeleteButton = async () => {
         const formData = new FormData();
         formData.append("list", JSON.stringify(checkedAuctionNos));
-      
+        console.log(checkedAuctionNos);
+        console.log(formData);
         await deleteCheckList(formData);
     }
 
