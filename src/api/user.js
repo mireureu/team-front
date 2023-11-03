@@ -26,7 +26,7 @@ export const updateUser = async (data) => {
       },
     });
   } catch (error) {
-    console.error('API 에러 발생:', error);
+    console.error("API 에러 발생:", error);
     throw error;
   }
 };
@@ -40,7 +40,6 @@ export const getUserData = async (id) => {
     throw error;
   }
 };
-
 
 
 // interest 가져오기
@@ -62,7 +61,7 @@ export const addMyInterest = async (auctionNo) => {
     return response.data;
   } catch (error) {
     // 에러 처리
-    console.error('에러 발생:', error);
+    console.error("에러 발생:", error);
     throw error;
   }
 };

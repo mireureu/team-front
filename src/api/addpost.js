@@ -55,6 +55,8 @@ export const deletePost = async (auctionNo) => {
 
 // 게시글 수정
 export const updatePost = async (auctionNo, data) => {
+  console.log(auctionNo);
+  console.log(data);
   return await instance.put(`/user/auction/update/${auctionNo}`, data);
 };
 

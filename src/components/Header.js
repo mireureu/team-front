@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
-import { Navbar, Nav } from 'react-bootstrap';
-import styled from 'styled-components';
-import Offcanvas from 'react-bootstrap/Offcanvas';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import InputGroup from 'react-bootstrap/InputGroup';
-import { Link, useNavigate } from 'react-router-dom';
+import Tab from "react-bootstrap/Tab";
+import Tabs from "react-bootstrap/Tabs";
+import { Navbar, Nav } from "react-bootstrap";
+import styled from "styled-components";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
+import InputGroup from "react-bootstrap/InputGroup";
+import { Link, useNavigate } from "react-router-dom";
 import { AiOutlineSearch } from "react-icons/ai";
 import { getCategories } from "../api/connection";
 import { useDispatch, useSelector } from "react-redux";
@@ -51,7 +51,7 @@ const Header = () => {
     console.log(keyword);
     dispatch(asyncSearch({ keyword: keyword }));
     movePage("/SearchResult", { state: { keyword } });
-  }
+  };
 
   const user = useSelector((state) => {
     return state.user;
@@ -71,7 +71,7 @@ const Header = () => {
     dispatch(userLogout());
     movePage("/");
     window.location.replace("/");
-  }
+  };
 
   const updateUserInfo = async (user) => {
     console.log(user);
@@ -107,19 +107,18 @@ const Header = () => {
 
   const Login = () => {
     movePage("/login");
-  }
+  };
 
   const register = () => {
     movePage("/register");
-  }
+  };
 
   const userPage = () => {
     movePage("/userPage");
-  }
-
+  };
 
   const handleTabSelect = (eventKey) => {
-    if (eventKey === 'home') {
+    if (eventKey === "home") {
       handleShow();
       return;
     }
@@ -134,15 +133,21 @@ const Header = () => {
     <>
       <StyledHeader id="fill-tab-style">
         <Navbar bg="white" variant="dark" collapseOnSelect>
-          <Navbar.Brand href="/" style={{ marginLeft: '100px', color: "black", fontWeight: "bold" }}>
+          <Navbar.Brand
+            href="/"
+            style={{ marginLeft: "100px", color: "black", fontWeight: "bold" }}
+          >
             중번당
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              {name &&
-                <Nav.Link href="/UserPage" style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
-              }
+              {name && (
+                <Nav.Link href="/UserPage" style={{ color: "black" }}>
+                  {" "}
+                  {name} 님 {point ? point.toLocaleString("ko-KR") : 0} point
+                </Nav.Link>
+              )}
               <Nav.Link onClick={register} style={{ color: "black" }}>
                 회원가입</Nav.Link>
               {
@@ -152,21 +157,41 @@ const Header = () => {
               }              
               
               {Object.keys(user).length === 0 ? (
-                <Nav.Link onClick={Login} style={{ color: "black" }}>로그인</Nav.Link>
+                <Nav.Link onClick={Login} style={{ color: "black" }}>
+                  로그인
+                </Nav.Link>
               ) : (
-                <Nav.Link onClick={logout} style={{ color: "black" }}>로그아웃</Nav.Link>
+                <Nav.Link onClick={logout} style={{ color: "black" }}>
+                  로그아웃
+                </Nav.Link>
               )}
-              <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>      
+              <Nav.Link href="#" style={{ color: "black" }}>
+                배송조회
+              </Nav.Link>
+              <Nav.Link href="#" style={{ color: "black" }}>
+                고객센터
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
         <Divider />
-        <Form onSubmit={(e) => {
-          e.preventDefault();
-          Search();
-        }}>
-          <InputGroup className="mb-3" style={{ width: "40%", height: "55px", marginTop: 15, marginLeft: "auto", marginRight: "auto", outline: "none" }}>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            Search();
+          }}
+        >
+          <InputGroup
+            className="mb-3"
+            style={{
+              width: "40%",
+              height: "55px",
+              marginTop: 15,
+              marginLeft: "auto",
+              marginRight: "auto",
+              outline: "none",
+            }}
+          >
             <Form.Control
               placeholder="검색어를 입력해주세요"
               style={{
@@ -194,7 +219,10 @@ const Header = () => {
                 onClick={Search}
                 className="custom-button"
               >
-                <AiOutlineSearch className="aiBtn" style={{ fontSize: "30px", color: "black" }} />
+                <AiOutlineSearch
+                  className="aiBtn"
+                  style={{ fontSize: "30px", color: "black" }}
+                />
               </Button>
             </Nav.Link>
           </InputGroup>
@@ -216,7 +244,11 @@ const Header = () => {
           </Tabs>
         </CategoryColor>
       </StyledHeader>
-      <Button variant="primary" onClick={handleShow} style={{ display: 'none' }}>
+      <Button
+        variant="primary"
+        onClick={handleShow}
+        style={{ display: "none" }}
+      >
         Launch
       </Button>
       <Offcanvas show={show} onHide={handleClose}>

@@ -28,8 +28,8 @@ const StyledHeader = styled.header`
     object-fit: cover;
   }
   .Pagination.Item.active {
-    background-color: #007BFF;
-    border-color: #007BFF;
+    background-color: #007bff;
+    border-color: #007bff;
     color: #fff;
   }
   .cards-container {

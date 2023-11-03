@@ -11,8 +11,10 @@ import { Modal } from "react-bootstrap";
 import { Margin } from "@mui/icons-material";
 import { userSave } from "../store/userSlice";
 import { userInfo, updatebuyerPoint } from "../api/user";
+import { asyncAuctionInfo } from "../store/auctionSlice";
 
 
+// 서울시간 설정
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
   const seoulOffset = 9 * 60;
@@ -205,6 +207,7 @@ const Auctionpost = () => {
       try {
         const response = await getPost(auctionNo);
         setAuctionPost(response.data);
+        dispatch(asyncAuctionInfo(auctionNo));
 
         // 판매자의 등록 게시물 수 가져오기
         const sellerId = response.data?.memberId?.id;
@@ -257,6 +260,21 @@ const Auctionpost = () => {
     setAddComments("");
   };
 
+  // 이미지 불러오기
+  useEffect(() => {
+    if (auctionPost && auctionPost.auctionImg) {
+      const imageUrls = auctionPost.auctionImg.split(",");
+      const interval = setInterval(() => {
+        setCurrentImageIndex((prevIndex) => (prevIndex + 1) % imageUrls.length);
+      }, 5000);
+
+      return () => {
+        clearInterval(interval);
+      };
+    }
+  }, [auctionPost]);
+
+  // 이전 이미지 버튼
   const handlePrevImage = () => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0
@@ -264,7 +282,13 @@ const Auctionpost = () => {
         : prevIndex - 1
     );
   };
-  
+
+  // 다음 이미지 버튼
+  const handleNextImage = () => {
+    setCurrentImageIndex(
+      (prevIndex) => (prevIndex + 1) % auctionPost.auctionImg.split(",").length
+    );
+  };
 
   useEffect(() => {
     const loadComments = async () => {
@@ -283,11 +307,6 @@ const Auctionpost = () => {
     }
   }, [auctionPost]);
 
-  const handleNextImage = () => {
-    setCurrentImageIndex((prevIndex) =>
-      (prevIndex + 1) % auctionPost.auctionImg.split(",").length
-    );
-  };
 
   function formatSeoulTime(dateString) {
     const seoulDate = convertToSeoulTime(dateString);
@@ -362,6 +381,19 @@ const Auctionpost = () => {
     }
   };
 
+  // 게시글 수정
+  const handleUpdatePost = () => {
+    if (auctionPost.currentNum === 0) {
+      if (savedUser && auctionPost.memberId.id === savedUser.id) {
+        // 현재 로그인한 사용자와 게시글 작성자의 ID가 동일한 경우에만 /update로 이동
+        navigate("/update");
+      } else {
+        alert("권한이 없습니다.");
+      }
+    } else {
+      alert("현재 입찰이 진행 중이므로 수정할 수 없습니다.");
+    }
+  };
 
   return (
     <Main>

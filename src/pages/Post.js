@@ -5,11 +5,10 @@ import Button from "react-bootstrap/Button";
 import { getCategories, addPost } from "../api/addpost";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 // import getUserInfo from "../api/user";
-
 // const { userObject } = getUserInfo();
 
+// 서울시간 설정
 function convertToSeoulTime(date) {
   const seoulOffset = 9 * 60; // 서울은 UTC+9
   const seoulTime = new Date(date.getTime() + seoulOffset * 60000);
@@ -39,7 +38,7 @@ const Post = () => {
   // 정보 업데이트
   const onClick = async () => {
     const formData = new FormData();
-
+    console.log(images);
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("desc", desc);
@@ -59,6 +58,7 @@ const Post = () => {
     // 이미지를 FormData에 추가
     for (let i = 0; i < images.length; i++) {
       formData.append("image", images[i]);
+      console.log(images[i]);
     }
 
     try {
@@ -82,7 +82,7 @@ const Post = () => {
     for (let i = 0; i < selectedImages.length; i++) {
       newImages.push(selectedImages[i]);
     }
-    
+
     // 이미지 미리보기 배열 업데이트
     const imagePreviewsArray = Array.from(selectedImages).map((image) =>
       URL.createObjectURL(image)
@@ -107,7 +107,6 @@ const Post = () => {
   // 카테고리 불러오기
   const categoryAPI = async () => {
     const result = await getCategories();
-    console.log(result);
     setCategories(result.data);
   };
 
