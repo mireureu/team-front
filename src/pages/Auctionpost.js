@@ -10,8 +10,9 @@ import { addComment, updateComment, deleteComment } from "../store/commentSlice"
 import { Modal } from "react-bootstrap";
 import { Margin } from "@mui/icons-material";
 import { userSave } from "../store/userSlice";
-import { userInfo, updatebuyerPoint } from "../api/user";
-
+import { userInfo, updatebuyerPoint, deleteCheck, addMyInterest, interestDuplicate } from "../api/user";
+import Cookies from "js-cookie";
+import { asyncAuctionInfo } from "../store/auctionSlice";
 
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
@@ -48,6 +49,9 @@ const Auctionpost = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [andList, setAndList] = useState([]);
   const [point, setPoint] = useState(0);
+
+  const [interestData, setInterestData] = useState(null);
+  const [isInterest, setInterestToggle] = useState(false);
   
   const handleDeleteComment = (comment) => {
 
@@ -133,6 +137,7 @@ const Auctionpost = () => {
 };
 
 
+
   useEffect(() => {
     startTimer();
   }, []);
@@ -200,27 +205,40 @@ const Auctionpost = () => {
   };
   
 
-  useEffect(() => {
-    const fetchAuctionPost = async () => {
-      try {
-        const response = await getPost(auctionNo);
-        setAuctionPost(response.data);
-
-        // 판매자의 등록 게시물 수 가져오기
-        const sellerId = response.data?.memberId?.id;
-        if (sellerId) {
-          const sellerCountResponse = await getCountAuction(sellerId);
-
-          setSellerAuctionCount(sellerCountResponse.data);
-        }
-      } catch (error) {
-        console.error("게시글 정보를 불러오는 중 오류 발생:", error);
-      }
-    };
-
-    if (auctionNo) {
-      fetchAuctionPost();
+  const fetchAuctionPost = async () => {
+    const response = await getPost(auctionNo);
+    setAuctionPost(response.data);
+    const seoulOffset = 9 * 60;
+    const expiresDate = new Date(seoulOffset * 60000);
+    if (response.data) {
+      Cookies.set(`auctionPost${auctionNo}`, JSON.stringify(response.data),{expires: expiresDate.getDate()+ 5 * 60 * 1000});
     }
+    dispatch(asyncAuctionInfo(auctionNo));
+
+    // 판매자의 등록 게시물 수 가져오기
+    const sellerId = response.data?.memberId?.id;
+    if (sellerId) {
+      const sellerCountResponse = await getCountAuction(sellerId);
+      setSellerAuctionCount(sellerCountResponse.data);
+    }
+  }
+
+  const dupleAuctionCheck = async () => {
+    const formData = new FormData();
+    formData.append("auctionNo",auctionNo);
+    const duple = await interestDuplicate(formData);
+    setInterestToggle(duple.data);
+    console.log(duple.data);
+  };
+
+
+  // 데이터 가져오기
+  useEffect(() => {
+    console.log(auctionNo);
+    fetchAuctionPost();
+    dupleAuctionCheck();
+
+
   }, [auctionNo]);
 
   useEffect(() => {
@@ -317,7 +335,23 @@ const Auctionpost = () => {
   };
 
 
-
+  // 게시물 삭제
+  const handleDeletePost = async () => {
+    if (window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
+      try {
+        const deletedAuction = await deletePost(auctionNo);
+        if (deletedAuction) {
+          alert("게시물이 삭제되었습니다.");
+          navigate("/Auctiondetail");
+        } else {
+          alert("게시물 삭제에 실패했습니다.");
+        }
+      } catch (error) {
+        console.error("게시물 삭제 중 오류 발생:", error);
+        alert("게시물 삭제에 실패했습니다.");
+      }
+    }
+  };
 
   // 입찰 성공 시 팝업
   const handlePriceChangeSuccess = () => {
@@ -344,23 +378,40 @@ const Auctionpost = () => {
       console.error("입찰 변경 실패:", error);
     }
   };
-  // 게시물 삭제
-  const handleDeletePost = async () => {
-    if (window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
-      try {
-        const deletedAuction = await deletePost(auctionNo);
-        if (deletedAuction) {
-          alert("게시물이 삭제되었습니다.");
-          navigate("/Auctiondetail");
-        } else {
-          alert("게시물 삭제에 실패했습니다.");
-        }
-      } catch (error) {
-        console.error("게시물 삭제 중 오류 발생:", error);
-        alert("게시물 삭제에 실패했습니다.");
-      }
+
+
+  // 관심등록 토글 버튼
+  const interestToggle = () => {
+    setInterestToggle(isInterest => {
+      const updatedInterest = !isInterest;
+  
+      // 로컬 스토리지에 관심 등록 정보 저장
+      localStorage.setItem('isInterest', updatedInterest.toString());
+  
+      return updatedInterest;
+    });
+  }
+
+  // 관심등록 on/off 데이터 전송
+  const interestSet = async (auctionNo) => {
+    const formData = new FormData();
+    formData.append("auctionNo", auctionNo); // 필드명이랑 같야아함
+
+    if(isInterest) {
+      await deleteCheck(auctionNo);
+    } else {
+      await addMyInterest(formData);
     }
-  };
+  }
+
+  
+  useEffect(() => {
+    const storedInterest = localStorage.getItem('isInterest');    
+    if (storedInterest !== null) {
+      setInterestToggle(storedInterest === 'true');
+    }
+  }, []);
+
 
 
   return (
@@ -369,6 +420,12 @@ const Auctionpost = () => {
       {auctionPost ? (
         <Card>
           <Card.Body>
+            <button 
+                className={ `checkButton ${isInterest ? 'checkOn' : 'checkOff'}`} 
+                onClick={() => {  interestToggle(); interestSet(auctionPost.auctionNo);
+              }}>
+              {isInterest ? '관심등록해제' : '관심등록'}            
+            </button>
             <h2 className="text-center border-bottom pb-3">
               {auctionPost.auctionTitle}
             </h2>
