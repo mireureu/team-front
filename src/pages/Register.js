@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Button from 'react-bootstrap/Button';
 import { addUser, nickDuplicate, idDuplicate } from '../api/user';
 import { useNavigate } from 'react-router-dom';
@@ -112,37 +112,49 @@ const Register = () => {
 
     const [checkId, setCheckId] = useState(false);
     const [checkNick, setCheckNick] = useState(false);
-
     const successRegister = useNavigate();
     const handleAddressSelected = (selectedAddress) => {
         setAddr(selectedAddress);
     };
 
-const idDuplicationAPI = async () => {
-    const formData = new FormData();
-    formData.append("id", id);
+    useEffect(() => {
 
-    const response = await idDuplicate(formData);
-    if (response.data.isDuplicate) {
-        alert("사용가능한 아이디 입니다");
-        setCheckId(true);
-    } else {
-        alert("가입된 사용자가 있습니다 ")
-        setCheckId(false);
-    }
-};
-const nickDuplicateAPI = async () => {
-    const formData = new FormData();
-    formData.append("nick", nickName);        
-    const response = await nickDuplicate(formData);                                        
-    if (response.data.isDuplicate) {
-        alert("사용가능한 닉네임 입니다");
-        setCheckNick(true);
-    } else {
-        alert("가입된 사용자가 있습니다 ")
-        setCheckNick(false);
-    }
-};
+        const phoneNumberFront = "0504";
+
+        // 핸드폰 번호 뒷자리 (랜덤 8자리)
+        const randomNumber = Math.floor(Math.random() * 100000000).toString().padStart(8, "0");
+
+        // 전체 핸드폰 번호 생성
+        const phoneNumber = phoneNumberFront + randomNumber;
+        setsPhone(phoneNumber);
+    }, []);
+
+
+    const idDuplicationAPI = async () => {
+        const formData = new FormData();
+        formData.append("id", id);
+
+        const response = await idDuplicate(formData);
+        if (response.data.isDuplicate) {
+            alert("사용가능한 아이디 입니다");
+            setCheckId(true);
+        } else {
+            alert("가입된 사용자가 있습니다 ")
+            setCheckId(false);
+        }
+    };
+    const nickDuplicateAPI = async () => {
+        const formData = new FormData();
+        formData.append("nick", nickName);
+        const response = await nickDuplicate(formData);
+        if (response.data.isDuplicate) {
+            alert("사용가능한 닉네임 입니다");
+            setCheckNick(true);
+        } else {
+            alert("가입된 사용자가 있습니다 ")
+            setCheckNick(false);
+        }
+    };
 
     const onClick = async () => {
         const userData = {
@@ -165,8 +177,8 @@ const nickDuplicateAPI = async () => {
     }
 
 
-   
-   
+
+
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatch, setPasswordMatch] = useState(true);
 
@@ -203,8 +215,6 @@ const nickDuplicateAPI = async () => {
         const isMatch = password === newConfirmPassword;
         setPasswordMatch(isTyping && isMatch);
     }
-
-
     // 이메일 체크 부분
     const checkEmail = (e) => {
         const email = e.target.value;
@@ -316,7 +326,7 @@ const nickDuplicateAPI = async () => {
                         <label className='lables'>안심번호</label>
                         <div className="divs sucretPhoneDiv">
                             <div>
-                                <input className='inputs sicretPhone' type="text" placeholder="번호" onChange={(e) => setsPhone(e.target.value)} />
+                                <input className='inputs sicretPhone' placeholder="안심번호" value={sphone} readOnly/>
                             </div>
                         </div>
                     </div>
@@ -341,7 +351,7 @@ const nickDuplicateAPI = async () => {
                                     <input
                                         className='inputs regiNumberBack'
                                         id="registrationNumberBack"
-                                        type="text"
+                                        type="password"
                                         placeholder="뒷자리"
                                         onChange={(e) => {
                                             handleBackChange(e);

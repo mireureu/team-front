@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPost, updateCurrentPrice, getCountAuction,
-  deletePost, } from "../api/addpost";
+import {
+  getPost, updateCurrentPrice, getCountAuction,
+  deletePost,
+} from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getComments, getreComments } from "../api/auctionBoard";
 import styled from "styled-components";
@@ -19,7 +21,7 @@ function convertToSeoulTime(utcDateString) {
   return seoulTime;
 }
 
-const Auctionpost = () => {  
+const Auctionpost = () => {
   const dispatch = useDispatch();
   const [auctionPost, setAuctionPost] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -33,7 +35,7 @@ const Auctionpost = () => {
   const [editingComment, setEditingComment] = useState([]);
   const [sellerAuctionCount, setSellerAuctionCount] = useState(0);
   const save = localStorage.getItem("user");
-  const savedUser = JSON.parse(save);  
+  const savedUser = JSON.parse(save);
   const navigate = useNavigate();
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -41,16 +43,16 @@ const Auctionpost = () => {
 
     dispatch(deleteComment(comment.commentNo));
     window.location.reload();
-  };  
+  };
 
   const handleEditComment = (comment) => {
     console.log(comment);
     setIsEditing(true);
-    setEditingComment(comment.content);  
-    setSelectedComment(comment); 
+    setEditingComment(comment.content);
+    setSelectedComment(comment);
     console.log(editingComment);
   };
-  
+
 
   const handleCancelEdit = () => {
     setIsEditing(false);
@@ -58,7 +60,7 @@ const Auctionpost = () => {
     setSelectedComment(null);
   };
 
-  
+
 
   const loadRecomments = async (commentNo, auctionNo) => {
     try {
@@ -69,7 +71,7 @@ const Auctionpost = () => {
       console.log("★");
     } catch (error) {
       console.error("대댓글 데이터를 불러오는 중 오류 발생:", error);
-    } 
+    }
   };
 
   const onUpdate = (e) => {
@@ -77,53 +79,56 @@ const Auctionpost = () => {
       console.log("온업데이트작동확인");
       return;
     }
-  
+
     if (editingComment.trim() === "") {
       alert("수정할 내용을 입력해주세요.");
       return;
     }
-  
+
     const commentNo = selectedComment.commentNo;
     const parrentNo = selectedComment.parent;
-  
+
 
     dispatch(
       updateComment({
         commentNo: commentNo,
-        content: editingComment,        
+        content: editingComment,
         auctionNo: auctionNo,
         parrentNo: parrentNo
       })
-      );
-      console.log(parrentNo+"부모번호체크");
-      
-      
-  
+    );
+    console.log(parrentNo + "부모번호체크");
+
+
+
     // 수정 후 상태 초기화
     setIsEditing(false);
     setEditingComment("");
     setSelectedComment(null);
-    
+
   };
-  
+
 
   const handleLoadRecomments = (comment) => {
     setSelectedComment(comment);
     loadRecomments(comment.commentNo, comment.auctionNo);
     console.log(comment);
   };
-  
+
 
   useEffect(() => {
     const fetchAuctionPost = async () => {
-      try {       
-  
+      try {
+
         const response = await getPost(auctionNo);
-        setAuctionPost(response.data);        
-        const seoulOffset = 9 * 60;
-        const expiresDate = new Date(seoulOffset * 60000);
+        setAuctionPost(response.data);
+        const seoulOffset = 9 * 60; // 서울 표준시 (GMT+9) 오프셋
+        const expiresDate = new Date();
+        expiresDate.setMinutes(expiresDate.getMinutes() + seoulOffset + 5 + 53); 
         if (response.data) {
-          Cookies.set(`auctionPost${auctionNo}`, JSON.stringify(response.data),{expires: expiresDate.getDate()+ 5 * 60 * 1000});
+          Cookies.set(`auctionPost${auctionNo}`, JSON.stringify(response.data), {
+            expires: expiresDate,
+          });
         }
         // 판매자의 등록 게시물 수 가져오기
         const sellerId = response.data?.memberId?.id;
@@ -160,7 +165,7 @@ const Auctionpost = () => {
       alert("댓글 내용을 입력해주세요.");
       return;
     }
-  
+
     if (selectedComment) {
       const data = {
         content: addComments,
@@ -172,7 +177,7 @@ const Auctionpost = () => {
       const data = { content: addComments, auctionNo: auctionNo };
       dispatch(addComment(data));
     }
-  
+
     setAddComments("");
   };
 
@@ -183,7 +188,7 @@ const Auctionpost = () => {
         : prevIndex - 1
     );
   };
-  
+
 
   useEffect(() => {
     const loadComments = async () => {
@@ -285,7 +290,7 @@ const Auctionpost = () => {
                     position: "relative",
                   }}
                 >
-                  
+
                   <img
                     src={
                       "/upload/" +
@@ -431,172 +436,173 @@ const Auctionpost = () => {
         </Modal.Footer>
       </Modal>
       <div>
-      {comments
-    .slice()
-    .sort((a, b) => a.commentNo - b.commentNo)
-    .map((comment) => (
-      <div key={comment.commentNo}>
-        <div className="comment" key={comment.commentNo}>
-          <span className="author" style={{ fontWeight: 'bold', fontSize: '14.5px' }}>{comment.member.nick} </span>
-          <span className="content">{comment.content}</span>
-          {comment.member.id === savedUser.id && (
-            <Button variant="outline-primary" size="sm" onClick={() => handleEditComment(comment)} style={{ marginLeft: '10px' }}>
-                수정
-            </Button>
-          )}
-          {comment.member.id === savedUser.id && (
-            <Button variant="outline-danger" size="sm" onClick={() => handleDeleteComment(comment)}>
-              삭제
-            </Button>
-            
-          )}
-          <Button
-          variant="outline-danger"
-          size="sm"
-          onClick={() => handleLoadRecomments(comment)}
-          style={{ marginLeft : '70%'
-          }}
-      >
-        답글 불러오기
-      </Button>
-      <hr></hr>
-    </div>
-    {selectedComment?.commentNo === comment.commentNo && (
-      <div style={{ marginLeft: '5%' }}>
-              {recomments
+        {comments
           .slice()
           .sort((a, b) => a.commentNo - b.commentNo)
-          .map((recomment) => (
-            <div className="recomment" key={recomment.commentNo}>
-              <div className="comment">
-                <div style={{ marginTop: '10px' }}>
-                  <span className="author" style={{ fontWeight: 'bold', fontSize: '14.5px' }}>{recomment.member.nick}</span>
-                </div>
-                <div style={{ marginTop: '10px' }}>
-                  <span className="content">{recomment.content}</span>
-                  {recomment.member.id === savedUser.id && (
-                    <Button variant="outline-primary" size="sm" 
-                    onClick={() => handleEditComment(recomment)}
-                    style={{ marginLeft: '10px' }}>
-                      수정
-                    </Button>
-                  )}
-                  {recomment.member.id === savedUser.id && (
-                    <Button variant="outline-danger" size="sm" onClick={() => handleDeleteComment(recomment)}>
-                      삭제
-                    </Button>
+          .map((comment) => (
+            <div key={comment.commentNo}>
+              <div className="comment" key={comment.commentNo}>
+                <span className="author" style={{ fontWeight: 'bold', fontSize: '14.5px' }}>{comment.member.nick} </span>
+                <span className="content">{comment.content}</span>
+                {comment.member.id === savedUser.id && (
+                  <Button variant="outline-primary" size="sm" onClick={() => handleEditComment(comment)} style={{ marginLeft: '10px' }}>
+                    수정
+                  </Button>
                 )}
-                
+                {comment.member.id === savedUser.id && (
+                  <Button variant="outline-danger" size="sm" onClick={() => handleDeleteComment(comment)}>
+                    삭제
+                  </Button>
+
+                )}
+                <Button
+                  variant="outline-danger"
+                  size="sm"
+                  onClick={() => handleLoadRecomments(comment)}
+                  style={{
+                    marginLeft: '70%'
+                  }}
+                >
+                  답글 불러오기
+                </Button>
+                <hr></hr>
               </div>
-              <hr></hr>
+              {selectedComment?.commentNo === comment.commentNo && (
+                <div style={{ marginLeft: '5%' }}>
+                  {recomments
+                    .slice()
+                    .sort((a, b) => a.commentNo - b.commentNo)
+                    .map((recomment) => (
+                      <div className="recomment" key={recomment.commentNo}>
+                        <div className="comment">
+                          <div style={{ marginTop: '10px' }}>
+                            <span className="author" style={{ fontWeight: 'bold', fontSize: '14.5px' }}>{recomment.member.nick}</span>
+                          </div>
+                          <div style={{ marginTop: '10px' }}>
+                            <span className="content">{recomment.content}</span>
+                            {recomment.member.id === savedUser.id && (
+                              <Button variant="outline-primary" size="sm"
+                                onClick={() => handleEditComment(recomment)}
+                                style={{ marginLeft: '10px' }}>
+                                수정
+                              </Button>
+                            )}
+                            {recomment.member.id === savedUser.id && (
+                              <Button variant="outline-danger" size="sm" onClick={() => handleDeleteComment(recomment)}>
+                                삭제
+                              </Button>
+                            )}
+
+                          </div>
+                          <hr></hr>
+                        </div>
+
+                      </div>
+                    ))}
+                </div>
+              )}
             </div>
-            
-          </div>
-        ))}
-      </div>
-    )}
-  </div>
-))}
+          ))}
       </div>
       <Form onSubmit={clickAddComment}>
-      {isEditing ? (
-        <div className="mt-3">
-          <Form.Group>
-            <Form.Label>댓글 내용 수정</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="댓글을 수정하세요"
-              value={editingComment}
-              onChange={(e) => {
-                console.log(e.target.value); // 이 부분에 console.log를 추가
-                setEditingComment(e.target.value);
-              }}
-              style={{ resize: "none" }}
-            />
-          </Form.Group>              
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button variant="outline-danger" onClick={handleCancelEdit} size="sm">
-              수정 취소
-            </Button>
+        {isEditing ? (
+          <div className="mt-3">
+            <Form.Group>
+              <Form.Label>댓글 내용 수정</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="댓글을 수정하세요"
+                value={editingComment}
+                onChange={(e) => {
+                  console.log(e.target.value); // 이 부분에 console.log를 추가
+                  setEditingComment(e.target.value);
+                }}
+                style={{ resize: "none" }}
+              />
+            </Form.Group>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button variant="outline-danger" onClick={handleCancelEdit} size="sm">
+                수정 취소
+              </Button>
 
-            <Button
-            variant="primary"
-            type="submit"
-            size="sm"
-            onClick={() => {
-                onUpdate(selectedComment.commentNo, editingComment, selectedComment.auctionNo, selectedComment.parent)                
-            }}            
-          >
-            수정 완료
-          </Button>          
+              <Button
+                variant="primary"
+                type="submit"
+                size="sm"
+                onClick={() => {
+                  onUpdate(selectedComment.commentNo, editingComment, selectedComment.auctionNo, selectedComment.parent)
+                }}
+              >
+                수정 완료
+              </Button>
+            </div>
           </div>
-        </div>
-      ) : selectedComment ? (
-        <div className="mt-3">
-          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{selectedComment.member.nick}님의 댓글에 대댓글 작성</span>
-          <Form.Group>
-            <Form.Label>대댓글 내용</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="대댓글을 입력하세요"
-              onChange={(e) => setAddComments(e.target.value)}
-              value={addComments}
-              style={{ resize: "none" }}
-            />
-          </Form.Group>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button variant="outline-danger" onClick={handleCancelEdit} size="sm">
-              작성 취소
-            </Button>
-            <Button
-              variant="outline-danger"
-              type="submit"
-              size="sm"
-              disabled={addComments.trim() === ""}
-            >
-              대댓글 작성
-            </Button>
+        ) : selectedComment ? (
+          <div className="mt-3">
+            <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{selectedComment.member.nick}님의 댓글에 대댓글 작성</span>
+            <Form.Group>
+              <Form.Label>대댓글 내용</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="대댓글을 입력하세요"
+                onChange={(e) => setAddComments(e.target.value)}
+                value={addComments}
+                style={{ resize: "none" }}
+              />
+            </Form.Group>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button variant="outline-danger" onClick={handleCancelEdit} size="sm">
+                작성 취소
+              </Button>
+              <Button
+                variant="outline-danger"
+                type="submit"
+                size="sm"
+                disabled={addComments.trim() === ""}
+              >
+                대댓글 작성
+              </Button>
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="mt-3">
-          <span style={{ fontSize: '40px' }}>댓글 작성</span>
-          <Form.Group>
-            <Form.Label>댓글 내용</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              placeholder="댓글을 입력하세요"
-              onChange={(e) => setAddComments(e.target.value)}
-              value={addComments}
-              style={{ resize: "none" }}
-            />
-          </Form.Group>
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <Button
-              variant="outline-danger"
-              type="submit"
-              size="sm"
-              disabled={addComments.trim() === ""}
-            >
-              댓글 작성
-            </Button>
+        ) : (
+          <div className="mt-3">
+            <span style={{ fontSize: '40px' }}>댓글 작성</span>
+            <Form.Group>
+              <Form.Label>댓글 내용</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={3}
+                placeholder="댓글을 입력하세요"
+                onChange={(e) => setAddComments(e.target.value)}
+                value={addComments}
+                style={{ resize: "none" }}
+              />
+            </Form.Group>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <Button
+                variant="outline-danger"
+                type="submit"
+                size="sm"
+                disabled={addComments.trim() === ""}
+              >
+                댓글 작성
+              </Button>
+            </div>
           </div>
-        </div>
-      )}
-    </Form>
-    <style>
-      {`
+        )}
+      </Form>
+      <style>
+        {`
         .item-desc {
           border: 1px solid #ccc;
           padding: 10px;
         }
       `}
-    </style>
-  </Container>
-);
+      </style>
+    </Container>
+  );
 };
 
 export default Auctionpost;

@@ -139,9 +139,9 @@ const Header = () => {
               }
               {
                 Object.keys(user).length === 0 ? (
-                  ("")
-                ) : <Nav.Link onClick={register} style={{ color: "black" }}>
+                  <Nav.Link onClick={register} style={{ color: "black" }}>
                   회원가입</Nav.Link>
+                ) : ("")
               }
 
               {
