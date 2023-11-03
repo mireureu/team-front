@@ -7,36 +7,11 @@ import { getComments, getreComments } from "../api/auctionBoard";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { addComment, updateComment, deleteComment } from "../store/commentSlice";
-import { asyncAuctionInfo } from "../store/auctionSlice";
-import Cookies from "js-cookie";
-import { Modal } from "react-bootstrap"; // 모달 컴포넌트 import 추가
-import { getInterest, addMyInterest, deleteCheck, interestDuplicate } from "../api/user"; // 관심등록 & 해제
+import { Modal } from "react-bootstrap";
 import { Margin } from "@mui/icons-material";
 import { userSave } from "../store/userSlice";
 import { userInfo, updatebuyerPoint } from "../api/user";
 
-
-const Main = styled.div`
-
-  margin-bottom: 100px;
-
-  .container {
-    width: 1300px;
-  }
-  .checkButton {
-    width: 150px;
-    height: 40px;
-  }
-
-  .checkOn {
-    background-color: red;
-    color: wheat;
-
-  }
-  .checkOff {
-
-  }
-`;
 
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
@@ -45,13 +20,22 @@ function convertToSeoulTime(utcDateString) {
   return seoulTime;
 }
 
-const Auctionpost = () => {  
+const Main = styled.div`
+  margin-bottom: 100px;
+
+  .container {
+    width: 1300px;
+  }
+`;
+
+
+const Auctionpost = () => {
   const dispatch = useDispatch();
   const [auctionPost, setAuctionPost] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [newCurrentPrice, setNewCurrentPrice] = useState(0);
   const [addComments, setAddComments] = useState("");
-  const { auctionNo, interestNo } = useParams();
+  const { auctionNo } = useParams();
   const [comments, setComments] = useState([]);
   const [recomments, setRecomments] = useState([]);
   const [selectedComment, setSelectedComment] = useState(null);
@@ -157,7 +141,8 @@ const Auctionpost = () => {
     setIsEditing(true);
     setEditingComment(comment.content);  
     setSelectedComment(comment); 
-
+  };
+  
 
   const handleCancelEdit = () => {
     setIsEditing(false);
@@ -215,20 +200,10 @@ const Auctionpost = () => {
   };
   
 
-  const [interestData, setInterestData] = useState(null);
-  const [isInterest, setInterestToggle] = useState(false);
-
   useEffect(() => {
     const fetchAuctionPost = async () => {
       try {
-
-        const storedInterest = localStorage.getItem('isInterest');
-        if (storedInterest !== null) {
-          setInterestToggle(storedInterest === 'true');
-        }
-
         const response = await getPost(auctionNo);
-
         setAuctionPost(response.data);
 
         // 판매자의 등록 게시물 수 가져오기
@@ -342,6 +317,8 @@ const Auctionpost = () => {
   };
 
 
+
+
   // 입찰 성공 시 팝업
   const handlePriceChangeSuccess = () => {
     setShowSuccessModal(true);
@@ -350,15 +327,18 @@ const Auctionpost = () => {
   const handlePriceChange = async (e) => {
     try {
       const newPrice =
-        auctionPost.currentNum === 0
-          ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
-          : auctionPost.currentPrice + auctionPost.auctionEMoney;
+      auctionPost.currentNum === 0
+      ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
+      : auctionPost.currentNum < 5
+      ? auctionPost.currentPrice + auctionPost.auctionEMoney
+      : auctionPost.currentPrice + 2 * auctionPost.auctionEMoney
 
       await updateCurrentPrice(auctionPost.auctionNo, {
+        
         currentPrice: newPrice,
+        id : savedUser.id
+        
       });
-
-      // 입찰 변경이 성공하면 성공 모달을 표시합니다.
       handlePriceChangeSuccess();
     } catch (error) {
       console.error("입찰 변경 실패:", error);
@@ -383,74 +363,12 @@ const Auctionpost = () => {
   };
 
 
-  // interest 정보 가져오기
-  const getInterestData = async (interestNo) => {
-    try {
-      const response = await getInterest(interestNo);
-      setInterestData(response.data);
-      console.log(response.data);
-    } catch (error) {
-      // 에러 처리
-      console.error('에러 발생:', error);
-    }
-  }
-
-  // 관심등록 토글 버튼
-  const interestToggle = () => {
-    setInterestToggle(isInterest => {
-      const updatedInterest = !isInterest;
-  
-      // 로컬 스토리지에 관심 등록 정보 저장
-      localStorage.setItem('isInterest', updatedInterest.toString());
-  
-      return updatedInterest;
-    });
-  }
-
-  // 관심등록 on/off 데이터 전송
-  const interestSet = async (auctionNo) => {
-    const formData = new FormData();
-    formData.append("auctionNo", auctionNo); // 필드명이랑 같야아함
-
-    if(isInterest) {
-      deleteCheck(auctionNo);
-    } else {
-     await addMyInterest(formData);
-    }
-  }
-
-  
-  useEffect(() => {
-    const storedInterest = localStorage.getItem('isInterest');    
-    if (storedInterest !== null) {
-      setInterestToggle(storedInterest === 'true');
-    }
-  }, []);
-
-  // 중복 여부 확인
-  // useEffect(() => {
-  //   const duplicateCheck = async (no) => {
-  //     const formData = new FormData();
-  //     formData.append("no", no);
-  //     const response = await interestDuplicate(formData);
-  //     console.log(response);
-  //     setInterestToggle(response);
-  //   }            
-  //   duplicateCheck(no);
-  // }, []);
-
   return (
     <Main>
     <div className="container">
       {auctionPost ? (
         <Card>
           <Card.Body>
-            <button 
-              className={ `checkButton ${isInterest ? 'checkOn' : 'checkOff'}`} 
-              onClick={() => {  interestToggle(); interestSet(auctionPost.auctionNo);
-            }}>
-            {isInterest ? '관심등록해제' : '관심등록'}            
-            </button>
             <h2 className="text-center border-bottom pb-3">
               {auctionPost.auctionTitle}
             </h2>
@@ -464,7 +382,6 @@ const Auctionpost = () => {
                     position: "relative",
                   }}
                 >
-                  
                   <img
                     src={
                       "/upload/" +
@@ -496,21 +413,7 @@ const Auctionpost = () => {
                     </Button>
                   </div>
                 </div>
-                <div className="text-center">
-                  <p>
-                    이미지 {currentImageIndex + 1} /{" "}
-                    {auctionPost.auctionImg.split(",").length}
-                  </p>
-                  <div>
-                    <Button variant="primary" onClick={handlePrevImage}>
-                      이전
-                    </Button>
-                    <Button variant="primary" onClick={handleNextImage}>
-                      다음
-                    </Button>
-                  </div>
-                </div>
-              </Col>              
+              </Col>
               <Col xs={12} md={6}>
                 
                 <p>상품명: {auctionPost.itemName}</p>
@@ -631,7 +534,7 @@ const Auctionpost = () => {
             variant="primary"
             onClick={() => {
               setShowSuccessModal(false);
-              window.location.reload(); // 팝업 닫기 후 페이지 새로고침
+              window.location.reload();
             }}
           >
             닫기
@@ -658,19 +561,16 @@ const Auctionpost = () => {
             <Button variant="outline-danger" size="sm" onClick={() => handleDeleteComment(comment)}>
               삭제
             </Button>
-            
           )}
-          <Button
-          variant="outline-danger"
-          size="sm"
-          onClick={() => handleLoadRecomments(comment)}
-          style={{ marginLeft : '70%'
-          }}
+      <Button
+        variant="outline-danger"
+        size="sm"
+        onClick={() => handleLoadRecomments(comment)}
       >
-        답글 불러오기
+        답글
       </Button>
-      <hr></hr>
     </div>
+    <hr></hr>
     {selectedComment?.commentNo === comment.commentNo && (
       <div style={{ marginLeft: '5%' }}>
               {recomments
@@ -719,7 +619,6 @@ const Auctionpost = () => {
               placeholder="댓글을 수정하세요"
               value={editingComment}
               onChange={(e) => {
-                console.log(e.target.value); // 이 부분에 console.log를 추가
                 setEditingComment(e.target.value);
               }}
               style={{ resize: "none" }}
@@ -790,6 +689,7 @@ const Auctionpost = () => {
               type="submit"
               size="sm"
               disabled={addComments.trim() === ""}
+              style={{ marginTop : '10px'}}
             >
               댓글 작성
             </Button>
@@ -801,5 +701,5 @@ const Auctionpost = () => {
   </Main>
 );
 };
-}
+
 export default Auctionpost;
