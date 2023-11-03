@@ -6,11 +6,9 @@ import {
 } from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";
 import { getComments, getreComments } from "../api/auctionBoard";
-import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { addComment, updateComment, deleteComment } from "../store/commentSlice";
 import { Modal } from "react-bootstrap";
-import { Margin } from "@mui/icons-material";
 import Cookies from "js-cookie";
 
 

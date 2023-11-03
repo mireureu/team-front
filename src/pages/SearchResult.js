@@ -77,7 +77,6 @@ const StyledHeader = styled.header`
     font-weight: bold;
   }
 `;
-
 const SearchResult = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
@@ -85,12 +84,16 @@ const SearchResult = () => {
   const [category, setCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
-  const searchResult = useSelector((state) => state.search);  
+
+  const searchResult = useSelector((state) => state.search);
   const location = useLocation();
   const keyword = location.state ? location.state.keyword : null;
 
+
+
   const TotalPage = searchResult?.getTotalPages || 1;
-  const categoryAPI = async () => {
+  
+  const categoryAPI = async () => {        
     const result = await getCategories();
     setCategories(result.data);
   };
