@@ -221,35 +221,6 @@ const InterestList = () => {
         setCheckItems(newCheckItems);
 
         setCheckedAutionNos(andList.filter((_, i) => newCheckItems[i]).map((item) => item.interestNo));
-
-        // const checkedAuctionNos = ;
-
-        // console.log(checkedAuctionNos);
-        // allDeleteButton(checkedAuctionNos);
-        
-        // checkItems[index] = !checkItems[index];
-
-
-        // console.log(prevCheckItems);
-        // console.log(index);
-        // console.log(andList);
-        // console.log(checkItems);
-
-        // const checkedAuctionNos = andList.filter((_, i) => )
-
-
-        // console.log(prevCheckItems);
-        // setCheckItems((prevCheckItems) => {
-        //     console.log(prevCheckItems);
-        //     const newCheckItems = [...prevCheckItems];
-        //     newCheckItems[index] = !newCheckItems[index];
-        //     const checkedAuctionNos = andList
-        //         .filter((_, i) => newCheckItems[i]) // 필터링된 체크박스만 선택
-        //         .map((item) => item.auction.auctionNo); // auctionNo 값만 추출
-        //     console.log('선택된 auctionNo:', checkedAuctionNos);
-        //     // allDeleteButton(checkedAuctionNos);
-        //     return checkedAuctionNos;
-        // });
     };
 
 
@@ -258,9 +229,10 @@ const InterestList = () => {
     }
 
     const allDeleteButton = async () => {
-        console.log(checkedAuctionNos);
-        console.log(andList);        
-        await deleteCheckList(checkedAuctionNos);
+        const formData = new FormData();
+        formData.append("list", JSON.stringify(checkedAuctionNos));
+      
+        await deleteCheckList(formData);
     }
 
     useEffect(() => {

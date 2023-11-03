@@ -5,7 +5,7 @@ import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
 import { setListType } from "../api/auctionBoard"; // 메인 카테고리
-import hot from "../components/imgs/hot.png";
+import hot from "../imgs/hot.png";
 import { recentView } from "../api/addpost";
 
 const Main = styled.div`

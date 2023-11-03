@@ -74,51 +74,23 @@ export const interestDuplicate = async (no) =>{
     headers: {
       Authorization: `Bearer ${token}`,
     }
-  })
+  });
+  return response;
 }
-
-
-// 관심 등록한 게시글 List 가져오기
-export const getMyInterestList = async () => {
-
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await instance.get(`/user/myInterestList`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    // 에러 처리
-    console.error('에러 발생:', error);
-    throw error;
-  }
-
-};
 
 // 관심 등록한 게시글 삭제
 export const deleteCheck = async (auctionNo) => {
-
-  console.log(auctionNo);
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await instance.delete(`/user/checkDelete`, auctionNo, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-    });
-    console.log(response);
-    return response.data;
-  } catch (error) {
-    // 에러 처리
-    console.error('에러 발생:', error);
-    throw error;
-  }
+  console.log("관심 = " + auctionNo);
+  const token = localStorage.getItem("token");
+  const response = await instance.delete(`/user/checkDelete?auctionNo=${auctionNo}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  console.log("관심 = " + response.data);
+  return response.data;
 };
+
 
 // 관심 등록한 게시글 List 삭제
 export const deleteCheckList = async (auctionNos) => {
@@ -145,6 +117,26 @@ export const deleteCheckList = async (auctionNos) => {
   }
 };
 
+
+// 관심 등록한 게시글 List 가져오기
+export const getMyInterestList = async () => {
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await instance.get(`/user/myInterestList`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    // 에러 처리
+    console.error('에러 발생:', error);
+    throw error;
+  }
+
+};
 
 
 // 비밀번호 맞는지 확인 API
