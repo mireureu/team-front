@@ -28,13 +28,12 @@ export const getPost = async (auctionNo) => {
   return await instance.get(`/user/auction/${auctionNo}`);
 };
 
-
 // 현재 가격 수정
 export const updateCurrentPrice = async (auctionNo, newPrice) => {
   try {
     console.log(auctionNo);
     console.log(newPrice);
-    const response = await instance.put(`/user/auction/${auctionNo}`,newPrice);
+    const response = await instance.put(`/user/auction/${auctionNo}`, newPrice);
     return response.data;
   } catch (error) {
     console.error("현재 가격을 업데이트하는 중 오류 발생:", error);
@@ -46,7 +45,7 @@ export const updateCurrentPrice = async (auctionNo, newPrice) => {
 export const deletePost = async (auctionNo) => {
   try {
     const response = await instance.delete(`/user/auction/${auctionNo}`);
-    return response.data; 
+    return response.data;
   } catch (error) {
     console.error("Error deleting post:", error);
     throw error;
@@ -66,6 +65,6 @@ export const getCountAuction = async (memberId) => {
 };
 
 // 게시글 카테고리 번호 바꾸기
-export const updatecategoryNo = async (no) =>{
-  return await instance.put(`/public/updateCategory?no=${no}`); 
-}
+export const updatecategoryNo = async (no) => {
+  return await instance.put(`/public/updateCategory?no=${no}`);
+};
