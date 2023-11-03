@@ -89,8 +89,10 @@ const AuctionDetail = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState("0");
   const save = localStorage.getItem("user");
+  const savedUser = JSON.parse(save);
   const navigate = useNavigate();
-  const location = useLocation();
+  const location = useLocation();  
+  
   const searchParams = new URLSearchParams(location.search);
   const categoryFromQuery = searchParams.get("categoryNo");
   

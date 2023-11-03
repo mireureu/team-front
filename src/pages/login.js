@@ -17,7 +17,7 @@ import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../css/modal.css";
-import FindPassword from "../components/FindPassword";
+import FindPassword from "../components/findPassword";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
@@ -28,7 +28,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  
   const [registrationNumberBack, setRegistrationNumberBack] = useState('');
   const [registrationNumberValid, setRegistrationNumberValid] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -186,13 +186,12 @@ const Login = () => {
                         type="text"
                         placeholder="이메일을 입력해주세요"
                         onBlur={(e) => setEmail(e.target.value)}
-                      />
-                      
+                      />                      
                       {email && registrationNumberFront.length === 6 && registrationNumberBack.length === 7 && id && (
                         <FindPassword email={email} birthday={`${registrationNumberFront}${registrationNumberBack}`} id={id} />
                       )}
-
                     </div>
+
                     <div>
                       <Form.Group as={Row} className="mb-3">
                         <Col sm>

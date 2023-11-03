@@ -167,12 +167,8 @@ const Kakaopay = () => {
   }, [userCode]);
 
   return (
-    <div>
-      <Nav.Link onClick={openModal} style={{ color: "black" }}>
-        {" "}
-        카카오페이로 결제
-      </Nav.Link>
-
+    <div>     
+        <Nav.Link onClick={openModal} style={{ color: "black" }}> 카카오페이로 결제</Nav.Link>            
       {isModalOpen && (
         <Modal>
           <div className="top">

@@ -3,8 +3,7 @@ import { createSlice,createAsyncThunk } from "@reduxjs/toolkit";
 import { getSearchResult } from "../api/search";
 
 const asyncSearch = createAsyncThunk("searchSlice/asyncSearch", async(keyword) =>{           
-    const result = await getSearchResult(keyword);            
-    console.log(result.data);
+    const result = await getSearchResult(keyword);                
     return result.data;
 });
 

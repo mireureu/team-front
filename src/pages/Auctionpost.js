@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  getPost,
-  updateCurrentPrice,
-  getCountAuction,
+  getPost, updateCurrentPrice, getCountAuction,
   deletePost,
 } from "../api/addpost";
 import { Container, Row, Col, Card, Button, Form } from "react-bootstrap";

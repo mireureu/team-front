@@ -84,8 +84,7 @@ const ItemDiv = styled.div`
 `;
 
 
-const Sidebar = () => {
-  const auctionData = JSON.parse(localStorage.getItem("auction"));
+const Sidebar = () => {  
   const [auctionPosts, setAuctionPosts] = useState([]);
 
   // 사이드바 펼치기 숨기기

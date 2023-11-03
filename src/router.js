@@ -36,11 +36,7 @@ const router = createBrowserRouter([
       {
         path: "/qnapost",
         element: <QnAboard />,
-      },
-      // {
-      //   path: "/AskPage",
-      //   element: <AskPage />,
-      // },
+      },     
       {
         path: "/Post",
         element: <Post />,
@@ -71,9 +67,5 @@ const router = createBrowserRouter([
     path: "/register",
     element: <Register />,
   },
-  // {
-  //   path: "/logout",
-  //   element: <Logout />,
-  // },
 ]);
 export default router;
