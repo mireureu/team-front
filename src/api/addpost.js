@@ -14,9 +14,9 @@ export const getCategories = async () => {
 };
 
 // 최근 본 게시물
-export const recentView = async () =>{
+export const recentView = async () => {
   return await instance.get("/user/recentView");
-}
+};
 
 // 게시글 추가
 export const addPost = async (data) => {
@@ -42,20 +42,30 @@ export const updateCurrentPrice = async (auctionNo, newPrice) => {
   }
 };
 
+// 게시글 삭제
 export const deletePost = async (auctionNo) => {
   try {
     const response = await instance.delete(`/user/auction/${auctionNo}`);
-    return response.data;
+    return response.data; 
   } catch (error) {
     console.error("Error deleting post:", error);
     throw error;
   }
 };
 
+// 게시글 수정
 export const updatePost = async (auctionNo, data) => {
+  console.log(auctionNo);
+  console.log(data);
   return await instance.put(`/user/auction/update/${auctionNo}`, data);
 };
 
+// 작성한 게시글 수 가져오기
 export const getCountAuction = async (memberId) => {
   return await instance.get(`/public/auction/count?memberId=${memberId}`);
 };
+
+// 게시글 카테고리 번호 바꾸기
+export const updatecategoryNo = async (no) =>{
+  return await instance.put(`/public/updateCategory?no=${no}`); 
+}

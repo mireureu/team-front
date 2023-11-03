@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { login } from "../api/user";
 const asyncLogin = createAsyncThunk("userSlice/asyncLogin", async (data) => {
     const result = await login(data);
+    
     return result.data;
 });
 const userSlice = createSlice({
@@ -18,7 +19,7 @@ const userSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(asyncLogin.fulfilled, (state, action)=>{
             localStorage.setItem("token",action.payload.token);  
-            localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장            
+            localStorage.setItem("user",JSON.stringify(action.payload)); // 유저의 정보를 json 방식으로 저장      
             return action.payload;
         });
     }

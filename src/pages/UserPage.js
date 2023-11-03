@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaMapLocationDot } from "react-icons/fa6";
@@ -7,7 +7,7 @@ import DaumPostcode from '../components/DaumPostcode';
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
-import { passwordCheck, changePassowrd } from "../api/user";
+import { userInfo, passwordCheck, changePassowrd } from "../api/user";
 
 const Main = styled.div`
 `;
@@ -141,6 +141,7 @@ const UserPage = () => {
   const [passwordMatch, setPasswordMatch] = useState(true);
   const [isTyping, setIsTyping] = useState(false);
 
+  const [myInterestList, setMyInterestList] = useState([]);
 
   const handleAddressSelected = (selectedAddress) => {
     const selectedAddr = selectedAddress;
@@ -293,29 +294,29 @@ const UserPage = () => {
   };
   
   // 데이터를 불러와 초기 필드값에 보냄.
-  // const updateUserInfo = async (user) => {
-  //   if (user) {
-  //     const response = await userInfo(user.token);
-  //     const newNick = response.data.nick;
-  //     const newPhone = response.data.phone;
-  //     const newEmail = response.data.email;
-  //     const newAddr = response.data.addr;
+  const updateUserInfo = async (user) => {
+    if (user) {
+      const response = await userInfo(user.token);
+      const newNick = response.data.nick;
+      const newPhone = response.data.phone;
+      const newEmail = response.data.email;
+      const newAddr = response.data.addr;
 
-  //     setInitialFieldValues({
-  //       nick: newNick,
-  //       phone: newPhone,
-  //       email: newEmail,
-  //       addr: newAddr,
-  //     });
-  //   }
-  // };
+      setInitialFieldValues({
+        nick: newNick,
+        phone: newPhone,
+        email: newEmail,
+        addr: newAddr,
+      });
+    }
+  };
 
-  // useEffect(() => {
-  //   const savedUser = JSON.parse(localStorage.getItem("user"));
-  //   if (savedUser) {
-  //     updateUserInfo(savedUser);
-  //   }
-  // }, []);
+  useEffect(() => {
+    const savedUser = JSON.parse(localStorage.getItem("user"));
+    if (savedUser) {
+      updateUserInfo(savedUser);
+    }
+  }, []);
 
 
   const isAllFieldsEmpty = () => {
@@ -366,6 +367,11 @@ const UserPage = () => {
   const navigate = useNavigate();
 
  
+
+  // 관심목록 페이지로 이동
+  const goInterestPage = () => {
+    window.location.href = '/InterestList';
+  };
 
   const onClick = async() =>{
     await changePassowrd({password:password});
@@ -516,7 +522,7 @@ const UserPage = () => {
             <div className="my-column">
               <p className="title">관심목록</p>
               <p className="title"></p>
-              <button className="buttons">
+              <button className="buttons" onClick={goInterestPage}>
                 <BsPencilSquare style={{ fontSize: "30px" }} /> 보러가기
               </button>
             </div>

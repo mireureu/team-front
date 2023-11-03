@@ -1,8 +1,13 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { getHotList, getNewList } from "../api/auctionBoard";
-import hot from "../components/hot.png";
+import { getCategories } from "../api/connection";
+import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
+import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
+import { setListType } from "../api/auctionBoard"; // 메인 카테고리
+import hot from "../imgs/hot.png";
+import { recentView } from "../api/addpost";
+
 const Main = styled.div`
   position: relative;
 `;
@@ -48,12 +53,12 @@ const News = styled.div`
   justify-content: center;
   gap: 20px;
   margin: 0 auto;
-  max-width: 1000px;
+  max-width: 1200px;
 
   
   .new-box {
     width: 200px;
-    height: 250px;
+    height: 280px;
     background-color: rgba(234, 234, 234);
     border: 1px solid black;
     justify-self: center;
@@ -92,6 +97,11 @@ const News = styled.div`
       h5 {
         background-color: rgba(217, 220, 253);
         border-radius: 10px;
+
+        max-width: 100%; /* 원하는 최대 너비 설정 (예: 200px) */
+        overflow: hidden; /* 넘치는 텍스트를 감출 수 있도록 설정 */
+        white-space: nowrap; /* 텍스트가 한 줄에 나타나도록 설정 */
+        text-overflow: ellipsis; /* 텍스트가 너비 제한을 넘어갈 때 생략 부호(...) 표시 */
       }
 
       p {
@@ -271,7 +281,7 @@ const Home = () => {
         minutes: 0,
         seconds: 0,
       };
-    }
+    } 
 
     const endDate = new Date(auctionEndDate);
     const currentDate = new Date();
@@ -291,41 +301,39 @@ const Home = () => {
 
   const startTimer = () => {
     const timerId = setInterval(() => {
-      // 1초마다 시간을 갱신
-      setAndList((prevAndList) => {
-        return prevAndList.map((ands) => {
-          const timeDifference = calculateTimeDifference(ands.auctionEndDate);
-          const newAnds = {
-            ...ands,
-            timeDifference,
-          };
-          return newAnds;
+        // 남은 시간만 업데이트
+        setAndList((prevAndList) => {
+            return prevAndList.map((ands) => {
+                const timeDifference = calculateTimeDifference(ands.auctionEndDate);
+                return {
+                    ...ands,
+                    timeDifference,
+                };
+            });
         });
-      });
     }, 1000);
 
     // 컴포넌트 언마운트 시 타이머 해제
     return () => {
-      clearInterval(timerId);
+        clearInterval(timerId);
     };
-  };
+};
 
   const andListAPI = async () => {
-    let clicks = "a";
-    let result = null;
+    let clicks = setListType(1);
+    let result = await getHotList();
 
-    if (clicks === "a") {
+    if (clicks === 1) {
       result = await getHotList();
-    } else if (clicks === "b") {
+    } else if (clicks === 2) {
       result = await getNewList();
     }
-    
+    console.log(result);
     setAndList(result.data);
   };
 
   useEffect(() => {
     andListAPI();
-    // categoryAPI();
     startTimer();
   }, []);
 
@@ -345,6 +353,10 @@ const Home = () => {
     // 페이지 이동을 위해 window.location.href를 사용
     window.location.href = `/auctionpost/${auctionNo}`;
   };
+
+  const test = (test) => {
+    console.log("섹스");
+  }
 
   // 쿠키로 최근 본 게시물 목록
   function addToRecentPosts(postId) {
@@ -378,9 +390,22 @@ const Home = () => {
                 </div>
                 <div className="new-font">
                   <h5>{ands.auctionTitle}</h5>
-                  <p className={((calculateTimeDifference(ands.auctionEndDate).hours < 8) && (calculateTimeDifference(ands.auctionEndDate).days === 0)) || (calculateTimeDifference(ands.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
-                    {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
-                  </p>
+                  {calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (
+                    <p className={((calculateTimeDifference(ands.auctionEndDate).hours < 8) && (calculateTimeDifference(ands.auctionEndDate).days === 0)) || (calculateTimeDifference(ands.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
+                      {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (
+                        `남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`
+                      ) : (
+                        (calculateTimeDifference(ands.auctionEndDate).seconds <= 0) ? (
+                          <span>
+                            {test()}
+                            경매 마감
+                          </span>
+                        ) : (
+                          `남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`
+                        )
+                      )}
+                    </p>
+                  ) : null}
                   <p>
                     현재가 : <span>{ands.currentPrice}</span>원
                   </p>
@@ -397,7 +422,7 @@ const Home = () => {
               <h2>{selectedItem.auctionTitle}</h2>
             </div>
             <div className="itemImg">
-              <img src={"/upload/" + selectedItem.auctionImg.split(",", 1)} alt={selectedItem.auctionTitle} />
+              <img src={"/upload/" + selectedItem.auctionImg.split(",", 1)} alt={selectedItem.auctionTitle}/>
             </div>
             <div className="itemBoard">
               <h4>남은 시간</h4>
