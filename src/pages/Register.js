@@ -118,31 +118,31 @@ const Register = () => {
         setAddr(selectedAddress);
     };
 
-    const idDuplicationAPI = async () => {
-        const formData = new FormData();
-        formData.append("id", id);
+const idDuplicationAPI = async () => {
+    const formData = new FormData();
+    formData.append("id", id);
 
-        const response = await idDuplicate(formData);
-        if (response.data.isDuplicate) {
-            alert("사용가능한 아이디 입니다");
-            setCheckId(true);
-        } else {
-            alert("가입된 사용자가 있습니다 ")
-            setCheckId(false);
-        }
-    };
-    const nickDuplicateAPI = async () => {
-        const formData = new FormData();
-        formData.append("nick", nickName);        
-        const response = await nickDuplicate(formData);                                        
-        if (response.data.isDuplicate) {
-            alert("사용가능한 닉네임 입니다");
-            setCheckNick(true);
-        } else {
-            alert("가입된 사용자가 있습니다 ")
-            setCheckNick(false);
-        }
-    };
+    const response = await idDuplicate(formData);
+    if (response.data.isDuplicate) {
+        alert("사용가능한 아이디 입니다");
+        setCheckId(true);
+    } else {
+        alert("가입된 사용자가 있습니다 ")
+        setCheckId(false);
+    }
+};
+const nickDuplicateAPI = async () => {
+    const formData = new FormData();
+    formData.append("nick", nickName);        
+    const response = await nickDuplicate(formData);                                        
+    if (response.data.isDuplicate) {
+        alert("사용가능한 닉네임 입니다");
+        setCheckNick(true);
+    } else {
+        alert("가입된 사용자가 있습니다 ")
+        setCheckNick(false);
+    }
+};
 
     const onClick = async () => {
         const userData = {
