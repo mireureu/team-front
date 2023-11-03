@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 
-const Sidebar = () => {
-  const auctionData = JSON.parse(localStorage.getItem("auction"));
+const Sidebar = () => {  
   const [auctionPosts, setAuctionPosts] = useState([]);
 
 

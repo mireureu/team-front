@@ -46,11 +46,11 @@ const Header = () => {
   const [name, setName] = useState(userData ? userData.name : "");
 
 
-  const Search = () => {
-    console.log(keyword);
-    dispatch(asyncSearch({ keyword: keyword }));
-    movePage("/SearchResult", { state: { keyword } });
-  }
+    const Search = () => {
+      console.log(keyword);
+      dispatch(asyncSearch({ keyword: keyword }));
+      movePage("/SearchResult", { state: { keyword } });
+    }
 
   const user = useSelector((state) => {
     return state.user;
@@ -140,7 +140,7 @@ const Header = () => {
               {
                 Object.keys(user).length === 0 ? (
                   <Nav.Link onClick={register} style={{ color: "black" }}>
-                  회원가입</Nav.Link>
+                    회원가입</Nav.Link>
                 ) : ("")
               }
 
@@ -177,6 +177,7 @@ const Header = () => {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
             />
+
             <Nav.Link>
               <Button
                 type="submit"

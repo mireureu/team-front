@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Button from "react-bootstrap/Button";
+import { Nav } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
 import styled from "styled-components";
 import Form from "react-bootstrap/Form";
@@ -10,7 +11,9 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { getTotalPages } from "../api/search";
 import { getCategories, getItem } from "../api/auctionBoard";
 import { useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useLocation,useNavigate } from "react-router-dom";
+const save = localStorage.getItem("user");
+const savedUser = JSON.parse(save);
 const StyledHeader = styled.header`
   display: flex;
   justify-content: center;
@@ -82,8 +85,7 @@ const SearchResult = () => {
   const [category, setCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
   const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
-  const searchResult = useSelector((state) => state.search);
-  const content = searchResult?.content || [];
+  const searchResult = useSelector((state) => state.search);  
   const location = useLocation();
   const keyword = location.state ? location.state.keyword : null;
 
@@ -99,6 +101,16 @@ const SearchResult = () => {
       setItems(getResult.data.content);
     } catch (error) {
       console.error("데이터 불러오기 오류:", error);
+    }
+  };
+  
+  const navigate = useNavigate();
+    const handlePostitemClick = (auctionNo) => {
+    if (save === null) {
+      alert('로그인 후 이용하세요');
+      navigate("/login");
+    } else {
+      navigate(`/auctionpost/${auctionNo}`);
     }
   };
 
@@ -180,10 +192,11 @@ const SearchResult = () => {
                 style={{ width: "18rem", marginTop: "30px" }}
                 className="hover"
               >
-                <a href="#" style={{ textDecoration: "none" }}>
+                <Nav.Link onClick={() => handlePostitemClick(item.auctionNo)}>
                   <Card.Img
                     variant="top"
                     src={"/upload/" + item.auctionImg.split(",", 1)}
+                    className="image-container"
                   />
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
@@ -196,26 +209,20 @@ const SearchResult = () => {
                         {calculateTimeDifference(item.auctionEndDate).days}일{" "}
                         {calculateTimeDifference(item.auctionEndDate).hours}시간{" "}
                         {calculateTimeDifference(item.auctionEndDate).minutes}분{" "}
-                        {/* {calculateTimeDifference(item.auctionEndDate).seconds}초 */}
+                        {calculateTimeDifference(item.auctionEndDate).seconds}초
                       </p>
                     )}
                     <div className="hover-button">
                       <div>현재가 : {item.currentPrice}원</div>
-                      <div className="hidden-hover" onMouseEnter={() => {}}>
-                        현재가 : {item.currentPrice}원
-                      </div>
+                      <div className="hidden-hover"></div>
                       <div
-                        className="show-hover"
-                        id={`show-hover-${item.auctionAttendNo}`}
+                        className="show-hover"                        
                         style={{ display: "none" }}
-                        onMouseLeave={() => {}}
-                      >
-                        현재가 : {item.currentPrice}원
-                      </div>
+                      ></div>
                       <div className="small-text">클릭 시 경매 참가</div>
                     </div>
                   </Card.Body>
-                </a>
+                </Nav.Link>
               </Card>
             ))}
         </div>
@@ -253,9 +260,6 @@ const SearchResult = () => {
             disabled={page === TotalPage}
           />
         </Pagination>
-        <div className="current-page">
-          {/* 현재 페이지: {page}/{totalPages} */}
-        </div>
       </Container>
     </StyledHeader>
   );

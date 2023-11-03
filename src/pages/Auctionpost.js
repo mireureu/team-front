@@ -119,15 +119,13 @@ const Auctionpost = () => {
   useEffect(() => {
     const fetchAuctionPost = async () => {
       try {
-
         const response = await getPost(auctionNo);
-        setAuctionPost(response.data);
-        const seoulOffset = 9 * 60; // 서울 표준시 (GMT+9) 오프셋
-        const expiresDate = new Date();
-        expiresDate.setMinutes(expiresDate.getMinutes() + seoulOffset + 5 + 53); 
+        setAuctionPost(response.data);       
+        const time = 300; // 5분 (300초)
+        const expiration = new Date(Date.now() + time * 1000);
         if (response.data) {
           Cookies.set(`auctionPost${auctionNo}`, JSON.stringify(response.data), {
-            expires: expiresDate,
+            expires: expiration
           });
         }
         // 판매자의 등록 게시물 수 가져오기

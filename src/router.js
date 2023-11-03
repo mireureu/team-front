@@ -35,11 +35,7 @@ const router = createBrowserRouter([
       {
         path: "/qnapost",
         element: <QnAboard />,
-      },
-      // {
-      //   path: "/AskPage",
-      //   element: <AskPage />,
-      // },
+      },     
       {
         path: "/Post",
         element: <Post />,
