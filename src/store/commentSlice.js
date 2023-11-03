@@ -40,15 +40,12 @@ const deleteComment = createAsyncThunk(
   }
 );
 
-// 기존 리듀서라고 생각하면 됨!
-// initialState로 초기값 설정, reducers는 기존 액션 함수 정의하는 곳이라 생각!
-// extraReducers도 마찬가지! 다만 차이점은 extraReducers에 비동기 관련 정의를 해야 응답 받음
+
 const commentSlice = createSlice({
   name: "commentSlice",
   initialState: [],
   reducers: {},
   extraReducers: (builder) => {
-    // 만약 비동기 로딩이나 실패와 관련된 것도 추가하고 싶다면 -> pending, rejected 추가!
 
     // 댓글 조회 액션 성공시 상태 업데이트
     builder.addCase(viewComments.fulfilled, (state, action) => {

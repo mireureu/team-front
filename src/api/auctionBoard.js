@@ -24,25 +24,28 @@ export const getNewList = async () => {
     return await instance.get("public/auction/new");
 };
 
-
+// 카테고리 불러오기
 export const getCategories = async () => {
     return await instance.get("public/category");
 };
+
 
 export const getPostitem = async (id) => {
   return await instance.get(`public/auction/${id}`);
 };
 
+// 댓글 불러오기
 export const getComments = async (auctionNo) =>{
-  console.log("12345"+auctionNo);
   return await instance.get(`public/${auctionNo}/comment`);
 }
 
+
+// 댓글 한개 불러오기
 export const getreComments = async (commentNo, auctionNo) =>{
-  console.log("12345"+auctionNo+ "ddd" + commentNo);
   return await instance.get(`public/${commentNo}/${auctionNo}/recomment`);
 }
 
+// 게시글 리스트 불러오기
 export const getItem = async (page, category, sortOption) => {
   let url = `public/auction?page=${page}`;
   if (category !== null) {
@@ -54,6 +57,5 @@ export const getItem = async (page, category, sortOption) => {
   return await instance.get(url);
 };
 
-export const setListType = (num) => {
-  return num;
-}
+ 
+ 

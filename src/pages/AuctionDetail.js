@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import styled from "styled-components";
@@ -22,9 +22,9 @@ const StyledHeader = styled.header`
     height: 100%;
   }
   .image-container {
-  width: 250px; /* 원하는 가로 너비 설정 */
-  height: 250px; /* 원하는 세로 높이 설정 */
-  object-fit: cover; /* 이미지 비율 유지 및 이미지가 컨테이너에 맞게 잘릴 수 있도록 설정 */
+  width: 250px; 
+  height: 250px; 
+  object-fit: cover; 
 }
   .Pagination.Item.active {
     background-color: #007BFF;
@@ -47,7 +47,7 @@ const StyledHeader = styled.header`
   }
   .hover:hover {
     background-color: whitesmoke;
-    color: white;
+    color: black;
     transform: scale(1.05);
   }
   .hidden-hover {
@@ -85,7 +85,7 @@ const App = () => {
   const [page, setPage] = useState(1);
   const [category, setCategory] = useState(null);
   const [totalPages, setTotalPages] = useState(1);
-  const [sortOption, setSortOption] = useState("0"); // 정렬 옵션 기본값을 0으로 설정
+  const [sortOption, setSortOption] = useState("0"); 
   const save = localStorage.getItem("user");
   const navigate = useNavigate();
 
@@ -106,19 +106,16 @@ const App = () => {
 
   const handlePostitemClick = (auctionNo) => {
     if (save === null) {
-      console.log(auctionNo)
       alert('로그인 후 이용하세요');
       navigate("/login"); 
     } else {
       navigate(`/auctionpost/${auctionNo}`);
-      // console.log("초-비-상")
     }
   };
 
   const itemAPI = async (selectedCategory, selectedPage, sortOption) => {
     try {
       const result = await getItem(selectedPage, selectedCategory, sortOption);
-      console.log(result.data.content);
       setTotalPages(result.data.totalPages);
       setItems(result.data.content);
     } catch (error) {
@@ -229,7 +226,6 @@ const App = () => {
                 
                 <Nav.Link onClick={() => handlePostitemClick(item.auctionNo)}>
                   {" "}
-                  {/* 게시글 번호를 URL에 전달하는 Link 생성 */}
                   <Card.Img
                     variant="top"
                     src={"/upload/" + item.auctionImg.split(",", 1)}
@@ -238,15 +234,15 @@ const App = () => {
                   <Card.Body>
                     <Card.Title>{item.auctionTitle}</Card.Title>
                     <Card.Text></Card.Text>
-                    <p>입찰 : {item.auctionAttendNo}회</p>
+                    <p>입찰 : {item.currentNum}명</p>
                     <p>조회 : {item.auctionCheckNo}</p>
                     {item.auctionEndDate && (
                       <p>
-                        남은 시간:{" "}
+                        {" "}
                         {calculateTimeDifference(item.auctionEndDate).days}일{" "}
                         {calculateTimeDifference(item.auctionEndDate).hours}시간{" "}
-                        {calculateTimeDifference(item.auctionEndDate).minutes}분{" "}
-                        {calculateTimeDifference(item.auctionEndDate).seconds}초
+                        {calculateTimeDifference(item.auctionEndDate).minutes}분전
+                        {/* {calculateTimeDifference(item.auctionEndDate).seconds}초 */}
                       </p>
                     )}
                     <div className="hover-button">
@@ -256,20 +252,8 @@ const App = () => {
                         onMouseEnter={() => {
                         }}
                       >
-                        현재가 : {item.currentPrice}원
-          
-                      </div>
-                      <div
-                        className="show-hover"
-                        id={`show-hover-${index}`}
-                        style={{ display: "none" }}
-                        onMouseLeave={() => {
-                          // ...
-                        }}
-                      >
-                        현재가 : {item.currentPrice}원
-                      </div>
-                      <div className="small-text">클릭 시 경매 참가</div>
+                        </div>
+
                     </div>
                   </Card.Body>
                 </Nav.Link>
@@ -319,7 +303,6 @@ const App = () => {
       </Button>
     </div>
         <div className="current-page">
-          {/* 현재 페이지: {page}/{totalPages} */}
         </div>
       </Container>
     </StyledHeader>

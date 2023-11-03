@@ -193,3 +193,25 @@ export const updatePassword = async (data) => {
 }
 
 export default getUserInfo;
+
+export const updatePoint = async (data) =>{
+  const token = localStorage.getItem("token");
+  console.log(token);
+  console.log(data);    
+  return await instance.put("/user/point",data,{
+      headers: {
+          Authorization: `Bearer ${token}`,
+      },
+  });
+}
+
+  export const updatebuyerPoint = async (data) =>{
+    const token = localStorage.getItem("token");
+    return await instance.put("/user/buyerPoint",data,{
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+}
+
+

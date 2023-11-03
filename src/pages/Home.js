@@ -104,7 +104,7 @@ const News = styled.div`
     z-index: 1;
     cursor: pointer; /* 커서를 포인터로 변경 */
     /* background-image: none; */
-
+    
     .new-image {
       margin-top: 10px;
       margin-left: 10px;
@@ -133,6 +133,11 @@ const News = styled.div`
       h5 {
         background-color: rgba(217, 220, 253);
         border-radius: 10px;
+
+        max-width: 100%; /* 원하는 최대 너비 설정 (예: 200px) */
+        overflow: hidden; /* 넘치는 텍스트를 감출 수 있도록 설정 */
+        white-space: nowrap; /* 텍스트가 한 줄에 나타나도록 설정 */
+        text-overflow: ellipsis; /* 텍스트가 너비 제한을 넘어갈 때 생략 부호(...) 표시 */
       }
 
       p {
@@ -312,7 +317,7 @@ const Home = () => {
         minutes: 0,
         seconds: 0,
       };
-    }
+    } 
 
     const endDate = new Date(auctionEndDate);
     const currentDate = new Date();
@@ -385,6 +390,17 @@ const Home = () => {
     window.location.href = `/auctionpost/${auctionNo}`;
   };
 
+  const test = (test) => {
+    console.log("섹스");
+  }
+
+  // 쿠키로 최근 본 게시물 목록
+  function addToRecentPosts(postId) {
+    const recentPosts = JSON.parse(sessionStorage.getItem("recentPosts")) || [];
+    recentPosts.push(postId);
+    sessionStorage.setItem("recentPosts", JSON.stringify(recentPosts));
+  }
+
   return (
     <Main className="div-container">
       <Centers>
@@ -410,9 +426,22 @@ const Home = () => {
                 </div>
                 <div className="new-font">
                   <h5>{ands.auctionTitle}</h5>
-                  <p className={((calculateTimeDifference(ands.auctionEndDate).hours < 8) && (calculateTimeDifference(ands.auctionEndDate).days === 0)) || (calculateTimeDifference(ands.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
-                    {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (`남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`) : calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (`남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`) : ("경매 마감")}
-                  </p>
+                  {calculateTimeDifference(ands.auctionEndDate).hours >= 0 ? (
+                    <p className={((calculateTimeDifference(ands.auctionEndDate).hours < 8) && (calculateTimeDifference(ands.auctionEndDate).days === 0)) || (calculateTimeDifference(ands.auctionEndDate).hours < 0) ? "p-time-short" : ""}>
+                      {calculateTimeDifference(ands.auctionEndDate).days > 0 ? (
+                        `남은 시간: ${calculateTimeDifference(ands.auctionEndDate).days}일`
+                      ) : (
+                        (calculateTimeDifference(ands.auctionEndDate).seconds <= 0) ? (
+                          <span>
+                            {test()}
+                            경매 마감
+                          </span>
+                        ) : (
+                          `남은 시간: ${(calculateTimeDifference(ands.auctionEndDate).hours < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).hours}:${(calculateTimeDifference(ands.auctionEndDate).minutes < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).minutes}:${(calculateTimeDifference(ands.auctionEndDate).seconds < 10 ? '0' : '')}${calculateTimeDifference(ands.auctionEndDate).seconds}`
+                        )
+                      )}
+                    </p>
+                  ) : null}
                   <p>
                     현재가 : <span>{ands.currentPrice}</span>원
                   </p>

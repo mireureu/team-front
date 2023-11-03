@@ -14,7 +14,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-import { setListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
 
 
