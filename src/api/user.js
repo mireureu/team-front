@@ -1,25 +1,24 @@
 import axios from "axios";
-// const token = localStorage.getItem("token");
 const instance = axios.create({
   baseURL: "http://localhost:8080/api",
 });
 
+// 로그인
 export const login = async (data) => {
   return await instance.post("/public/signin", data);
 };
-export const userInfo = async(token) =>{
-  console.log(token);
+
+// token에 해당하는 사용자 불러오기 API
+export const userInfo = async(token) =>{  
   return await instance.get("/user/show",{
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 };
-
+// 사용자 정보 업데이트 API
 export const updateUser = async (data) => {
-  const token = localStorage.getItem("token");
-  console.log(token);
-  console.log(data);
+  const token = localStorage.getItem("token");    
   try {
     return await instance.put("/user/updateuser", data, {
       headers: {
@@ -32,17 +31,7 @@ export const updateUser = async (data) => {
   }
 };
 
-export const getUserData = async (id) => {
-  try {
-    const response = await instance.get(`/user/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error("Error fetching user data: " + error);
-    throw error;
-  }
-};
-
-
+// 비밀번호 맞는지 확인 API
 export const passwordCheck = async (password) => {
   const token = localStorage.getItem("token");
   console.log(password);
@@ -53,42 +42,27 @@ export const passwordCheck = async (password) => {
   });
 }
 
-export const addUser = async (id) => {
-  try {
-    // 사용자 정보 가져오기
-    const token = localStorage.getItem("token");
 
-    // 사용자 정보를 요청에 포함하여 백엔드에 GET 요청 보내기
-    const response = await instance.get(`/users/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    return response.data; // 백엔드에서 반환한 JSON 데이터를 반환
-  } catch (error) {
-    // 에러 처리
-    console.error('에러 발생:', error);
-    throw error;
-  }
-}
-
-const getUserInfo = () => {
-  const storedToken = localStorage.getItem("token");
-  const storedUser = localStorage.getItem("user");
-  let userObject = null;
-
-  if (storedToken && storedUser) {
-    userObject = JSON.parse(storedUser);
-  }
-
-  return { storedToken, userObject };
+// 회원가입
+export const addUser = async (data) => {
+  return await instance.post("/public/create", data);
 };
 
+// 아이디 중복 확인
+export const idDuplicate = async (data) => {
+  return await instance.post("/public/idDuplicate", data);
+}
+// 닉네임 중복 확인
+export const nickDuplicate = async (data) =>{
+  return await instance.post("/public/nickDuplicate",data);
+}
+
+// 비밀번호 잃어버렸을때 임시 비밀번호로 업데이트
 export const updatePassword = async (data) => {
   return await instance.put("/public/updatePassword", data);
 }
 
+// 사용자가 비밀번호 변경
 export const changePassowrd = async (password) =>{
   const token = localStorage.getItem("token");
   return await instance.put("/user/pwdUpdate",password,{
@@ -100,5 +74,3 @@ export const changePassowrd = async (password) =>{
 
 
 
-
-export default getUserInfo;

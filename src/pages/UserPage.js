@@ -1,9 +1,8 @@
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styled from "styled-components";
 import { BsPencilSquare } from "react-icons/bs";
 import { FaMapLocationDot } from "react-icons/fa6";
-import { updateUser,  pwdChack } from "../api/user";
+import { updateUser } from "../api/user";
 import DaumPostcode from '../components/DaumPostcode';
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";

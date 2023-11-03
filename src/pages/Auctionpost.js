@@ -18,7 +18,7 @@ function convertToSeoulTime(utcDateString) {
   return seoulTime;
 }
 
-const Auctionpost = () => {
+const Auctionpost = () => {  
   const dispatch = useDispatch();
   const [auctionPost, setAuctionPost] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -117,8 +117,7 @@ const Auctionpost = () => {
     const fetchAuctionPost = async () => {
       try {
         const response = await getPost(auctionNo);
-        setAuctionPost(response.data);
-
+        setAuctionPost(response.data);        
         // 판매자의 등록 게시물 수 가져오기
         const sellerId = response.data?.memberId?.id;
         if (sellerId) {
@@ -260,6 +259,7 @@ const Auctionpost = () => {
   };
 
 
+
   return (
     <Container>
       {auctionPost ? (
@@ -278,6 +278,7 @@ const Auctionpost = () => {
                     position: "relative",
                   }}
                 >
+                  
                   <img
                     src={
                       "/upload/" +

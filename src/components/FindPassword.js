@@ -1,6 +1,7 @@
 import emailjs from 'emailjs-com';
 import { useState } from 'react';
 import { updatePassword } from '../api/user';
+
 const temporaryPassword = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
