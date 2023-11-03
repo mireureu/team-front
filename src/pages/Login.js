@@ -17,7 +17,7 @@ import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../css/modal.css";
-import FindPassword from "../components/FindPassword";
+import FindPassword from "../components/findPassword";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';

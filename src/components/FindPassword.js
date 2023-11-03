@@ -28,10 +28,11 @@ const FindPassword = ({ email, birthday, id }) => {
 
     const sendVerificationEmail = () => {
         const templateParams = {
-            to_email: { email },
+            to_email:  email ,
             from_name: "중번당",
             message: password,
         };
+        console.log(email);
         emailjs
             .send(
                 'Password-Service', // 서비스 ID
