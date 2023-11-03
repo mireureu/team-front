@@ -353,11 +353,7 @@ const Home = () => {
     // 페이지 이동을 위해 window.location.href를 사용
     window.location.href = `/auctionpost/${auctionNo}`;
   };
-
-  const test = (test) => {
-    console.log("섹스");
-  }
-
+  
   // 쿠키로 최근 본 게시물 목록
   function addToRecentPosts(postId) {
     const recentPosts = JSON.parse(sessionStorage.getItem("recentPosts")) || [];
@@ -437,9 +433,9 @@ const Home = () => {
               <p className="values">
                 <span>{selectedItem.currentPrice}</span>원
               </p>
-              <h4>입찰 참여 인원</h4>
+              <h4>입찰 횟수</h4>
               <p className="attend">
-                <span>{selectedItem.auctionAttendNo}</span>
+                <span>{selectedItem.currentNum}</span>                
               </p>
             </div>
             <div className="itemLower-left">

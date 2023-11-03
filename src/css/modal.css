@@ -12,8 +12,32 @@
     z-index: 4;
     border: 1px solid black;
     border-radius: 20px;
+
+  }
+
+  .id{
+
+  }
+
+  .registrationBox{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .label{
+    margin-left: 100px;
   }
   
+  .registrationNumberFirst{
+    
+  }
+  
+  .registrationNumberBack {
+    
+  }
+
+
   .Modal .top h2 {
     display: flex;
     justify-content: center;

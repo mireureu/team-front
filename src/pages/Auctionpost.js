@@ -13,7 +13,7 @@ import { Modal } from "react-bootstrap";
 import { Margin } from "@mui/icons-material";
 import { userSave } from "../store/userSlice";
 import { userInfo, updatebuyerPoint } from "../api/user";
-
+import Cookies from "js-cookie";
 
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
@@ -216,6 +216,13 @@ const Auctionpost = () => {
 
           setSellerAuctionCount(sellerCountResponse.data);
         }
+        const time = 300; // 5분 (300초)
+        const expiration = new Date(Date.now() + time * 1000);
+        if (response.data) {
+          Cookies.set(`auctionPost${auctionNo}`, JSON.stringify(response.data), {
+            expires: expiration
+          });
+        }
       } catch (error) {
         console.error("게시글 정보를 불러오는 중 오류 발생:", error);
       }
@@ -314,14 +321,9 @@ const Auctionpost = () => {
       updatecategoryNo(auctionPost.auctionNo);
       navigate("/auctiondetail");
     } else {
-
-
-      alert("돈없잖아")
+      alert("돈 없잖아")
     }
   };
-
-
-
 
   // 입찰 성공 시 팝업
   const handlePriceChangeSuccess = () => {
@@ -348,7 +350,7 @@ const Auctionpost = () => {
       console.error("입찰 변경 실패:", error);
     }
   };
-  
+
   // 게시물 삭제
   const handleDeletePost = async () => {
     if (window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
@@ -447,8 +449,7 @@ const Auctionpost = () => {
                 <Col xs={12} md={6} className="border-right">
                   <p>경매 시작가: {auctionPost.auctionSMoney}원</p>
                   <p>최소 입찰가: {auctionPost.auctionEMoney}원</p>
-                  <p>총 입찰 횟수: {auctionPost.currentNum}</p>
-                  <p>입찰 인원: {auctionPost.auctionAttendNo}명</p>
+                  <p>총 입찰 횟수: {auctionPost.currentNum}</p>                  
                   <p>현재 가격: {auctionPost.currentPrice}원</p>
                 </Col>
                 <Col xs={12} md={6}>
