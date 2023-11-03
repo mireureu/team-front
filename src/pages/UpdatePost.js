@@ -17,6 +17,7 @@ function convertToSeoulTime(date) {
 const UpdatePost = () => {
   const auctionData = JSON.parse(localStorage.getItem("auction"));
   const [categories, setCategories] = useState([]);
+  const [boolean, setBoolean] = useState(false);
   const [post, setPost] = useState({
     title: auctionData.auctionTitle,
     itemName: auctionData.itemName,
@@ -58,7 +59,9 @@ const UpdatePost = () => {
   // 게시물 수정 버튼 클릭 시 호출되는 함수
   const onClick = async () => {
     console.log(images);
+    console.log(boolean);
     const formData = new FormData();
+    formData.append("duple", boolean);
     formData.append("title", title);
     formData.append("itemName", itemName);
     formData.append("desc", desc);
@@ -118,7 +121,6 @@ const UpdatePost = () => {
 
     const newImages = images.slice();
     newImages.splice(index, 1);
-
     setPost({
       ...post,
       images: newImages,
@@ -253,9 +255,22 @@ const UpdatePost = () => {
               }
               style={{ maxWidth: "100px", maxHeight: "100px" }}
             />
-            <button onClick={() => removeImage(index)} type="button">
+            <button
+              onClick={() => {
+                removeImage(index);
+                setBoolean(true);
+              }}
+              type="button"
+            >
               삭제
             </button>
+
+
+
+
+
+
+
           </div>
         ))}
         <Button

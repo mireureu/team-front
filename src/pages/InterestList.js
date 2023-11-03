@@ -225,11 +225,6 @@ const InterestList = () => {
         setCheckedAutionNos(andList.filter((_, i) => newCheckItems[i]).map((item) => item.interestNo));
     };
 
-
-    const deleteCheck = () => {
-        
-    }
-
     const allDeleteButton = async () => {
         const formData = new FormData();
         formData.append("list", JSON.stringify(checkedAuctionNos));

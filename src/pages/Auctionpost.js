@@ -14,6 +14,7 @@ import { userInfo, updatebuyerPoint, deleteCheck, addMyInterest, interestDuplica
 import Cookies from "js-cookie";
 import { asyncAuctionInfo } from "../store/auctionSlice";
 
+
 function convertToSeoulTime(utcDateString) {
   const utcDate = new Date(utcDateString);
   const seoulOffset = 9 * 60;
@@ -26,6 +27,20 @@ const Main = styled.div`
 
   .container {
     width: 1300px;
+  }
+
+  .checkButton {
+    width: 150px;
+    height: 40px;
+  }
+
+  .checkOn {
+    background-color: red;
+    color: wheat;
+
+  }
+  .checkOff {
+
   }
 `;
 
