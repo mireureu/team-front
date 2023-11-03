@@ -57,5 +57,6 @@ export const getItem = async (page, category, sortOption) => {
   return await instance.get(url);
 };
 
- 
- 
+export const setListType = (num) => {
+  return num;
+}
