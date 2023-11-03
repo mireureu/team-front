@@ -335,6 +335,7 @@ const Home = () => {
   useEffect(() => {
     andListAPI();
     startTimer();
+    window.scrollTo(0, 0);
   }, []);
 
   // 미리보기 창 열기
@@ -353,11 +354,7 @@ const Home = () => {
     // 페이지 이동을 위해 window.location.href를 사용
     window.location.href = `/auctionpost/${auctionNo}`;
   };
-
-  const test = (test) => {
-    console.log("섹스");
-  }
-
+  
   // 쿠키로 최근 본 게시물 목록
   function addToRecentPosts(postId) {
     const recentPosts = JSON.parse(sessionStorage.getItem("recentPosts")) || [];

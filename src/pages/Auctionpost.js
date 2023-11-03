@@ -354,6 +354,10 @@ const Auctionpost = () => {
   const handleDeletePost = async () => {
     if (window.confirm("정말로 이 게시물을 삭제하시겠습니까?")) {
       try {
+
+        if (isInterest) {
+          await interestSet(auctionNo);
+        }
         const deletedAuction = await deletePost(auctionNo);
         if (deletedAuction) {
           alert("게시물이 삭제되었습니다.");
