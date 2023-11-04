@@ -180,7 +180,7 @@ export const updatePoint = async (data) =>{
 }
 
   export const updatebuyerPoint = async (data) =>{
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");    
     return await instance.put("/user/buyerPoint",data,{
         headers: {
             Authorization: `Bearer ${token}`,

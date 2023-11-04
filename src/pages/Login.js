@@ -248,9 +248,62 @@ const Login = () => {
                     </div>
                     <div className="checkButton">
                       {email && registrationNumberFront.length === 6 && registrationNumberBack.length === 7 && id && (
-                          <FindPassword email={email} birthday={`${registrationNumberFront}${registrationNumberBack}`} id={id} />
-                        )}
+                        <FindPassword email={email} birthday={`${registrationNumberFront}${registrationNumberBack}`} id={id} />
+                      )}
                     </div>
+                    <div>
+                      <Form.Group as={Row} className="mb-3">
+                        <Col sm>
+                          <Form.Control 
+                          className="id"
+                          type="text" placeholder="아이디" onBlur={(e) => setId(e.target.value)}/>
+                          
+                        </Col>
+
+                      </Form.Group>
+                    </div>
+                    <div>
+                      <Form.Group as={Row} className="mb-3">
+                        
+                        <Col sm className="">
+                          <div>
+                            <Form.Label className="label">주민번호</Form.Label>
+                          </div>
+                          <div>
+                            <Row className="registrationBox">
+                              <Col sm={5}>
+                                <Form.Control
+                                  id="registrationNumberFirst"
+                                  type="text"
+                                  placeholder="앞자리"
+                                  onBlur={(e) => {
+                                    handleFrontChange(e);
+                                  }}
+                                  maxLength={6}
+                                />
+                              </Col>
+
+                              <Col sm={5}>
+                                <Form.Control
+                                  id="registrationNumberBack"
+                                  type="password"
+                                  placeholder="뒷자리"
+                                  onBlur={(e) => {
+                                    handleBackChange(e);
+                                  }}
+                                  maxLength={7}
+                                />
+                              </Col>
+                            </Row>
+                          </div>
+                          <div>
+                            {!registrationNumberValid && (
+                            <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>)}
+                          </div>
+                        </Col>
+                      </Form.Group>
+                    </div>
+                    
                   </div>
                 )}
                 <Link style={{ textDecoration: "none", cursor: "pointer", float: "right", marginRight:"20px"}} onClick={openModal} >비밀번호를 잊으셨나요?</Link>

@@ -438,9 +438,9 @@ const Home = () => {
               <p className="values">
                 <span>{selectedItem.currentPrice}</span>원
               </p>
-              <h4>입찰 참여 인원</h4>
+              <h4>입찰 횟수</h4>
               <p className="attend">
-                <span>{selectedItem.auctionAttendNo}</span>
+                <span>{selectedItem.currentNum}</span>                
               </p>
             </div>
             <div className="itemLower-left">
