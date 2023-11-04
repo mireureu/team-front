@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { getMyInterestList, deleteCheckList } from "../api/user";
 
-
 const Main = styled.div`
     position: relative;
 
@@ -29,14 +28,16 @@ const Container = styled.div`
 
 const MyPage = styled.div`
   max-width: 1295px;
-  margin: 0 auto;
-  height: 1200px;
+    margin: 0 auto;
+    height: 1200px;
 
     .allMenu{
+        display: flex;
+        align-items: center;
         margin: 0 auto;
         max-width: 1200px;
-        border: 1px solid black;
-        border-radius: 15px;
+        border: none;
+        border-radius: 5px;
         background-color: skyblue;
         margin-bottom: 20px;
     
@@ -56,6 +57,11 @@ const MyPage = styled.div`
             height: 20px;
             margin-right: 10px;
         }
+    }
+    
+    .deleteButton {
+        border-radius: 10px;
+        background-color: aquamarine;
     }
   }
 
@@ -77,8 +83,7 @@ const MyPage = styled.div`
             border-radius: 5%;
             transition: 0.5s;
             position: relative;
-            cursor: pointer; /* 커서를 포인터로 변경 */
-            /* background-image: none; */
+            cursor: pointer;
 
             .new-image {
                 margin-top: 30px;
@@ -108,10 +113,10 @@ const MyPage = styled.div`
                 h5 {
                     background-color: rgba(217, 220, 253);
                     border-radius: 10px;
-                    max-width: 100%; /* 원하는 최대 너비 설정 (예: 200px) */
-                    overflow: hidden; /* 넘치는 텍스트를 감출 수 있도록 설정 */
-                    white-space: nowrap; /* 텍스트가 한 줄에 나타나도록 설정 */
-                    text-overflow: ellipsis; /* 텍스트가 너비 제한을 넘어갈 때 생략 부호(...) 표시 */
+                    max-width: 100%;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
 
                 p {
@@ -147,18 +152,16 @@ const InterestList = () => {
     const myListAPI = async () => {
         try {
             const result = await getMyInterestList();
-            console.log(result);
             setAndList(result);
             const initialCheckStates = new Array(result.length).fill(false);
             setCheckItems(initialCheckStates); // Set initial check states
         } catch (error) {
-            // Error handling
             console.error('에러 발생:', error);
         }
     };
 
 
-    // 남은 시간을 1초마다 갱신
+    // 경매 남은 시간을 1초마다 갱신
     const calculateTimeDifference = (auctionEndDate) => {
         if (!auctionEndDate) {
             return {
@@ -206,32 +209,34 @@ const InterestList = () => {
     };
     
 
-    // 해당 페이지로 이동
+    // auctionNo를 기준으로 해당하는 상세페이지로 이동
     const openPage = (auctionNo) => {
-        // 페이지 이동을 위해 window.location.href를 사용
         window.location.href = `/auctionpost/${auctionNo}`;
     };
 
-    // 
-
+    // 체크 박스 전체 on/off 연동 설정
     const handleCheckboxChange = (index) => {
 
         const newCheckItems = [...checkItems];
         newCheckItems[index] = !newCheckItems[index];
-        console.log(newCheckItems);
-        console.log(index);
         setCheckItems(newCheckItems);
 
         setCheckedAutionNos(andList.filter((_, i) => newCheckItems[i]).map((item) => item.interestNo));
     };
 
-    const allDeleteButton = async () => {
-        const formData = new FormData();
-        formData.append("list", JSON.stringify(checkedAuctionNos));
-        console.log(checkedAuctionNos);
-        console.log(formData);
-        await deleteCheckList(formData);
-    }
+    const allDeleteButton = () => {
+        if (checkedAuctionNos.length === 0) {
+            return;
+        }
+    
+        deleteCheckList(checkedAuctionNos.map(auctionNo => parseInt(auctionNo)));
+        onDeleteCheck();
+    };
+
+    const onDeleteCheck = () => {
+        alert("관심등록이 해제되었습니다");
+        window.location.replace("/InterestList");
+    };
 
     useEffect(() => {
         myListAPI();
@@ -240,30 +245,37 @@ const InterestList = () => {
 
 
     return (
-        <Main>
-            <MyPage>
+        <Main className="main">
+            <MyPage className="myPage">
                 <div>
                     <h2 style={{ marginLeft: "60px", margin: "40px" }}>관심등록 List</h2>
                 </div>
                 <div className="allMenu">
-                    <label className="checks">
+                    <div>
+                        <label className="checks">
                         <input 
                             className="checkBox" 
                             type="checkbox" 
                             onChange={(e) => {
-                                setCheckItems(new Array(andList.length).fill(e.target.checked));
+                                // andList가 비어 있을 때는 체크박스를 체크 해제
+                                if (andList.length === 0) {
+                                    e.target.checked = false;
+                                } else {
+                                    setCheckItems(new Array(andList.length).fill(e.target.checked));
+                                }
                             }}
-                            checked={checkItems.every((isChecked) => isChecked)}
+                            checked={checkItems.length > 0 && checkItems.every((isChecked) => isChecked)}
                         />
-                         전체 선택
-                    </label>
+                            전체 선택
+                        </label>
+                    </div>
                     <div>
-                        <button onClick={allDeleteButton}>
+                        <button className="deleteButton" onClick={allDeleteButton}>
                             등록 해제
                         </button>
                     </div>
                 </div>
-                <Container>
+                <Container className="container">
                     <div className="container">
                         {andList.map((myList, index) => (
                             <div 

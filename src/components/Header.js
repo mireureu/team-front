@@ -114,10 +114,6 @@ const Header = () => {
     movePage("/register");
   };
 
-  const userPage = () => {
-    movePage("/userPage");
-  };
-
   const handleTabSelect = (eventKey) => {
     if (eventKey === "home") {
       handleShow();
@@ -125,9 +121,9 @@ const Header = () => {
     }
   };
 
+  // 클릭되는 메뉴버튼에 따라 전송하는 데이터 변경
   const handleTabClick = (num) => {
     setListType(num);
-    console.log("메인 카테고리 = " + num);
   };
 
   return (

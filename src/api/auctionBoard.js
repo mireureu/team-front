@@ -57,5 +57,6 @@ export const getItem = async (page, category, sortOption) => {
 };
 
 export const setListType = (num) => {
+  console.log(num);
   return num;
 }

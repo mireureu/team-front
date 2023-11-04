@@ -10,8 +10,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { FaRegUser } from "react-icons/fa";
+import { AiFillLock, AiOutlineClose } from "react-icons/ai";
 import { styled } from "@mui/material/styles";
-import { AiFillLock } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { asyncLogin } from "../store/userSlice";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +21,8 @@ import FindPassword from "../components/FindPassword";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
+
+
 
 const defaultTheme = createTheme();
 const Login = () => {
@@ -176,72 +178,83 @@ const Login = () => {
 
                 {isModalOpen && (
                   <div className="Modal">
-                    <p>모든 값을 입력하시면 버튼이 화면에 보입니다~</p>
+                    <button className='close' onClick={closeModal}><AiOutlineClose/></button>
+                    <div className="top-value">
+                      <h2>비밀번호 재설정</h2>
+                    </div>
                     <div className="top">
-                      <h2>이메일을 입력해주세요</h2>
-                      <button className='close' onClick={closeModal}>X</button>
+                      <div className="mb-3">
+                        <Col sm>
+                          <div>
+                            <Form.Label className="label">아이디 확인</Form.Label>
+                          </div>
+                          <div className="idBox">
+                            <input 
+                            className="ids"
+                            type="text" placeholder="아이디" onBlur={(e) => setId(e.target.value)}/>
+                          </div>
+                        </Col>
+                      </div>
+                    </div>
+                    <div className="middle">
+                      <div className="mb-3">
+                          <div>
+                            <Form.Label className="label">주민등록번호 확인</Form.Label>
+                          </div>
+                          <div>
+                            <div className="registrationBox">
+                              <Col sm={5}>
+                                <input
+                                  id="registrationNumberFirst"
+                                  type="text"
+                                  placeholder="앞자리"
+                                  onBlur={(e) => {
+                                    handleFrontChange(e);
+                                  }}
+                                  maxLength={6}
+                                />
+                              </Col>
+                              <Col sm={5}>
+                                <input
+                                  id="registrationNumberBack"
+                                  type="password"
+                                  placeholder="뒷자리"
+                                  onBlur={(e) => {
+                                    handleBackChange(e);
+                                  }}
+                                  maxLength={7}
+                                />
+                              </Col>
+                            </div>
+                          </div>
+                          <div>
+                            {!registrationNumberValid && (
+                            <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>)}
+                          </div>
+                      </div>
                     </div>
                     <div className="bottom">
-                      <input
-                        type="text"
-                        placeholder="이메일을 입력해주세요"
-                        onBlur={(e) => setEmail(e.target.value)}
-                      />                      
+                      <div>
+                        <Form.Label className="label">이메일 확인</Form.Label>
+                      </div>
+                      <div>
+                        <input
+                          className="emails"
+                          type="text"
+                          placeholder="이메일을 입력해주세요"
+                          onBlur={(e) => setEmail(e.target.value)}
+                        />                      
+                      </div>
+                    </div>
+                    <div className="checkButton">
                       {email && registrationNumberFront.length === 6 && registrationNumberBack.length === 7 && id && (
-                        <FindPassword email={email} birthday={`${registrationNumberFront}${registrationNumberBack}`} id={id} />
-                      )}
-                    </div>
-
-                    <div>
-                      <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                          <Form.Label>주민번호</Form.Label>
-                          <Row>
-                            <Col sm={5}>
-                              <Form.Control
-                                type="text"
-                                placeholder="앞자리"
-                                onBlur={(e) => {
-                                  handleFrontChange(e);
-                                }}
-                                style={{ width: "500px" }}
-                                maxLength={6}
-                              />
-                            </Col>
-
-                            <Col sm={5}>
-                              <Form.Control
-                                id="registrationNumberBack"
-                                type="password"
-                                placeholder="뒷자리"
-                                onBlur={(e) => {
-                                  handleBackChange(e);
-                                }}
-                                style={{ width: "500px" }}
-                                maxLength={7}
-                              />
-                            </Col>
-                          </Row>
-                          {!registrationNumberValid && (
-                            <p className="text-danger">올바르지 않은 주민등록 번호입니다.</p>
-                          )}
-                        </Col>
-                      </Form.Group>
-                    </div>
-                    <div>
-                      <Form.Group as={Row} className="mb-3">
-                        <Col sm>
-                          <Form.Control type="text" placeholder="아이디" onBlur={(e) => setId(e.target.value)} style={{ width: inputWidth }} />
-                          
-                        </Col>
-
-                      </Form.Group>
+                          <FindPassword email={email} birthday={`${registrationNumberFront}${registrationNumberBack}`} id={id} />
+                        )}
                     </div>
                   </div>
                 )}
-                <Link style={{ textDecoration: "none" }} onClick={openModal} >비밀번호를 잊어버리셨나요?</Link>
+                <Link style={{ textDecoration: "none", cursor: "pointer", float: "right", marginRight:"20px"}} onClick={openModal} >비밀번호를 잊으셨나요?</Link>
               </Grid>
-
             </Box>
           </Box>
         </Grid>

@@ -1,6 +1,25 @@
 import emailjs from 'emailjs-com';
 import { useState } from 'react';
 import { updatePassword } from '../api/user';
+import styled from "styled-components";
+import Button from 'react-bootstrap/Button';
+
+const Buttons = styled.div`
+    .buttons {
+        background: #3498db;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px; /* 곡면을 만들어주는 속성 */
+        box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
+        transition: transform 0.2s;
+    }
+
+    .buttons:hover {
+        transform: scale(1.1); /* 마우스 호버 시 버튼 확대 효과 */
+    }
+`;
+
 const temporaryPassword = () => {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
@@ -50,12 +69,16 @@ const FindPassword = ({ email, birthday, id }) => {
     return (
         <div>
             {isEmailSent ? (
-                <p>
-                    인증 이메일이 성공적으로 발송되었습니다. 이메일을
-                    확인해주세요!
-                </p>
+                <div>
+                    <p style={{whiteSpace: "pre"}}>
+                        인증 이메일이 성공적으로 발송되었습니다.
+                        이메일을 확인해주세요!
+                    </p>
+                </div>
             ) : (
-                <button onClick={handleVerification}>인증</button>
+                <Buttons>
+                    <Button className='buttons' onClick={handleVerification}>인증</Button>
+                </Buttons>
             )}
         </div>
     );

@@ -109,11 +109,16 @@ const PasswordCheckModal = styled.div`
   z-index: 4;
   border: 3px solid blue;
   border-radius: 20px;
+  text-align: center;
+
+  .passwordInput {
+    margin-top: 50px;
+  }
 `;
 
 const PasswordChangeModal = styled.div`
   display: grid;
-  grid-template-rows: 1fr 2fr 2fr;
+  grid-template-rows: 1fr 2fr 1fr;
 
   position: fixed;
   top: 50%;
@@ -126,6 +131,7 @@ const PasswordChangeModal = styled.div`
   z-index: 4;
   border: 3px solid blue;
   border-radius: 20px;
+  text-align: center;
 `;
 
 const UserPage = () => {
@@ -606,12 +612,11 @@ const UserPage = () => {
 
       {isModal1Open && (
         <PasswordCheckModal>
-          <form>
             <div>
               <h1>현재 비밀번호 확인</h1>
             </div>
 
-            <div>
+            <div className="passwordInput">
               <input required type="password" onChange={(e)=>{setPassword(e.target.value)}}/>              
             </div>
 
@@ -620,7 +625,6 @@ const UserPage = () => {
               
               <button onClick={closeModal}>취소</button>              
             </div>
-          </form>
         </PasswordCheckModal>
       )}
     

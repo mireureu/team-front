@@ -93,23 +93,16 @@ export const deleteCheck = async (auctionNo) => {
 
 
 // 관심 등록한 게시글 List 삭제
-export const deleteCheckList = async (formData) => {
-  try {
-    const token = localStorage.getItem("token");
+export const deleteCheckList = async (list) => {
 
-    console.log(formData);
-    await instance.delete(`/user/checkDeleteList`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      data: formData, // 이미 FormData 객체를 전달
-    });
+  const token = localStorage.getItem("token");
 
-  } catch (error) {
-    // 에러 처리
-    console.error('에러 발생:', error);
-    throw error;
-  }
+  await instance.delete(`/user/checkDeleteList?list=${list.join(',')}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
 };
 
 

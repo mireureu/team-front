@@ -29,9 +29,10 @@ const Main = styled.div`
     width: 1300px;
   }
 
-  .checkButton {
+  .interestCheckButton {
     width: 150px;
     height: 40px;
+    border-radius: 20px;
   }
 
   .checkOn {
@@ -440,7 +441,7 @@ const Auctionpost = () => {
         <Card>
           <Card.Body>
             <button 
-                className={ `checkButton ${isInterest ? 'checkOn' : 'checkOff'}`} 
+                className={ `interestCheckButton ${isInterest ? 'checkOn' : 'checkOff'}`} 
                 onClick={() => {  interestToggle(); interestSet(auctionPost.auctionNo);
               }}>
               {isInterest ? '관심등록해제' : '관심등록'}            

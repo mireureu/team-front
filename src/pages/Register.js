@@ -66,6 +66,14 @@ const Container = styled.div`
                 display: flex;
             }
 
+            &.nickDiv {
+                display: flex;
+                align-items: center;
+                .nickCheckButton {
+                    margin-left: 20px;
+                }
+            }
+
             &.registerButtonDiv {
                 display: grid;
                 justify-content: end;
@@ -304,7 +312,9 @@ const Register = () => {
                             <label className='lables'>닉네임</label>
                             <div className="divs nickDiv">
                                 <input className='inputs nick' type="text" placeholder="닉네임" onChange={(e) => setNickName(e.target.value)} />
-                                <Button disabled={!nickName} onClick={nickDuplicateAPI}>닉네임 중복확인</Button>
+                                <div className='nickCheckButton'>
+                                    <Button disabled={!nickName} onClick={nickDuplicateAPI}>닉네임 중복확인</Button>
+                                </div>
                             </div>
                         </div>
                     </div>

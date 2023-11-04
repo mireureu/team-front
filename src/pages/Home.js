@@ -5,7 +5,8 @@ import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
 import { setListType } from "../api/auctionBoard"; // 메인 카테고리
-import hot from "../imgs/hot.png";
+import bestImg from "../imgs/best.png";
+import newImg from "../imgs/new.png";
 import { recentView } from "../api/addpost";
 
 const Main = styled.div`
@@ -17,6 +18,12 @@ const Centers = styled.div`
   margin: 0 auto;
   height: 1200px;
   gap: 20px;
+
+   .bannerCase {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   }
 `;
 
 const Banner = styled.div`
@@ -24,7 +31,7 @@ const Banner = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 184, 90);
+  background-color: rgba(189, 189, 189);
   width: 100%;
   margin-bottom: 20px;  
   img {
@@ -98,10 +105,10 @@ const News = styled.div`
         background-color: rgba(217, 220, 253);
         border-radius: 10px;
 
-        max-width: 100%; /* 원하는 최대 너비 설정 (예: 200px) */
-        overflow: hidden; /* 넘치는 텍스트를 감출 수 있도록 설정 */
-        white-space: nowrap; /* 텍스트가 한 줄에 나타나도록 설정 */
-        text-overflow: ellipsis; /* 텍스트가 너비 제한을 넘어갈 때 생략 부호(...) 표시 */
+        max-width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
       }
 
       p {
@@ -219,12 +226,12 @@ const Modal = styled.div`
       color: #fff;
       border: none;
       padding: 10px 20px;
-      border-radius: 10px; /* 곡면을 만들어주는 속성 */
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-      transition: transform 0.2s; /* 마우스 호버 시 애니메이션 */
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
     }
     .move-page:hover {
-      transform: scale(1.1); /* 마우스 호버 시 버튼 확대 효과 */
+      transform: scale(1.1);
     }
   }
 
@@ -242,13 +249,13 @@ const Modal = styled.div`
       color: #fff;
       border: none;
       padding: 10px 20px;
-      border-radius: 10px; /* 곡면을 만들어주는 속성 */
-      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* 그림자 효과 */
-      transition: transform 0.2s; /* 마우스 호버 시 애니메이션 */
+      border-radius: 10px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s;
     }
 
     .close-button:hover {
-      transform: scale(1.1); /* 마우스 호버 시 버튼 확대 효과 */
+      transform: scale(1.1);
     }
   }
 
@@ -267,7 +274,7 @@ const Home = () => {
 
   const [andList, setAndList] = useState([]);
 
-  const [recentList, setRecentList] = useState([]);
+  const [isBannerImg, setBannerImg] = useState(bestImg);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
   
@@ -299,6 +306,7 @@ const Home = () => {
     };
   };
 
+  // 경매 종료까지 남은 시간 실시간 업데이트
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트
@@ -319,17 +327,22 @@ const Home = () => {
     };
 };
 
+  // Header 메뉴 선택에 따라 출력되는 이미지와 게시글 변경
   const andListAPI = async () => {
     let clicks = setListType(1);
     let result = await getHotList();
+    let setImg = bestImg;
 
     if (clicks === 1) {
       result = await getHotList();
+      setImg = bestImg;
     } else if (clicks === 2) {
       result = await getNewList();
+      setImg = newImg;
     }
-    console.log(result);
+
     setAndList(result.data);
+    setBannerImg(setImg);
   };
 
   useEffect(() => {
@@ -349,28 +362,19 @@ const Home = () => {
     setIsModalOpen(false);
   };
 
-  // 해당 페이지로 이동
+  // 해당 게시글 페이지로 이동
   const openPage = (auctionNo) => {
-    // 페이지 이동을 위해 window.location.href를 사용
     window.location.href = `/auctionpost/${auctionNo}`;
   };
-  
-  // 쿠키로 최근 본 게시물 목록
-  function addToRecentPosts(postId) {
-    const recentPosts = JSON.parse(sessionStorage.getItem("recentPosts")) || [];
-    recentPosts.push(postId);
-    sessionStorage.setItem("recentPosts", JSON.stringify(recentPosts));
-  }
 
   return (
     <Main className="div-container">
       <Centers>
-        <Banner>
-          {/* <h1>[ 주간 HOT 경매! ]</h1> */}
-          <img src={hot}/>
-          {/* <h1>[ 주간 New 경매! ]</h1> */}
-        </Banner>
-
+        <div className="bannerCase">
+          <Banner>
+            <img src={isBannerImg}/>
+          </Banner>
+        </div>
         <NewItem className="div-item">
           <News className="new-container">
             {andList.map((ands, index) => (
