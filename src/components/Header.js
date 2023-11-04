@@ -17,7 +17,6 @@ import { asyncSearch } from "../store/searchSlice";
 import { setListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
 
-
 const StyledHeader = styled.header`
   #basic-navbar-nav {
     display: flex;
@@ -47,12 +46,11 @@ const Header = () => {
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
 
-
-    const Search = () => {
-      console.log(keyword);
-      dispatch(asyncSearch({ keyword: keyword }));
-      movePage("/SearchResult", { state: { keyword } });
-    }
+  const Search = () => {
+    console.log(keyword);
+    dispatch(asyncSearch({ keyword: keyword }));
+    movePage("/SearchResult", { state: { keyword } });
+  };
 
   const user = useSelector((state) => {
     return state.user;
@@ -80,7 +78,7 @@ const Header = () => {
       const response = await userInfo(user.token);
       const newPoint = response.data.point;
       const newName = response.data.name;
-      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
+      const formatPoint = newPoint ? newPoint.toLocaleString("ko-KR") : 0;
       setPoint(formatPoint);
       setName(newName);
     }
@@ -139,21 +137,21 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              {name &&
-                <Nav.Link href="/UserPage" style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
-              }
-              {
-                Object.keys(user).length === 0 ? (
-                  <Nav.Link onClick={register} style={{ color: "black" }}>
-                    회원가입</Nav.Link>
-                ) : ("")
-              }
+              {name && (
+                <Nav.Link href="/UserPage" style={{ color: "black" }}>
+                  {" "}
+                  {name} 님 {point ? point.toLocaleString("ko-KR") : 0} point
+                </Nav.Link>
+              )}
+              {Object.keys(user).length === 0 ? (
+                <Nav.Link onClick={register} style={{ color: "black" }}>
+                  회원가입
+                </Nav.Link>
+              ) : (
+                ""
+              )}
 
-              {
-                Object.keys(user).length === 0 ? (
-                  ("")
-                ) : <Kakaopay />
-              }
+              {Object.keys(user).length === 0 ? "" : <Kakaopay />}
 
               {Object.keys(user).length === 0 ? (
                 <Nav.Link onClick={Login} style={{ color: "black" }}>
@@ -164,8 +162,12 @@ const Header = () => {
                   로그아웃
                 </Nav.Link>
               )}
-              <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
+              <Nav.Link href="#" style={{ color: "black" }}>
+                배송조회
+              </Nav.Link>
+              <Nav.Link href="#" style={{ color: "black" }}>
+                고객센터
+              </Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -234,9 +236,54 @@ const Header = () => {
             style={{ marginTop: "40px", fontSize: "20px" }}
           >
             <Tab eventKey="home" title="전체카테고리" />
-            <Tab eventKey="longer-tab" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(1)}>베스트상품</Link>} />
-            <Tab eventKey="profile" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(2)}>신상품</Link>} />
-            <Tab eventKey="contact" title={<Link to="/contact" style={{ textDecoration: "none", color: "black", fontWeight: "bold", border: "none", outline: "none" }}>QnA</Link>} className="no-hover-animation" />
+            <Tab
+              eventKey="longer-tab"
+              title={
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
+                  onClick={() => handleTabClick(1)}
+                >
+                  베스트상품
+                </Link>
+              }
+            />
+            <Tab
+              eventKey="profile"
+              title={
+                <Link
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    fontWeight: "bold",
+                  }}
+                  onClick={() => handleTabClick(2)}
+                >
+                  신상품
+                </Link>
+              }
+            />
+            <Tab
+              eventKey="contact"
+              title={
+                <Link
+                  to="/contact"
+                  style={{
+                    textDecoration: "none",
+                    color: "black",
+                    fontWeight: "bold",
+                    border: "none",
+                    outline: "none",
+                  }}
+                >
+                  QnA
+                </Link>
+              }
+              className="no-hover-animation"
+            />
           </Tabs>
         </CategoryColor>
       </StyledHeader>
@@ -249,15 +296,24 @@ const Header = () => {
       </Button>
       <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
-          <Offcanvas.Title>전체 상품</Offcanvas.Title>
+          <Link
+            to={"/auctiondetail"}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <Offcanvas.Title>전체 상품</Offcanvas.Title>
+          </Link>
         </Offcanvas.Header>
         <Offcanvas.Body>
           {categories.map((Category) => (
-            <Link to={`/auctionDetail?categoryNo=${Category.categoryNo}`} key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }} value={Category.categoryNo}>
+            <Link
+              to={`/auctionDetail?categoryNo=${Category.categoryNo}`}
+              key={Category.categoryNo}
+              style={{ textDecoration: "none", color: "black" }}
+              value={Category.categoryNo}
+            >
               <p>{Category.categoryName}</p>
             </Link>
           ))}
-
         </Offcanvas.Body>
       </Offcanvas>
     </>
