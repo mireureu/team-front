@@ -16,7 +16,7 @@ import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
 import { setListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
-
+import Home from "../pages/Home";
 
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -37,7 +37,9 @@ const CategoryColor = styled.div`
   margin: 0 auto;
 `;
 
+
 const Header = () => {
+  
   const userData = JSON.parse(localStorage.getItem("user"));
   const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
@@ -47,6 +49,7 @@ const Header = () => {
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
 
+    
 
     const Search = () => {
       console.log(keyword);
@@ -125,11 +128,14 @@ const Header = () => {
     }
   };
 
+  const [nums,setNum] = useState(0);
   const handleTabClick = (num) => {
-    setListType(num);
-    console.log("메인 카테고리 = " + num);
+    setNum(num);    
   };
-
+  useEffect(()=>{
+    handleTabClick(0);
+  },[]);
+  
   return (
     <>
       <StyledHeader id="fill-tab-style">
@@ -226,8 +232,7 @@ const Header = () => {
               </Button>
             </Nav.Link>
           </InputGroup>
-        </Form>
-
+        </Form>        
         <CategoryColor>
           <Tabs
             defaultActiveKey="home"
@@ -242,6 +247,7 @@ const Header = () => {
             <Tab eventKey="profile" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(2)}>신상품</Link>} />
             <Tab eventKey="contact" title={<Link to="/contact" style={{ textDecoration: "none", color: "black", fontWeight: "bold", border: "none", outline: "none" }}>QnA</Link>} className="no-hover-animation" />
           </Tabs>
+          {nums !== 0 && <Home num={nums} />}
         </CategoryColor>
       </StyledHeader>
       <Button

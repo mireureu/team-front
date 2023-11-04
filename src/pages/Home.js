@@ -261,7 +261,7 @@ const Modal = styled.div`
   
 `;
 
-const Home = () => {
+const Home = (nums) => {
   // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
 
@@ -270,8 +270,7 @@ const Home = () => {
   const [recentList, setRecentList] = useState([]);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
-  
-  
+
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
@@ -298,7 +297,12 @@ const Home = () => {
       seconds: secondsDifference % 60,
     };
   };
-
+  const test = () =>{
+    console.log(nums);
+  }
+  useEffect(()=>{
+    test();
+  },[nums]);
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트
@@ -327,14 +331,14 @@ const Home = () => {
       result = await getHotList();
     } else if (clicks === 2) {
       result = await getNewList();
-    }
-    console.log(result);
+    }    
     setAndList(result.data);
   };
 
   useEffect(() => {
     andListAPI();
     startTimer();
+    
   }, []);
 
   // 미리보기 창 열기
@@ -362,6 +366,7 @@ const Home = () => {
   }
 
   return (
+    
     <Main className="div-container">
       <Centers>
         <Banner>
@@ -369,7 +374,7 @@ const Home = () => {
           <img src={hot}/>
           {/* <h1>[ 주간 New 경매! ]</h1> */}
         </Banner>
-
+                    
         <NewItem className="div-item">
           <News className="new-container">
             {andList.map((ands, index) => (
