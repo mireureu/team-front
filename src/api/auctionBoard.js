@@ -56,7 +56,3 @@ export const getItem = async (page, category, sortOption) => {
   return await instance.get(url);
 };
 
-// 카테고리 불러오기
-// export const getListType = async () => {
-//   return await instance.get("public/category2");
-// };

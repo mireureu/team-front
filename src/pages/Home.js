@@ -306,18 +306,6 @@ const Home = (props) => {
       seconds: secondsDifference % 60,
     };
   };
-  const [newNum, setNewNum] = useState(0);
-  const test = () =>{
-    if(num == 1){
-      setNewNum(1);
-    }else{
-      setNewNum(2);
-    }
-    console.log(newNum);
-  }
-  useEffect(()=>{
-    test();
-  },[num]);
 
   const startTimer = () => {
     const timerId = setInterval(() => {

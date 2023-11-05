@@ -14,8 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-// import { getListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
+import Home from "../pages/Home";
 
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -36,7 +36,9 @@ const CategoryColor = styled.div`
   margin: 0 auto;
 `;
 
+
 const Header = () => {
+  
   const userData = JSON.parse(localStorage.getItem("user"));
   const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
@@ -80,7 +82,7 @@ const Header = () => {
       const response = await userInfo(user.token);
       const newPoint = response.data.point;
       const newName = response.data.name;
-      const formatPoint = newPoint ? newPoint.toLocaleString("ko-KR") : 0;
+      const formatPoint = newPoint ? newPoint.toLocaleString('ko-KR') : 0;
       setPoint(formatPoint);
       setName(newName);
     }
@@ -114,6 +116,10 @@ const Header = () => {
     movePage("/register");
   };
 
+  const userPage = () => {
+    movePage("/userPage");
+  };
+
   const handleTabSelect = (eventKey) => {
     if (eventKey === "home") {
       handleShow();
@@ -121,13 +127,14 @@ const Header = () => {
     }
   };
 
-  // 클릭되는 메뉴버튼에 따라 전송하는 데이터 변경
+  const [nums,setNum] = useState(0);
   const handleTabClick = (num) => {
-    console.log(num);
-    // getListType(num);
+    setNum(num);
   };
+  useEffect(()=>{
+    handleTabClick(0);
+  },[]);
   
-
   return (
     <>
       <StyledHeader id="fill-tab-style">
@@ -141,21 +148,21 @@ const Header = () => {
           <Navbar.Toggle />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="mr-auto">
-              {name && (
-                <Nav.Link href="/UserPage" style={{ color: "black" }}>
-                  {" "}
-                  {name} 님 {point ? point.toLocaleString("ko-KR") : 0} point
-                </Nav.Link>
-              )}
-              {Object.keys(user).length === 0 ? (
-                <Nav.Link onClick={register} style={{ color: "black" }}>
-                  회원가입
-                </Nav.Link>
-              ) : (
-                ""
-              )}
+              {name &&
+                <Nav.Link href="/UserPage" style={{ color: "black" }}> {name} 님 {point ? point.toLocaleString('ko-KR') : 0} point</Nav.Link>
+              }
+              {
+                Object.keys(user).length === 0 ? (
+                  <Nav.Link onClick={register} style={{ color: "black" }}>
+                    회원가입</Nav.Link>
+                ) : ("")
+              }
 
-              {Object.keys(user).length === 0 ? "" : <Kakaopay />}
+              {
+                Object.keys(user).length === 0 ? (
+                  ("")
+                ) : <Kakaopay />
+              }
 
               {Object.keys(user).length === 0 ? (
                 <Nav.Link onClick={Login} style={{ color: "black" }}>
@@ -166,12 +173,8 @@ const Header = () => {
                   로그아웃
                 </Nav.Link>
               )}
-              <Nav.Link href="#" style={{ color: "black" }}>
-                배송조회
-              </Nav.Link>
-              <Nav.Link href="#" style={{ color: "black" }}>
-                고객센터
-              </Nav.Link>
+              <Nav.Link href="#" style={{ color: "black" }}>배송조회</Nav.Link>
+              <Nav.Link href="#" style={{ color: "black" }}>고객센터</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -228,8 +231,7 @@ const Header = () => {
               </Button>
             </Nav.Link>
           </InputGroup>
-        </Form>
-
+        </Form>        
         <CategoryColor>
           <Tabs
             defaultActiveKey="home"
@@ -240,55 +242,11 @@ const Header = () => {
             style={{ marginTop: "40px", fontSize: "20px" }}
           >
             <Tab eventKey="home" title="전체카테고리" />
-            <Tab
-              eventKey="longer-tab"
-              title={
-                <Link
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    fontWeight: "bold",
-                  }}
-                  onClick={() => handleTabClick(1)}
-                >
-                  베스트상품
-                </Link>
-              }
-            />
-            <Tab
-              eventKey="profile"
-              title={
-                <Link
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    fontWeight: "bold",
-                  }}
-                  onClick={() => handleTabClick(2)}
-                >
-                  신상품
-                </Link>
-              }
-            />
-            <Tab
-              eventKey="contact"
-              title={
-                <Link
-                  to="/contact"
-                  style={{
-                    textDecoration: "none",
-                    color: "black",
-                    fontWeight: "bold",
-                    border: "none",
-                    outline: "none",
-                  }}
-                >
-                  QnA
-                </Link>
-              }
-              className="no-hover-animation"
-            />
+            <Tab eventKey="longer-tab" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(1)}>베스트상품</Link>} />
+            <Tab eventKey="profile" title={<Link style={{ textDecoration: "none", color: "black", fontWeight: "bold" }} onClick={() => handleTabClick(2)}>신상품</Link>} />
+            <Tab eventKey="contact" title={<Link to="/contact" style={{ textDecoration: "none", color: "black", fontWeight: "bold", border: "none", outline: "none" }}>QnA</Link>} className="no-hover-animation" />
           </Tabs>
+          {nums !== 0 && <Home num={nums} />}
         </CategoryColor>
       </StyledHeader>
       <Button
@@ -300,24 +258,15 @@ const Header = () => {
       </Button>
       <Offcanvas show={show} onHide={handleClose}>
         <Offcanvas.Header closeButton>
-          <Link
-            to={"/auctiondetail"}
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <Offcanvas.Title>전체 상품</Offcanvas.Title>
-          </Link>
+          <Offcanvas.Title>전체 상품</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body>
           {categories.map((Category) => (
-            <Link
-              to={`/auctionDetail?categoryNo=${Category.categoryNo}`}
-              key={Category.categoryNo}
-              style={{ textDecoration: "none", color: "black" }}
-              value={Category.categoryNo}
-            >
+            <Link to={`/auctionDetail?categoryNo=${Category.categoryNo}`} key={Category.categoryNo} style={{ textDecoration: "none", color: "black" }} value={Category.categoryNo}>
               <p>{Category.categoryName}</p>
             </Link>
           ))}
+
         </Offcanvas.Body>
       </Offcanvas>
     </>
