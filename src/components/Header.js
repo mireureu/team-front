@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-import { getListType } from "../api/auctionBoard";
+// import { getListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
 
 const StyledHeader = styled.header`
@@ -124,7 +124,7 @@ const Header = () => {
   // 클릭되는 메뉴버튼에 따라 전송하는 데이터 변경
   const handleTabClick = (num) => {
     console.log(num);
-    getListType(num);
+    // getListType(num);
   };
   
 

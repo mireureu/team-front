@@ -318,7 +318,7 @@ const Home = (props) => {
   useEffect(()=>{
     test();
   },[num]);
-  
+
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트
@@ -342,11 +342,11 @@ const Home = (props) => {
 
   useEffect(()=>{
     andListAPI();
-  },[]);
+  },[num]);
 
   // Header 메뉴 선택에 따라 출력되는 이미지와 게시글 변경
   const andListAPI = async () => {
-    let clicks = 1;
+    let clicks = num;
     let result = await getHotList();
     let setImg = bestImg;
     console.log(clicks);
