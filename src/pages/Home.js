@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { createContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
@@ -8,6 +8,7 @@ import { setListType } from "../api/auctionBoard"; // 메인 카테고리
 import bestImg from "../imgs/best.png";
 import newImg from "../imgs/new.png";
 import { recentView } from "../api/addpost";
+import setListTypeCallback from "../components/Header";
 
 const Main = styled.div`
   position: relative;
@@ -268,7 +269,8 @@ const Modal = styled.div`
   
 `;
 
-const Home = () => {
+const Home = ({nums}) => {
+  console.log(nums);
   // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
 
@@ -278,6 +280,7 @@ const Home = () => {
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
   
+  const typeNum = setListType();
   
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
@@ -327,6 +330,17 @@ const Home = () => {
     };
 };
 
+  // const [listType, setListType] = useState(1);
+
+  const setListTypeCallback = (num) => {
+    if(num){
+      setListType(num);
+      console.log("성공");
+      console.log(num);
+      console.log("성공");
+    }
+  };
+
   // Header 메뉴 선택에 따라 출력되는 이미지와 게시글 변경
   const andListAPI = async () => {
     let clicks = setListType(1);
@@ -350,6 +364,7 @@ const Home = () => {
     startTimer();
     window.scrollTo(0, 0);
   }, []);
+
 
   // 미리보기 창 열기
   const openModal = (item) => {

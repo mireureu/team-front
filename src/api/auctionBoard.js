@@ -57,6 +57,6 @@ export const getItem = async (page, category, sortOption) => {
 };
 
 export const setListType = (num) => {
-  console.log(num);
+  // console.log("api에서 보냄요 = " + num);
   return num;
 }
