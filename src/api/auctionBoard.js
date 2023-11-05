@@ -56,7 +56,7 @@ export const getItem = async (page, category, sortOption) => {
   return await instance.get(url);
 };
 
-export const setListType = (num) => {
-  // console.log("api에서 보냄요 = " + num);
-  return num;
-}
+// 카테고리 불러오기
+export const getListType = async () => {
+  return await instance.get("public/category2");
+};

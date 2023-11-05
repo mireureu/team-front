@@ -4,11 +4,10 @@ import styled from "styled-components";
 import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
-import { setListType } from "../api/auctionBoard"; // 메인 카테고리
+import { handleTabClick } from "../api/auctionBoard"; // 메인 카테고리
 import bestImg from "../imgs/best.png";
 import newImg from "../imgs/new.png";
 import { recentView } from "../api/addpost";
-import setListTypeCallback from "../components/Header";
 
 const Main = styled.div`
   position: relative;
@@ -275,7 +274,7 @@ const Home = (nums) => {
 
   const [andList, setAndList] = useState([]);
 
-  const [isBannerImg, setBannerImg] = useState(bestImg);
+  const [isBannerImg, setBannerImg] = useState();
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
   // 남은 시간을 1초마다 갱신
@@ -304,12 +303,10 @@ const Home = (nums) => {
       seconds: secondsDifference % 60,
     };
   };
-  const test = () =>{
-    console.log(nums);
-  }
-  useEffect(()=>{
-    test();
-  },[nums]);
+
+
+
+  // 경매 종료까지 남은 시간 실시간 업데이트
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트
@@ -330,23 +327,17 @@ const Home = (nums) => {
     };
 };
 
-  // const [listType, setListType] = useState(1);
 
-  const setListTypeCallback = (num) => {
-    if(num){
-      setListType(num);
-      console.log("성공");
-      console.log(num);
-      console.log("성공");
-    }
-  };
+  useEffect(()=>{
+    andListAPI();
+  },[nums]);
 
   // Header 메뉴 선택에 따라 출력되는 이미지와 게시글 변경
   const andListAPI = async () => {
-    let clicks = setListType(1);
+    let clicks = nums;
     let result = await getHotList();
     let setImg = bestImg;
-
+    console.log(clicks);
     if (clicks === 1) {
       result = await getHotList();
       setImg = bestImg;
@@ -360,7 +351,7 @@ const Home = (nums) => {
   };
 
   useEffect(() => {
-    andListAPI();
+    
     startTimer();
     window.scrollTo(0, 0);
   }, []);
@@ -414,7 +405,6 @@ const Home = (nums) => {
                       ) : (
                         (calculateTimeDifference(ands.auctionEndDate).seconds <= 0) ? (
                           <span>
-                            {test()}
                             경매 마감
                           </span>
                         ) : (

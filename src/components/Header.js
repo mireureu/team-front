@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import { Navbar, Nav } from "react-bootstrap";
@@ -14,9 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { userSave, userLogout } from "../store/userSlice";
 import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
-import { setListType } from "../api/auctionBoard";
+import { getListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
-import Home from "../pages/Home";
 
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -37,9 +36,7 @@ const CategoryColor = styled.div`
   margin: 0 auto;
 `;
 
-
 const Header = () => {
-  
   const userData = JSON.parse(localStorage.getItem("user"));
   const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
@@ -48,8 +45,6 @@ const Header = () => {
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
-
-    
 
   const Search = () => {
     console.log(keyword);
@@ -124,14 +119,13 @@ const Header = () => {
     }
   };
 
-  const [nums,setNum] = useState(0);
+  // 클릭되는 메뉴버튼에 따라 전송하는 데이터 변경
   const handleTabClick = (num) => {
-    setNum(num);    
+    console.log(num);
+    getListType(num);
   };
-  useEffect(()=>{
-    handleTabClick(0);
-  },[]);
   
+
   return (
     <>
       <StyledHeader id="fill-tab-style">
@@ -232,7 +226,8 @@ const Header = () => {
               </Button>
             </Nav.Link>
           </InputGroup>
-        </Form>        
+        </Form>
+
         <CategoryColor>
           <Tabs
             defaultActiveKey="home"
@@ -254,7 +249,7 @@ const Header = () => {
                   }}
                   onClick={() => handleTabClick(1)}
                 >
-                  베스트상품 <Home nums={nums}/>
+                  베스트상품
                 </Link>
               }
             />
@@ -269,7 +264,7 @@ const Header = () => {
                   }}
                   onClick={() => handleTabClick(2)}
                 >
-                  신상품 <Home nums={nums}/>
+                  신상품
                 </Link>
               }
             />
@@ -292,7 +287,6 @@ const Header = () => {
               className="no-hover-animation"
             />
           </Tabs>
-          {nums !== 0 && <Home num={nums} />}
         </CategoryColor>
       </StyledHeader>
       <Button
