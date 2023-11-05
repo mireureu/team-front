@@ -269,8 +269,7 @@ const Modal = styled.div`
   
 `;
 
-const Home = ({nums}) => {
-  console.log(nums);
+const Home = (nums) => {
   // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
 
@@ -279,9 +278,6 @@ const Home = ({nums}) => {
   const [isBannerImg, setBannerImg] = useState(bestImg);
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
-  
-  const typeNum = setListType();
-  
   // 남은 시간을 1초마다 갱신
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
@@ -308,8 +304,12 @@ const Home = ({nums}) => {
       seconds: secondsDifference % 60,
     };
   };
-
-  // 경매 종료까지 남은 시간 실시간 업데이트
+  const test = () =>{
+    console.log(nums);
+  }
+  useEffect(()=>{
+    test();
+  },[nums]);
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트
@@ -383,6 +383,7 @@ const Home = ({nums}) => {
   };
 
   return (
+    
     <Main className="div-container">
       <Centers>
         <div className="bannerCase">

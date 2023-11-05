@@ -16,10 +16,7 @@ import Kakaopay from "../components/KakaoPay";
 import { asyncSearch } from "../store/searchSlice";
 import { setListType } from "../api/auctionBoard";
 import { userInfo } from "../api/user";
-
 import Home from "../pages/Home";
-
-import setListTypeCallback from "../pages/Home"
 
 const StyledHeader = styled.header`
   #basic-navbar-nav {
@@ -40,7 +37,9 @@ const CategoryColor = styled.div`
   margin: 0 auto;
 `;
 
+
 const Header = () => {
+  
   const userData = JSON.parse(localStorage.getItem("user"));
   const [point, setPoint] = useState(0);
   const dispatch = useDispatch();
@@ -50,7 +49,7 @@ const Header = () => {
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
 
-  const [nums, setNums] = useState("");
+    
 
   const Search = () => {
     console.log(keyword);
@@ -125,24 +124,14 @@ const Header = () => {
     }
   };
 
-  // const [nums , setNum] = useState(0);
-
-  // 클릭되는 메뉴버튼에 따라 전송하는 데이터 변경
-  const handleTabClick = (nums) => {
-    setNums(nums);
-    console.log(nums);
-
+  const [nums,setNum] = useState(0);
+  const handleTabClick = (num) => {
+    setNum(num);    
   };
-
-  // const handleTabClick = (num) => {
-  //   console.log("메인 카테고리 = " + num);
-  //   // 목록 유형을 Home.js에서 설정하는 콜백 함수를 호출합니다.
-  //   if (setListTypeCallback) {
-  //     setListTypeCallback(num);
-  //   }
-  // };
-
-
+  useEffect(()=>{
+    handleTabClick(0);
+  },[]);
+  
   return (
     <>
       <StyledHeader id="fill-tab-style">
@@ -243,8 +232,7 @@ const Header = () => {
               </Button>
             </Nav.Link>
           </InputGroup>
-        </Form>
-
+        </Form>        
         <CategoryColor>
           <Tabs
             defaultActiveKey="home"
@@ -304,6 +292,7 @@ const Header = () => {
               className="no-hover-animation"
             />
           </Tabs>
+          {nums !== 0 && <Home num={nums} />}
         </CategoryColor>
       </StyledHeader>
       <Button
