@@ -308,6 +308,7 @@ const UserPage = () => {
     if (savedUser) {
       updateUserInfo(savedUser);
     }
+    window.scrollTo(0, 0);
   }, []);
 
   // 모든 필드가 비어 있는지 확인
@@ -363,7 +364,8 @@ const UserPage = () => {
 
   const onClick = async() =>{
     await changePassowrd({password:password});
-     
+    alert("비밀번호 변경이 완료되었습니다.");
+    window.location.reload();
   }
 
   // 비밀번호 유효성 검사후 출력

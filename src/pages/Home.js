@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { getCategories } from "../api/connection";
 import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
 import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
-import { handleTabClick } from "../api/auctionBoard"; // 메인 카테고리
+import { getListType } from "../api/auctionBoard"; // 메인 카테고리
 import bestImg from "../imgs/best.png";
 import newImg from "../imgs/new.png";
 import { recentView } from "../api/addpost";
@@ -278,6 +278,9 @@ const Home = (nums) => {
 
   const [selectedItem, setSelectedItem] = useState(null); // 사용자가 클릭한 항목 정보를 저장
   // 남은 시간을 1초마다 갱신
+
+  // const typeNum = getListType();
+
   const calculateTimeDifference = (auctionEndDate) => {
     if (!auctionEndDate) {
       return {
