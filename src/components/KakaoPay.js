@@ -149,6 +149,7 @@ const Kakaopay = () => {
       setId(newId);
     }
   };
+  
   useEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("user"));
     if (savedUser) {

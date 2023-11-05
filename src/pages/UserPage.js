@@ -193,8 +193,9 @@ const UserPage = () => {
   // 상세 주소
   const [detailAddr, setDetailAddr] = useState("");
 
+  // 편집 모드 전환 함수
   const toggleEditable = (field) => {
-    // 편집 모드 전환 함수
+    
     switch (field) {
       case "nick":
         setNickField((prevField) => ({
@@ -248,11 +249,10 @@ const UserPage = () => {
     }
   };
 
+  // 데이터를 저장할 객체를 생성해 데이터가 비어있지 않은 경우만 백엔드로 전송
   const handleSave = async () => {
-    // 데이터를 저장할 객체 생성
     const updatedData = {};
   
-    // 각 필드를 확인하고 값이 비어있지 않은 경우에만 추가
     if (nickField.value.trim() !== "") {
       updatedData.nick = nickField.value;
     }
@@ -270,32 +270,18 @@ const UserPage = () => {
     }
   
     if (addrField.value.trim() !== "") {
-      // 기본 주소만 추가하도록 변경
       updatedData.addr = addrField.value;
     }
   
-    // if (detailAddr.trim() !== "") {
-    //   // 상세 주소가 있는 경우 추가
-    //   updatedData.addr = `${updatedData.addr}/${detailAddr}`;
-    // }
-  
-    // 데이터가 비어있지 않은 경우에만 백엔드로 전송
     if (Object.keys(updatedData).length > 0) {
-      // updateUser 함수를 호출하여 업데이트된 데이터를 전송
-      try {
-        const response = await updateUser(updatedData);
- 
-        userData.nick = response.data.nick;
-        userData.phone = response.data.phone;
-        userData.email = response.data.email;
-        userData.addr = response.data.addr;
-        localStorage.setItem("user", JSON.stringify(userData));
-        // localStorage.setItem(response);
-        window.location.replace("/UserPage");
-        // 성공적으로 업데이트됐을 때의 처리
-      } catch (error) {
-        // 업데이트 실패 시의 처리
-      }
+      const response = await updateUser(updatedData);
+
+      userData.nick = response.data.nick;
+      userData.phone = response.data.phone;
+      userData.email = response.data.email;
+      userData.addr = response.data.addr;
+      localStorage.setItem("user", JSON.stringify(userData));
+      window.location.replace("/UserPage");
     }
   };
   
@@ -324,9 +310,9 @@ const UserPage = () => {
     }
   }, []);
 
-
+  // 모든 필드가 비어 있는지 확인
   const isAllFieldsEmpty = () => {
-    // 모든 필드가 비어 있는지 확인
+    
     if (
       nickField.value.trim() === "" &&
       phoneField.value.trim() === "" &&
@@ -344,6 +330,7 @@ const UserPage = () => {
     return emailRegExp.test(email);
   };
 
+  // 비밀번호 효성 검사
   const checkPassword = (e) => {
     const newPassword = e.target.value;
     setPassword(newPassword);
@@ -359,20 +346,15 @@ const UserPage = () => {
     setIsValidPasswordFormat(isValidPassword);
   }
 
+  // 비밀번호와 비밀번호 확인 일치 여부 확인
   const checkConfirmPassword = (e) => {
     const newConfirmPassword = e.target.value;
     setConfirmPassword(newConfirmPassword);
     setIsTyping(true);
 
-    // 비밀번호와 비밀번호 확인 일치 여부 확인
     const isMatch = password === newConfirmPassword;
     setPasswordMatch(isTyping && isMatch);
   }
-
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
- 
 
   // 관심목록 페이지로 이동
   const goInterestPage = () => {
@@ -384,6 +366,7 @@ const UserPage = () => {
      
   }
 
+  // 비밀번호 유효성 검사후 출력
   const checkpassword =  async(e) =>{
     e.preventDefault();
     const isPasswordValid =  await passwordCheck({password:password});  
@@ -555,7 +538,7 @@ const UserPage = () => {
         </div>
       </MyPage>
       
-
+      {/* 주소 변경 Modal */}
       {isModalAddrOpen && (
         <AddrSetModal>
           <div>
@@ -609,7 +592,7 @@ const UserPage = () => {
         </AddrSetModal>
       )}
       
-
+      {/* 비밀번호 확인 Modal */}
       {isModal1Open && (
         <PasswordCheckModal>
             <div>
@@ -628,6 +611,7 @@ const UserPage = () => {
         </PasswordCheckModal>
       )}
     
+      {/* 비밀번호 변경 Modal */}
       {isModal2Open && (
         <PasswordChangeModal>
           <div>

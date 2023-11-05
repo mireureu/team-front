@@ -275,7 +275,7 @@ const InterestList = () => {
                         </button>
                     </div>
                 </div>
-                <Container className="container">
+                <Container>
                     <div className="container">
                         {andList.map((myList, index) => (
                             <div 

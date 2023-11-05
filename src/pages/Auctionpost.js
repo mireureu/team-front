@@ -348,7 +348,7 @@ const Auctionpost = () => {
       updatecategoryNo(auctionPost.auctionNo);
       navigate("/auctiondetail");
     } else {
-      alert("돈 없잖아")
+      alert("포인트가 부족합니다.")
     }
   };
 
@@ -460,19 +460,6 @@ const Auctionpost = () => {
                     position: "relative",
                   }}
                 >
-                  <img
-                    src={
-                      "/upload/" +
-                      auctionPost.auctionImg.split(",")[currentImageIndex]
-                    }
-                    alt="Auction Image"
-                    style={{
-                      width: "100%",
-                      height: "300px",
-                      overflow: "hidden",
-                      position: "relative",
-                    }}
-                  />
                     <img
                       src={
                         "/upload/" +
@@ -532,30 +519,45 @@ const Auctionpost = () => {
               </Row>
               <Row className="border-top justify-content-center">
                 <Col xs={12} md={6} className="border-right">
-                  <p>경매 시작가: {auctionPost.auctionSMoney}원</p>
-                  <p>최소 입찰가: {auctionPost.auctionEMoney}원</p>
-                  <p>총 입찰 횟수: {auctionPost.currentNum}</p>                  
-                  <p>현재 가격: {auctionPost.currentPrice}원</p>
+                  <div>
+                    <p>경매 시작가: {auctionPost.auctionSMoney}원</p>
+                  </div>
+                  <div>
+                    <p>최소 입찰가: {auctionPost.auctionEMoney}원</p>
+                  </div>
+                  <div>
+                    <p>총 입찰 횟수: {auctionPost.currentNum}</p> 
+                  </div>
+                  <div>
+                    <p>현재 가격: {auctionPost.currentPrice}원</p>
+                  </div>
                 </Col>
                 <Col xs={12} md={6}>
-                  입찰하기
-                  <Form.Group>
-                    <Form.Control
-                      type="number"
-                      style={{ width: "300px" }}
-                      value={
-                        auctionPost.currentNum === 0
-                          ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
-                          : auctionPost.currentNum < 5
-                            ? auctionPost.currentPrice + auctionPost.auctionEMoney
-                            : auctionPost.currentPrice + 2 * auctionPost.auctionEMoney
-                      }
-                      onChange={(e) => setNewCurrentPrice(e.target.value)}
-                    />
-                  </Form.Group>
-                  <Button variant="primary" onClick={handlePriceChange}>
-                    입찰
-                  </Button>
+                  <h4 style={{marginTop:"10px"}}>입찰하기</h4>
+                  <div style={{display:"flex"}}>
+                    <Form.Group>
+                      <Form.Control
+                        type="number"
+                        style={{ width: "300px" }}
+                        value={
+                          auctionPost.currentNum === 0
+                            ? auctionPost.auctionSMoney + auctionPost.auctionEMoney
+                            : auctionPost.currentNum < 5
+                              ? auctionPost.currentPrice + auctionPost.auctionEMoney
+                              : auctionPost.currentPrice + 2 * auctionPost.auctionEMoney
+                        }
+                        onChange={(e) => setNewCurrentPrice(e.target.value)}
+                      />
+                    </Form.Group>
+                    <Button 
+                      variant="primary" 
+                      onClick={handlePriceChange}
+                      style={{marginLeft:"10px"}}
+                    >
+                      입찰
+                    </Button>
+                  </div>
+                  
                   <div className="border-top my-3"></div>
                   <Row>
                     <Col xs={6}>
@@ -596,12 +598,15 @@ const Auctionpost = () => {
             )}
           </Col>
         </Row>
-        <Button variant="danger" onClick={handleDeletePost}>
-          게시글 삭제
-        </Button>
-        <Button variant="primary" onClick={() => navigate("/update")}>
-          게시글 수정
-        </Button>
+        <div style={{display:"flex"}}>
+          <Button variant="danger" onClick={handleDeletePost}>
+            게시글 삭제
+          </Button>
+          <Button variant="primary" onClick={() => navigate("/update")}>
+            게시글 수정
+          </Button>
+        </div>
+        
         <hr></hr>
         <style>
           {`
@@ -732,7 +737,7 @@ const Auctionpost = () => {
             </div>
           ) : selectedComment ? (
             <div className="mt-3">
-              <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{selectedComment.member.nick}님의 댓글에 대댓글 작성</span>
+              <span style={{ fontSize: '20px', fontWeight: 'bold' }}>{selectedComment.member.nick}님에게 답글 작성</span>
               <Form.Group>
                 <Form.Label>대댓글 내용</Form.Label>
                 <Form.Control
