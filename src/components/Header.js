@@ -45,16 +45,16 @@ const Header = () => {
   const dispatch = useDispatch();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
   const movePage = useNavigate();
   const [keyword, setKeyword] = useState("");
   const [name, setName] = useState(userData ? userData.name : "");
 
-    
-
+  
     const Search = () => {
       console.log(keyword);
       dispatch(asyncSearch({ keyword: keyword }));
-      movePage("/SearchResult", { state: { keyword } });
+      movePage("/SearchResult", { state: { keyword:keyword } });
     }
 
   const user = useSelector((state) => {

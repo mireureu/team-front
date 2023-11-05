@@ -261,10 +261,10 @@ const Modal = styled.div`
   
 `;
 
-const Home = (nums) => {
+const Home = (props) => {
   // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
-
+  const { num } = props;
   const [andList, setAndList] = useState([]);
 
   const [recentList, setRecentList] = useState([]);
@@ -297,12 +297,18 @@ const Home = (nums) => {
       seconds: secondsDifference % 60,
     };
   };
+  const [newNum, setNewNum] = useState(0);
   const test = () =>{
-    console.log(nums);
+    if(num == 1){
+      setNewNum(1);
+    }else{
+      setNewNum(2);
+    }
+    console.log(newNum);
   }
   useEffect(()=>{
     test();
-  },[nums]);
+  },[num]);
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트

@@ -94,8 +94,6 @@ const SearchResult = () => {
   const location = useLocation();
   const keyword = location.state ? location.state.keyword : null;
 
-
-
   const TotalPage = searchResult?.getTotalPages || 1;
   
   const categoryAPI = async () => {        
@@ -103,13 +101,9 @@ const SearchResult = () => {
     setCategories(result.data);
   };
 
-  const itemAPI = async (selectedPage, sortOption) => {
-    try {
+  const itemAPI = async (selectedPage, sortOption) => {   
       const getResult = await getTotalPages(keyword, selectedPage, sortOption);
-      setItems(getResult.data.content);
-    } catch (error) {
-      console.error("데이터 불러오기 오류:", error);
-    }
+      setItems(getResult.data.content);  
   };
   
   const navigate = useNavigate();
