@@ -268,10 +268,10 @@ const Modal = styled.div`
   
 `;
 
-const Home = (nums) => {
+const Home = (props) => {
   // const [categories, setCategories] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false); // 클릭시미리보기
-
+  const { num } = props;
   const [andList, setAndList] = useState([]);
 
   const [isBannerImg, setBannerImg] = useState();
@@ -306,10 +306,19 @@ const Home = (nums) => {
       seconds: secondsDifference % 60,
     };
   };
-
-
-
-  // 경매 종료까지 남은 시간 실시간 업데이트
+  const [newNum, setNewNum] = useState(0);
+  const test = () =>{
+    if(num == 1){
+      setNewNum(1);
+    }else{
+      setNewNum(2);
+    }
+    console.log(newNum);
+  }
+  useEffect(()=>{
+    test();
+  },[num]);
+  
   const startTimer = () => {
     const timerId = setInterval(() => {
         // 남은 시간만 업데이트
@@ -333,11 +342,11 @@ const Home = (nums) => {
 
   useEffect(()=>{
     andListAPI();
-  },[nums]);
+  },[]);
 
   // Header 메뉴 선택에 따라 출력되는 이미지와 게시글 변경
   const andListAPI = async () => {
-    let clicks = nums;
+    let clicks = 1;
     let result = await getHotList();
     let setImg = bestImg;
     console.log(clicks);
