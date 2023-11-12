@@ -2,9 +2,7 @@ import React from "react";
 import { createContext, useState, useEffect } from "react";
 import styled from "styled-components";
 import { getCategories } from "../api/connection";
-import { getAuctionBoard, getHotList, getNewList } from "../api/auctionBoard";
-import RecentPosts from "./RecentPosts"; // 최근 본 게시물 목록
-import { getListType } from "../api/auctionBoard"; // 메인 카테고리
+import { getAuctionBoard, getBestList, getNewList } from "../api/auctionBoard";
 import bestImg from "../imgs/best.png";
 import newImg from "../imgs/new.png";
 import { recentView } from "../api/addpost";
@@ -335,11 +333,11 @@ const Home = (props) => {
   // Header 메뉴 선택에 따라 출력되는 이미지와 게시글 변경
   const andListAPI = async () => {
     let clicks = num;
-    let result = await getHotList();
+    let result = await getBestList();
     let setImg = bestImg;
     console.log(clicks);
     if (clicks === 1) {
-      result = await getHotList();
+      result = await getBestList();
       setImg = bestImg;
     } else if (clicks === 2) {
       result = await getNewList();

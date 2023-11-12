@@ -9,18 +9,18 @@ export const getAuctionBoard = async () => {
   return null;
 };
 
-// Hot 게시글로 정렬
-export const getHotList = async () => {
-  return await instance.get("public/auction/hot");
-};
-
-export const getList = async () => {
-  return await instance.get("public/auction/sortedt");
+// Best 게시글로 정렬
+export const getBestList = async () => {
+  return await instance.get("public/auction/best");
 };
 
 // New 게시글로 정렬
 export const getNewList = async () => {
   return await instance.get("public/auction/new");
+};
+
+export const getList = async () => {
+  return await instance.get("public/auction/sortedt");
 };
 
 // 카테고리 불러오기

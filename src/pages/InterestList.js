@@ -150,14 +150,10 @@ const InterestList = () => {
     const [checkedAuctionNos, setCheckedAutionNos] = useState([]);
 
     const myListAPI = async () => {
-        try {
-            const result = await getMyInterestList();
-            setAndList(result);
-            const initialCheckStates = new Array(result.length).fill(false);
-            setCheckItems(initialCheckStates); // Set initial check states
-        } catch (error) {
-            console.error('에러 발생:', error);
-        }
+        const result = await getMyInterestList();
+        setAndList(result);
+        const initialCheckStates = new Array(result.length).fill(false);
+        setCheckItems(initialCheckStates);
     };
 
 

@@ -49,26 +49,17 @@ export const getInterest = async () => {
 
 // 게시글 관심 등록
 export const addMyInterest = async (auctionNo) => {
-  try {
-    const token = localStorage.getItem("token");
-    console.log(auctionNo);    
-    const response = await instance.post(`/user/addList`, auctionNo, {      
-      headers: {
-        Authorization: `Bearer ${token}`,        
-      },
-    });
-
-    return response.data;
-  } catch (error) {
-    // 에러 처리
-    console.error("에러 발생:", error);
-    throw error;
-  }
+  const token = localStorage.getItem("token");  
+  const response = await instance.post(`/user/addList`, auctionNo, {      
+    headers: {
+      Authorization: `Bearer ${token}`,        
+    },
+  });
+  return response.data;
 };
 
 // 게시글 관심등록 중복확인
 export const interestDuplicate = async (no) =>{
-
   const token = localStorage.getItem("token");
   const response = await instance.post("/user/interestDuplicate", no,{
     headers: {
@@ -80,21 +71,18 @@ export const interestDuplicate = async (no) =>{
 
 // 관심 등록한 게시글 삭제
 export const deleteCheck = async (auctionNo) => {
-  console.log("관심 = " + auctionNo);
   const token = localStorage.getItem("token");
   const response = await instance.delete(`/user/checkDelete?auctionNo=${auctionNo}`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  console.log("관심 = " + response.data);
   return response.data;
 };
 
 
 // 관심 등록한 게시글 List 삭제
 export const deleteCheckList = async (list) => {
-
   const token = localStorage.getItem("token");
 
   await instance.delete(`/user/checkDeleteList?list=${list.join(',')}`, {
@@ -102,28 +90,19 @@ export const deleteCheckList = async (list) => {
       Authorization: `Bearer ${token}`,
     },
   });
-
 };
 
 
 // 관심 등록한 게시글 List 가져오기
 export const getMyInterestList = async () => {
+  const token = localStorage.getItem("token");
 
-  try {
-    const token = localStorage.getItem("token");
-
-    const response = await instance.get(`/user/myInterestList`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return response.data;
-  } catch (error) {
-    // 에러 처리
-    console.error('에러 발생:', error);
-    throw error;
-  }
-
+  const response = await instance.get(`/user/myInterestList`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
 };
 
 

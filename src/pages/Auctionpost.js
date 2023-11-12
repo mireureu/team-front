@@ -426,7 +426,6 @@ const Auctionpost = () => {
     }
   }
 
-  
   useEffect(() => {
     const storedInterest = localStorage.getItem('isInterest');    
     if (storedInterest !== null) {
